@@ -15,6 +15,7 @@ BGPack (Board Games Pack) is a full-stack application for discovering and managi
 ## 🚀 Quick Start
 
 ### Requirements
+
 - **Docker** and **Docker Compose** (recommended)
 - Or alternatively: Node.js 18+, Java 17+, Maven 3.6+
 
@@ -31,6 +32,7 @@ docker-run.bat
 ```
 
 **Or manually:**
+
 ```bash
 # Build and start all services
 docker-compose up --build
@@ -43,12 +45,14 @@ docker-compose down
 ```
 
 **Application will be available at:**
+
 - Frontend: http://localhost:3000
 - Backend: http://localhost:8080
 
 ### 🔧 Local Development (without Docker)
 
 **One command (recommended):**
+
 ```bash
 # Linux/Mac
 ./start-app.sh
@@ -58,6 +62,7 @@ start-app.bat
 ```
 
 **Or manually:**
+
 ```bash
 # Backend
 cd backend
@@ -70,6 +75,7 @@ npm start
 ```
 
 **Stop:**
+
 ```bash
 # Linux/Mac
 ./stop-app.sh
@@ -137,29 +143,35 @@ curl "http://localhost:8080/api/games?minPlayers=2&maxPlayers=4"
 ### Technology Stack
 
 **Frontend:**
+
 - React 18 with TypeScript
 - Redux Toolkit for state management
 - React Router for navigation
 - Tailwind CSS for styling
 - Axios for API communication
+- Prettier for code formatting
 
 **Backend:**
+
 - Spring Boot 3.2 with Java 17
 - Spring Security for authentication
 - Spring Web for REST API
 - Lombok for code simplification
 - Jackson for XML parsing
+- Google Java Format + Checkstyle for code quality
 
 ### Docker Configuration
 
 The application is fully containerized:
 
 **Production (`docker-compose.yml`):**
+
 - Backend: OpenJDK 17, port 8080
 - Frontend: Multi-stage build with Nginx
 - Health checks and dependencies
 
 **Development (`docker-compose.dev.yml`):**
+
 - Hot reload with volume mounts
 - Debug support
 - Development servers
@@ -169,6 +181,14 @@ The application is fully containerized:
 ```
 Frontend (port 3000) → Nginx → Backend (port 8080) → BGG API
 ```
+
+### Code Quality
+
+The project includes automated code formatting and quality checks:
+
+- **Pre-commit hook** - automatically formats code before commits
+- **Frontend**: Prettier for TypeScript/JavaScript/CSS formatting
+- **Backend**: Google Java Format + Checkstyle for Java code quality
 
 ## 📄 License
 
