@@ -18,7 +18,6 @@ public class BggService {
 
         List<GameDto> allGames = getMockGames();
 
-        // Apply filters
         return allGames.stream()
                 .filter(game -> matchesSearch(game, searchRequest))
                 .toList();
@@ -110,7 +109,6 @@ public class BggService {
     }
 
     private boolean matchesSearch(GameDto game, GameSearchRequest searchRequest) {
-        // Search by name or description
         if (searchRequest.getSearch() != null && !searchRequest.getSearch().trim().isEmpty()) {
             String search = searchRequest.getSearch().toLowerCase();
             if (!game.getName().toLowerCase().contains(search) &&
@@ -119,7 +117,6 @@ public class BggService {
             }
         }
 
-        // Filter by players
         if (searchRequest.getMinPlayers() != null && game.getMinPlayers() < searchRequest.getMinPlayers()) {
             return false;
         }
@@ -127,7 +124,6 @@ public class BggService {
             return false;
         }
 
-        // Filter by playing time
         if (searchRequest.getMinPlayingTime() != null && game.getPlayingTime() < searchRequest.getMinPlayingTime()) {
             return false;
         }
@@ -135,17 +131,14 @@ public class BggService {
             return false;
         }
 
-        // Filter by age
         if (searchRequest.getMinAge() != null && game.getMinAge() < searchRequest.getMinAge()) {
             return false;
         }
 
-        // Filter by rating
         if (searchRequest.getMinRating() != null && game.getBggRating() < searchRequest.getMinRating()) {
             return false;
         }
 
-        // Filter by year
         if (searchRequest.getYearFrom() != null && game.getYearPublished() < searchRequest.getYearFrom()) {
             return false;
         }

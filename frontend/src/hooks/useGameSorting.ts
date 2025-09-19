@@ -25,18 +25,14 @@ export const useGameSorting = ({
       let aValue: any = a[sortBy];
       let bValue: any = b[sortBy];
 
-      // Handle string comparison for name field
       if (sortBy === 'name') {
         aValue = aValue.toLowerCase();
         bValue = bValue.toLowerCase();
       }
 
-      // Handle numeric comparison
       if (typeof aValue === 'number' && typeof bValue === 'number') {
         return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
       }
-
-      // Handle string comparison
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {

@@ -29,7 +29,6 @@ export const HomePage: React.FC = () => {
     setIsLoading(true);
     setHasSearched(true);
 
-    // Mock data for demonstration
     setTimeout(() => {
       const owners = bggNicks
         .split(',')
@@ -37,7 +36,6 @@ export const HomePage: React.FC = () => {
         .filter(Boolean);
       let mockGames = getMockGamesByOwners(owners);
 
-      // Apply filters
       if (Object.keys(filters).length > 0) {
         mockGames = getMockGamesByFilters(filters);
       }
@@ -49,7 +47,6 @@ export const HomePage: React.FC = () => {
 
   const handleSaveResults = () => {
     if (!isAuthenticated) return;
-    // TODO: Implement save functionality
     alert('Results saved to your lists!');
   };
 
