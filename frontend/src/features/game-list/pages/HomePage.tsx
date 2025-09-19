@@ -2,30 +2,19 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useLanguage } from '../../../hooks/useLanguage';
-
-interface Game {
-  id: string;
-  name: string;
-  year: number;
-  minPlayers: number;
-  maxPlayers: number;
-  playTime: number;
-  rating: number;
-  ownedBy: string[];
-}
+import { useGameSorting } from '../../../hooks/useGameSorting';
+import { Game, GameFilters } from '../../../types/Game';
+import {
+  getMockGamesByOwners,
+  getMockGamesByFilters,
+} from '../../../services/mockDataService';
 
 export const HomePage: React.FC = () => {
   const [bggNicks, setBggNicks] = useState<string>('');
-  const [filters, setFilters] = useState({
-    minPlayers: '',
-    maxPlayers: '',
-    minPlayTime: '',
-    maxPlayTime: '',
-    minRating: '',
-    yearFrom: '',
-    yearTo: ''
-  });
-  const [sortBy, setSortBy] = useState('rating');
+  const [filters, setFilters] = useState<Partial<GameFilters>>({});
+  const [sortBy, setSortBy] = useState<
+    'name' | 'yearPublished' | 'bggRating' | 'playingTime' | 'complexity'
+  >('bggRating');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,44 +25,23 @@ export const HomePage: React.FC = () => {
 
   const handleSearch = async () => {
     if (!bggNicks.trim()) return;
-    
+
     setIsLoading(true);
     setHasSearched(true);
-    
+
     // Mock data for demonstration
     setTimeout(() => {
-      const mockGames: Game[] = [
-        {
-          id: '1',
-          name: 'Wingspan',
-          year: 2019,
-          minPlayers: 1,
-          maxPlayers: 5,
-          playTime: 60,
-          rating: 8.1,
-          ownedBy: ['player1', 'player2']
-        },
-        {
-          id: '2',
-          name: 'Terraforming Mars',
-          year: 2016,
-          minPlayers: 1,
-          maxPlayers: 5,
-          playTime: 120,
-          rating: 8.4,
-          ownedBy: ['player1']
-        },
-        {
-          id: '3',
-          name: 'Azul',
-          year: 2017,
-          minPlayers: 2,
-          maxPlayers: 4,
-          playTime: 45,
-          rating: 7.8,
-          ownedBy: ['player2', 'player3']
-        }
-      ];
+      const owners = bggNicks
+        .split(',')
+        .map(nick => nick.trim())
+        .filter(Boolean);
+      let mockGames = getMockGamesByOwners(owners);
+
+      // Apply filters
+      if (Object.keys(filters).length > 0) {
+        mockGames = getMockGamesByFilters(filters);
+      }
+
       setGames(mockGames);
       setIsLoading(false);
     }, 1000);
@@ -85,21 +53,7 @@ export const HomePage: React.FC = () => {
     alert('Results saved to your lists!');
   };
 
-  const sortedGames = [...games].sort((a, b) => {
-    let aValue: any = a[sortBy as keyof Game];
-    let bValue: any = b[sortBy as keyof Game];
-    
-    if (sortBy === 'name') {
-      aValue = aValue.toLowerCase();
-      bValue = bValue.toLowerCase();
-    }
-    
-    if (sortOrder === 'asc') {
-      return aValue > bValue ? 1 : -1;
-    } else {
-      return aValue < bValue ? 1 : -1;
-    }
-  });
+  const sortedGames = useGameSorting({ games, sortBy, sortOrder });
 
   return (
     <div className="px-4 py-6 sm:px-0">
@@ -117,14 +71,17 @@ export const HomePage: React.FC = () => {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* BGG Nicks Input */}
           <div>
-            <label htmlFor="bgg-nicks" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="bgg-nicks"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               {t.bggUsernames}
             </label>
             <input
               type="text"
               id="bgg-nicks"
               value={bggNicks}
-              onChange={(e) => setBggNicks(e.target.value)}
+              onChange={e => setBggNicks(e.target.value)}
               placeholder={t.bggUsernamesPlaceholder}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
@@ -145,38 +102,74 @@ export const HomePage: React.FC = () => {
         {/* Filters */}
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.minPlayers}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.minPlayers}
+            </label>
             <input
               type="number"
-              value={filters.minPlayers}
-              onChange={(e) => setFilters({...filters, minPlayers: e.target.value})}
+              value={filters.minPlayers || ''}
+              onChange={e =>
+                setFilters({
+                  ...filters,
+                  minPlayers: e.target.value
+                    ? parseInt(e.target.value)
+                    : undefined,
+                })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.maxPlayers}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.maxPlayers}
+            </label>
             <input
               type="number"
-              value={filters.maxPlayers}
-              onChange={(e) => setFilters({...filters, maxPlayers: e.target.value})}
+              value={filters.maxPlayers || ''}
+              onChange={e =>
+                setFilters({
+                  ...filters,
+                  maxPlayers: e.target.value
+                    ? parseInt(e.target.value)
+                    : undefined,
+                })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.minPlayTime}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.minPlayTime}
+            </label>
             <input
               type="number"
-              value={filters.minPlayTime}
-              onChange={(e) => setFilters({...filters, minPlayTime: e.target.value})}
+              value={filters.minPlayingTime || ''}
+              onChange={e =>
+                setFilters({
+                  ...filters,
+                  minPlayingTime: e.target.value
+                    ? parseInt(e.target.value)
+                    : undefined,
+                })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t.maxPlayTime}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t.maxPlayTime}
+            </label>
             <input
               type="number"
-              value={filters.maxPlayTime}
-              onChange={(e) => setFilters({...filters, maxPlayTime: e.target.value})}
+              value={filters.maxPlayingTime || ''}
+              onChange={e =>
+                setFilters({
+                  ...filters,
+                  maxPlayingTime: e.target.value
+                    ? parseInt(e.target.value)
+                    : undefined,
+                })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
@@ -185,23 +178,28 @@ export const HomePage: React.FC = () => {
         {/* Sorting */}
         <div className="mt-4 flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">{t.sortBy}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {t.sortBy}
+            </label>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={e => setSortBy(e.target.value as typeof sortBy)}
               className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
-              <option value="rating">{t.rating}</option>
+              <option value="bggRating">{t.rating}</option>
               <option value="name">{t.name}</option>
-              <option value="year">{t.year}</option>
-              <option value="playTime">{t.playTime}</option>
+              <option value="yearPublished">{t.year}</option>
+              <option value="playingTime">{t.playTime}</option>
+              <option value="complexity">Complexity</option>
             </select>
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">{t.order}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {t.order}
+            </label>
             <select
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+              onChange={e => setSortOrder(e.target.value as 'asc' | 'desc')}
               className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="desc">{t.descending}</option>
@@ -235,10 +233,22 @@ export const HomePage: React.FC = () => {
             </div>
           ) : games.length === 0 ? (
             <div className="p-8 text-center">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 6.75a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 6.75a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">{t.noGamesFound}</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                {t.noGamesFound}
+              </h3>
               <p className="mt-1 text-sm text-gray-500">{t.noGamesFoundDesc}</p>
             </div>
           ) : (
@@ -246,33 +256,58 @@ export const HomePage: React.FC = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.game}</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.year}</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.players}</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.time}</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.rating}</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t.ownedBy}</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.game}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.year}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.players}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.time}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.rating}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.ownedBy}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {sortedGames.map((game) => (
+                  {sortedGames.map(game => (
                     <tr key={game.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{game.name}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {game.name}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{game.year}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.minPlayers === game.maxPlayers ? game.minPlayers : `${game.minPlayers}-${game.maxPlayers}`}
+                        {game.yearPublished}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{game.playTime} min</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{game.rating}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.minPlayers === game.maxPlayers
+                          ? game.minPlayers
+                          : `${game.minPlayers}-${game.maxPlayers}`}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.playingTime} min
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.bggRating}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex flex-wrap gap-1">
-                          {game.ownedBy.map((owner, index) => (
-                            <span key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {game.ownedBy?.map((owner, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                            >
                               {owner}
                             </span>
-                          ))}
+                          )) || <span className="text-gray-400">-</span>}
                         </div>
                       </td>
                     </tr>
@@ -287,13 +322,23 @@ export const HomePage: React.FC = () => {
       {/* Empty State - when no search has been performed */}
       {!hasSearched && (
         <div className="bg-white shadow rounded-lg p-8 text-center">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <svg
+            className="mx-auto h-12 w-12 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">{t.readyToDiscover}</h3>
-          <p className="mt-1 text-sm text-gray-500">
-            {t.readyToDiscoverDesc}
-          </p>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">
+            {t.readyToDiscover}
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">{t.readyToDiscoverDesc}</p>
         </div>
       )}
     </div>

@@ -1,19 +1,41 @@
 package com.bgpack.service;
 
 import com.bgpack.dto.GameDto;
+import com.bgpack.dto.GameSearchRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class BggService {
 
-    public List<GameDto> getMockGames() {
+    public List<GameDto> getGames(GameSearchRequest searchRequest) {
+        log.info("Searching games with criteria: {}", searchRequest);
+
+        List<GameDto> allGames = getMockGames();
+
+        // Apply filters
+        return allGames.stream()
+                .filter(game -> matchesSearch(game, searchRequest))
+                .toList();
+    }
+
+    public GameDto getGameById(String id) {
+        log.info("Getting game by id: {}", id);
+
+        return getMockGames().stream()
+                .filter(game -> game.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Game not found with id: " + id));
+    }
+
+    private List<GameDto> getMockGames() {
         log.info("Returning mock games data");
-        
+
         return Arrays.asList(
             GameDto.builder()
                 .id("1")
@@ -28,7 +50,7 @@ public class BggService {
                 .averageRating(7.2)
                 .complexity(2.3)
                 .build(),
-                
+
             GameDto.builder()
                 .id("2")
                 .name("Ticket to Ride")
@@ -42,7 +64,7 @@ public class BggService {
                 .averageRating(7.4)
                 .complexity(1.9)
                 .build(),
-                
+
             GameDto.builder()
                 .id("3")
                 .name("Wingspan")
@@ -56,7 +78,7 @@ public class BggService {
                 .averageRating(8.1)
                 .complexity(2.4)
                 .build(),
-                
+
             GameDto.builder()
                 .id("4")
                 .name("Azul")
@@ -70,7 +92,7 @@ public class BggService {
                 .averageRating(7.8)
                 .complexity(1.8)
                 .build(),
-                
+
             GameDto.builder()
                 .id("5")
                 .name("Gloomhaven")
@@ -87,21 +109,50 @@ public class BggService {
         );
     }
 
-    public GameDto getMockGameById(String id) {
-        log.info("Returning mock game with id: {}", id);
-        
-        return getMockGames().stream()
-            .filter(game -> game.getId().equals(id))
-            .findFirst()
-            .orElse(GameDto.builder()
-                .id(id)
-                .name("Nieznana gra")
-                .description("Gra o podanym ID nie została znaleziona.")
-                .build());
-    }
+    private boolean matchesSearch(GameDto game, GameSearchRequest searchRequest) {
+        // Search by name or description
+        if (searchRequest.getSearch() != null && !searchRequest.getSearch().trim().isEmpty()) {
+            String search = searchRequest.getSearch().toLowerCase();
+            if (!game.getName().toLowerCase().contains(search) &&
+                !game.getDescription().toLowerCase().contains(search)) {
+                return false;
+            }
+        }
 
-    public List<GameDto> searchGames(String query) {
-        log.info("Searching games with query: {}", query);
-        return getMockGames();
+        // Filter by players
+        if (searchRequest.getMinPlayers() != null && game.getMinPlayers() < searchRequest.getMinPlayers()) {
+            return false;
+        }
+        if (searchRequest.getMaxPlayers() != null && game.getMaxPlayers() > searchRequest.getMaxPlayers()) {
+            return false;
+        }
+
+        // Filter by playing time
+        if (searchRequest.getMinPlayingTime() != null && game.getPlayingTime() < searchRequest.getMinPlayingTime()) {
+            return false;
+        }
+        if (searchRequest.getMaxPlayingTime() != null && game.getPlayingTime() > searchRequest.getMaxPlayingTime()) {
+            return false;
+        }
+
+        // Filter by age
+        if (searchRequest.getMinAge() != null && game.getMinAge() < searchRequest.getMinAge()) {
+            return false;
+        }
+
+        // Filter by rating
+        if (searchRequest.getMinRating() != null && game.getBggRating() < searchRequest.getMinRating()) {
+            return false;
+        }
+
+        // Filter by year
+        if (searchRequest.getYearFrom() != null && game.getYearPublished() < searchRequest.getYearFrom()) {
+            return false;
+        }
+        if (searchRequest.getYearTo() != null && game.getYearPublished() > searchRequest.getYearTo()) {
+            return false;
+        }
+
+        return true;
     }
 }

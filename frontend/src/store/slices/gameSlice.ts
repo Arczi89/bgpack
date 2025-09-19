@@ -1,34 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export interface Game {
-  id: string;
-  name: string;
-  yearPublished: number;
-  minPlayers: number;
-  maxPlayers: number;
-  playingTime: number;
-  minAge: number;
-  description: string;
-  imageUrl?: string;
-  thumbnailUrl?: string;
-  bggRating: number;
-  averageRating: number;
-  complexity: number;
-}
+import { Game, GameFilters } from '../../types/Game';
 
 interface GameState {
   games: Game[];
   isLoading: boolean;
   error: string | null;
   searchQuery: string;
-  filters: {
-    minPlayers?: number;
-    maxPlayers?: number;
-    minPlayingTime?: number;
-    maxPlayingTime?: number;
-    minAge?: number;
-    minRating?: number;
-  };
+  filters: GameFilters;
 }
 
 const initialState: GameState = {
@@ -58,10 +36,10 @@ export const gameSlice = createSlice({
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
     },
-    setFilters: (state, action: PayloadAction<Partial<GameState['filters']>>) => {
+    setFilters: (state, action: PayloadAction<Partial<GameFilters>>) => {
       state.filters = { ...state.filters, ...action.payload };
     },
-    clearFilters: (state) => {
+    clearFilters: state => {
       state.filters = {};
       state.searchQuery = '';
     },

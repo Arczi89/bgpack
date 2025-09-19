@@ -146,6 +146,19 @@
                 </executions>
             </plugin>
             
+            <!-- SortPOM Plugin for organizing imports -->
+            <plugin>
+                <groupId>com.github.ekryd.sortpom</groupId>
+                <artifactId>sortpom-maven-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <keepBlankLines>true</keepBlankLines>
+                    <expandEmptyElements>false</expandEmptyElements>
+                    <sortDependencies>scope,groupId,artifactId</sortDependencies>
+                    <sortPlugins>groupId,artifactId</sortPlugins>
+                </configuration>
+            </plugin>
+            
             <!-- PMD Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
