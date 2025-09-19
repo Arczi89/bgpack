@@ -2,7 +2,7 @@
 
 BGPack (Board Games Pack) is a full-stack application for discovering and managing board game collections from your friends' group. The name represents a "pack" of board games from your "pack" of friends. The project consists of a React frontend with TypeScript and a Spring Boot backend.
 
-## 🎯 Features
+## Features
 
 - **Friends' game discovery** - see what games your friends own on BGG
 - **Smart filtering** - filter by players, time, rating, and more
@@ -12,44 +12,61 @@ BGPack (Board Games Pack) is a full-stack application for discovering and managi
 - **Modern UI** - responsive interface with Tailwind CSS
 - **Multi-language** - English and Polish support
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Requirements
 
-- **Docker** and **Docker Compose** (recommended)
-- Or alternatively: Node.js 18+, Java 17+, Maven 3.6+
+- **Docker** and **Docker Compose** (for backend)
+- **Node.js 18+** (for frontend development)
 
-### 🐳 Docker (Recommended)
+### Development Setup (Recommended)
 
 **One command to run the entire project:**
 
 ```bash
-# Linux/Mac
-./docker-run.sh
+# Linux/Mac - Backend in Docker (default)
+./start-dev.sh
 
-# Windows
-docker-run.bat
+# Linux/Mac - Backend locally (requires Java 17)
+./start-dev.sh --local
+
+# Windows - Backend in Docker (default)
+start-dev.bat
+
+# Windows - Backend locally (requires Java 17)
+start-dev.bat --local
 ```
 
-**Or manually:**
+**Stop the application:**
 
 ```bash
-# Build and start all services
-docker-compose up --build
+# Linux/Mac
+./stop-dev.sh
 
-# In background
-docker-compose up --build -d
-
-# Stop
-docker-compose down
+# Windows
+stop-dev.bat
 ```
 
 **Application will be available at:**
 
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8080
+- Frontend: http://localhost:3000 (local development)
+- Backend: http://localhost:8080 (Docker container or local)
 
-### 🔧 Local Development (without Docker)
+### Backend Options
+
+**Docker Backend (Default):**
+
+- No Java installation required
+- Consistent environment
+- Slower startup time
+
+**Local Backend:**
+
+- Requires Java 17 (included in `tools/jdk-17.0.2/`)
+- Faster startup and debugging
+- Direct access to logs
+
+### Local Development (without Docker)
 
 **One command (recommended):**
 
@@ -119,7 +136,7 @@ bgpack/
 └── README.md
 ```
 
-## 🔧 API Endpoints
+## API Endpoints
 
 - `GET /api/test` - Test endpoint
 - `GET /api/games` - List games with optional filters
@@ -138,7 +155,7 @@ curl http://localhost:8080/api/games
 curl "http://localhost:8080/api/games?minPlayers=2&maxPlayers=4"
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Technology Stack
 
@@ -189,6 +206,81 @@ The project includes automated code formatting and quality checks:
 - **Pre-commit hook** - automatically formats code before commits
 - **Frontend**: Prettier for TypeScript/JavaScript/CSS formatting
 - **Backend**: Google Java Format + Checkstyle for Java code quality
+
+## 🔧 Troubleshooting
+
+### BGG API Integration Issues
+
+If the application returns mock data instead of real BGG data, check these configurations:
+
+#### SSL/TLS Certificate Issues
+
+**Problem**: BGG API returns `null` responses due to SSL certificate validation failures.
+
+**Solution**: The backend is configured to ignore SSL certificate issues:
+
+```java
+// In BggApiClient.java
+.trustManager(io.netty.handler.ssl.util.InsecureTrustManagerFactory.INSTANCE)
+```
+
+#### Redirect Handling
+
+**Problem**: BGG API redirects from `www.boardgamegeek.com` to `boardgamegeek.com`.
+
+**Solution**: Enable automatic redirects:
+
+```java
+// In BggApiClient.java
+.followRedirect(true)
+```
+
+#### User-Agent Requirements
+
+**Problem**: BGG API blocks requests with custom User-Agent strings.
+
+**Solution**: Use standard browser User-Agent:
+
+```java
+// In BggApiClient.java
+.defaultHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...")
+```
+
+#### Rate Limiting
+
+**Problem**: BGG API blocks requests that exceed rate limits.
+
+**Solution**: Configure appropriate rate limiting in `application.yml`:
+
+```yaml
+bgg:
+  api:
+    rate-limit: 1.0 # 1 request per second
+    max-requests-per-hour: 3600 # 3600 requests per hour
+```
+
+#### CORS Configuration
+
+**Problem**: Frontend cannot access backend API.
+
+**Solution**: Configure CORS in `application.yml`:
+
+```yaml
+spring:
+  web:
+    cors:
+      allowed-origins: "http://localhost:3000,http://127.0.0.1:3000"
+      allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+      allowed-headers: "*"
+      allow-credentials: true
+```
+
+### Common Issues
+
+1. **Backend returns mock data**: Check BGG API configuration and SSL settings
+2. **CORS errors**: Verify CORS configuration in `application.yml`
+3. **Rate limiting**: Ensure rate limits are not exceeded
+4. **SSL errors**: Backend is configured to ignore SSL certificate issues
 
 ## 📄 License
 

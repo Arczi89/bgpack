@@ -17,16 +17,16 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${cors.allowed-origins}")
+    @Value("${spring.web.cors.allowed-origins}")
     private String allowedOrigins;
 
-    @Value("${cors.allowed-methods}")
+    @Value("${spring.web.cors.allowed-methods}")
     private String allowedMethods;
 
-    @Value("${cors.allowed-headers}")
+    @Value("${spring.web.cors.allowed-headers}")
     private String allowedHeaders;
 
-    @Value("${cors.allow-credentials}")
+    @Value("${spring.web.cors.allow-credentials}")
     private boolean allowCredentials;
 
     @Bean
@@ -35,7 +35,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/test", "/api/games/**").permitAll()
+                .requestMatchers("/api/test", "/api/games/**", "/api/own/**", "/api/stats/**").permitAll()
                 .anyRequest().authenticated()
             );
 

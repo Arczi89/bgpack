@@ -7,26 +7,42 @@ import {
   setSearchQuery,
   setFilters,
 } from '../../../store/slices/gameSlice';
-import { Game } from '../../../types/Game';
-import { getMockGames } from '../../../services/mockDataService';
+import { GameSearchParams } from '../../../types/Game';
+import { useGames } from '../../../hooks/useApi';
 
 export const GameListPage: React.FC = () => {
   const dispatch = useDispatch();
-  const { games, isLoading, searchQuery, filters } = useSelector(
+  const { searchQuery, filters } = useSelector(
     (state: RootState) => state.games
   );
 
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
   const [localFilters, setLocalFilters] = useState(filters);
 
-  useEffect(() => {
-    dispatch(setLoading(true));
+  // Prepare search parameters for API
+  const searchParams: GameSearchParams = {
+    search: localSearchQuery || undefined,
+    minPlayers: localFilters.minPlayers || undefined,
+    maxPlayers: localFilters.maxPlayers || undefined,
+    minPlayingTime: localFilters.minPlayingTime || undefined,
+    maxPlayingTime: localFilters.maxPlayingTime || undefined,
+    minAge: localFilters.minAge || undefined,
+    minRating: localFilters.minRating || undefined,
+  };
 
-    setTimeout(() => {
-      const mockGames = getMockGames();
-      dispatch(setGames(mockGames));
-    }, 1000);
-  }, [dispatch]);
+  // Use API hook to fetch games
+  const { data: games, loading: isLoading, error } = useGames(searchParams);
+
+  // Update Redux store when data changes
+  useEffect(() => {
+    if (games) {
+      dispatch(setGames(games));
+    }
+  }, [games, dispatch]);
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,14 +137,56 @@ export const GameListPage: React.FC = () => {
         </div>
       </div>
 
-      {isLoading ? (
+      {error ? (
+        <div className="text-center py-12">
+          <div className="mx-auto h-12 w-12 text-red-400">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+          </div>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">
+            Błąd ładowania gier
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">{error}</p>
+          <div className="mt-6">
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-primary"
+            >
+              Spróbuj ponownie
+            </button>
+          </div>
+        </div>
+      ) : isLoading ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
           <p className="mt-2 text-gray-600">Ładowanie gier...</p>
         </div>
+      ) : games && games.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="mx-auto h-12 w-12 text-gray-400">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709"
+              />
+            </svg>
+          </div>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">Brak gier</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Nie znaleziono gier spełniających kryteria wyszukiwania.
+          </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {games.map(game => (
+          {games?.map(game => (
             <div
               key={game.id}
               className="card hover:shadow-lg transition-shadow"

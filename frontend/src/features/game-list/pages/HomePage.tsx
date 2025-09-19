@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useLanguage } from '../../../hooks/useLanguage';
 import { useGameSorting } from '../../../hooks/useGameSorting';
 import { Game, GameFilters } from '../../../types/Game';
-import {
-  getMockGamesByOwners,
-  getMockGamesByFilters,
-} from '../../../services/mockDataService';
+import { useOwnedGames } from '../../../hooks/useApi';
 
 export const HomePage: React.FC = () => {
   const [bggNicks, setBggNicks] = useState<string>('');
@@ -17,32 +14,58 @@ export const HomePage: React.FC = () => {
   >('bggRating');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [games, setGames] = useState<Game[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [currentUsername, setCurrentUsername] = useState<string>('');
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { t } = useLanguage();
 
+  // Use API hook to fetch owned games only when username is provided
+  const {
+    data: apiGames,
+    loading: isLoading,
+    error,
+  } = useOwnedGames(currentUsername);
+
+  // Update games when API data changes
+  useEffect(() => {
+    if (apiGames) {
+      let filteredGames = [...apiGames];
+
+      // Apply filters
+      if (Object.keys(filters).length > 0) {
+        filteredGames = filteredGames.filter(game => {
+          if (filters.minPlayers && game.minPlayers < filters.minPlayers)
+            return false;
+          if (filters.maxPlayers && game.maxPlayers > filters.maxPlayers)
+            return false;
+          if (
+            filters.minPlayingTime &&
+            game.playingTime < filters.minPlayingTime
+          )
+            return false;
+          if (
+            filters.maxPlayingTime &&
+            game.playingTime > filters.maxPlayingTime
+          )
+            return false;
+          if (filters.minAge && game.minAge < filters.minAge) return false;
+          if (filters.minRating && game.bggRating < filters.minRating)
+            return false;
+          return true;
+        });
+      }
+
+      setGames(filteredGames);
+    }
+  }, [apiGames, filters]);
+
   const handleSearch = async () => {
     if (!bggNicks.trim()) return;
 
-    setIsLoading(true);
+    const username = bggNicks.trim();
+    setCurrentUsername(username);
     setHasSearched(true);
-
-    setTimeout(() => {
-      const owners = bggNicks
-        .split(',')
-        .map(nick => nick.trim())
-        .filter(Boolean);
-      let mockGames = getMockGamesByOwners(owners);
-
-      if (Object.keys(filters).length > 0) {
-        mockGames = getMockGamesByFilters(filters);
-      }
-
-      setGames(mockGames);
-      setIsLoading(false);
-    }, 1000);
   };
 
   const handleSaveResults = () => {
@@ -223,7 +246,24 @@ export const HomePage: React.FC = () => {
             )}
           </div>
 
-          {isLoading ? (
+          {error ? (
+            <div className="p-8 text-center">
+              <div className="mx-auto h-12 w-12 text-red-400">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                Błąd ładowania kolekcji
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">{error}</p>
+            </div>
+          ) : isLoading ? (
             <div className="p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
               <p className="mt-2 text-gray-500">{t.searching}</p>

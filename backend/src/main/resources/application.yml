@@ -11,12 +11,11 @@ spring:
       allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
       allowed-headers: "*"
       allow-credentials: true
-
-cors:
-  allowed-origins: "http://localhost:3000,http://127.0.0.1:3000"
-  allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
-  allowed-headers: "*"
-  allow-credentials: true
+  
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=1h
 
 logging:
   level:
@@ -27,5 +26,9 @@ logging:
 
 bgg:
   api:
-    base-url: "https://www.boardgamegeek.com/xmlapi2"
-    timeout: 30000
+    base-url: "https://www.boardgamegeek.com/xmlapi"
+    timeout: 60000
+    rate-limit: 1.0  # requests per second (1 request per second)
+    max-requests-per-hour: 3600  # 1 request per second * 60 minutes * 60 seconds
+    circuit-breaker-threshold: 5  # consecutive failures before opening circuit
+    circuit-breaker-timeout: 300  # seconds before trying again

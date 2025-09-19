@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -35,5 +35,11 @@ public class BggController {
     public ResponseEntity<GameDto> getGameById(@PathVariable @NotBlank String id) {
         GameDto game = bggService.getGameById(id);
         return ResponseEntity.ok(game);
+    }
+
+    @GetMapping("/own/{username}")
+    public ResponseEntity<List<GameDto>> getOwnedGames(@PathVariable @NotBlank String username) {
+        List<GameDto> games = bggService.getCollection(username);
+        return ResponseEntity.ok(games);
     }
 }
