@@ -43,10 +43,21 @@ export const HomePage: React.FC = () => {
       // Apply filters
       if (Object.keys(filters).length > 0) {
         filteredGames = filteredGames.filter(game => {
-          if (filters.minPlayers && game.minPlayers < filters.minPlayers)
-            return false;
-          if (filters.maxPlayers && game.maxPlayers > filters.maxPlayers)
-            return false;
+          // Player count filter: game range must overlap with filter range
+          if (filters.minPlayers && filters.maxPlayers) {
+            // Filter has both min and max - check if ranges overlap
+            if (
+              game.minPlayers > filters.maxPlayers ||
+              game.maxPlayers < filters.minPlayers
+            )
+              return false;
+          } else if (filters.minPlayers) {
+            // Only min filter - game must support at least this many players
+            if (game.maxPlayers < filters.minPlayers) return false;
+          } else if (filters.maxPlayers) {
+            // Only max filter - game must not require more than this many players
+            if (game.minPlayers > filters.maxPlayers) return false;
+          }
           if (
             filters.minPlayingTime &&
             game.playingTime < filters.minPlayingTime

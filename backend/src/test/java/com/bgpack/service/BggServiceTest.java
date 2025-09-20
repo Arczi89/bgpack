@@ -82,10 +82,10 @@ class BggServiceTest {
         // When
         List<GameDto> result = bggService.getGames(searchRequest);
 
-        // Then
-        assertThat(result).hasSize(2);
+        // Then - all games that support 3-4 players should be returned
+        assertThat(result).hasSize(5);
         assertThat(result).extracting(GameDto::getName)
-                .containsExactlyInAnyOrder("Catan", "Azul");
+                .containsExactlyInAnyOrder("Catan", "Ticket to Ride", "Wingspan", "Azul", "Gloomhaven");
     }
 
     @Test

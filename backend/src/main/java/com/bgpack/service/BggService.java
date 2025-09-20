@@ -242,11 +242,23 @@ public class BggService {
             }
         }
 
-        if (searchRequest.getMinPlayers() != null && game.getMinPlayers() < searchRequest.getMinPlayers()) {
-            return false;
-        }
-        if (searchRequest.getMaxPlayers() != null && game.getMaxPlayers() > searchRequest.getMaxPlayers()) {
-            return false;
+        // Player count filter: game range must overlap with filter range
+        if (searchRequest.getMinPlayers() != null && searchRequest.getMaxPlayers() != null) {
+            // Filter has both min and max - check if ranges overlap
+            if (game.getMinPlayers() > searchRequest.getMaxPlayers() ||
+                game.getMaxPlayers() < searchRequest.getMinPlayers()) {
+                return false;
+            }
+        } else if (searchRequest.getMinPlayers() != null) {
+            // Only min filter - game must support at least this many players
+            if (game.getMaxPlayers() < searchRequest.getMinPlayers()) {
+                return false;
+            }
+        } else if (searchRequest.getMaxPlayers() != null) {
+            // Only max filter - game must not require more than this many players
+            if (game.getMinPlayers() > searchRequest.getMaxPlayers()) {
+                return false;
+            }
         }
 
         if (searchRequest.getMinPlayingTime() != null && game.getPlayingTime() < searchRequest.getMinPlayingTime()) {
