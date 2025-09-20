@@ -24,6 +24,7 @@ export interface GameFilters {
   minRating?: number;
   yearFrom?: number;
   yearTo?: number;
+  exactPlayerFilter?: boolean;
 }
 
 export interface GameSearchParams {

@@ -155,6 +155,120 @@ curl http://localhost:8080/api/games
 curl "http://localhost:8080/api/games?minPlayers=2&maxPlayers=4"
 ```
 
+## 🔍 Game Filtering System
+
+BGPack provides comprehensive filtering capabilities to help you find the perfect games for your group. The filtering system supports both **exact matching** and **overlap matching** for player counts, giving you flexibility in how you search for games.
+
+### Filter Types
+
+#### Player Count Filters
+
+**Min Players** and **Max Players** filters allow you to find games suitable for your group size. The system supports two modes:
+
+**Non-Exact Mode (Default):**
+
+- Shows games that **support** the specified player range
+- Example: Filtering for 3-4 players shows games like:
+  - `2-4 players` (supports 3-4) ✅
+  - `3-4 players` (supports 3-4) ✅
+  - `1-5 players` (supports 3-4) ✅
+  - `4-6 players` (supports 4) ✅
+
+**Exact Mode:**
+
+- Shows only games with **exactly** the specified player range
+- Example: Filtering for 3-4 players (exact) shows only:
+  - `3-4 players` (exact match) ✅
+  - `2-4 players` (not exact) ❌
+  - `1-5 players` (not exact) ❌
+
+**Toggle between modes using the "Exact player count match" checkbox.**
+
+#### Playing Time Filters
+
+**Min Playing Time** and **Max Playing Time** filters help you find games that fit your available time:
+
+- Example: `30-60 minutes` shows games with playing time between 30 and 60 minutes
+
+#### Age Filters
+
+**Min Age** filters games by recommended minimum age:
+
+- Example: `12+` shows games recommended for ages 12 and above
+
+#### Rating Filters
+
+**Min Rating** filters games by BGG rating:
+
+- Example: `7.0+` shows games with BGG rating of 7.0 or higher
+
+#### Year Filters
+
+**Year From** and **Year To** filters games by publication year:
+
+- Example: `2010-2020` shows games published between 2010 and 2020
+
+### Filtering Examples
+
+**Example 1: Family Game Night**
+
+```
+Min Players: 4
+Max Players: 4
+Min Age: 8
+Max Playing Time: 60
+Min Rating: 7.0
+```
+
+Result: Games for exactly 4 players, suitable for ages 8+, under 60 minutes, with good ratings.
+
+**Example 2: Large Group Games**
+
+```
+Min Players: 6
+Exact Match: OFF (non-exact mode)
+```
+
+Result: All games that support 6+ players (6-8, 6-10, 1-10, etc.)
+
+**Example 3: Quick Games for Any Group Size**
+
+```
+Max Playing Time: 30
+Min Rating: 7.5
+```
+
+Result: Quick games (≤30 min) with excellent ratings, regardless of player count.
+
+### Filter Behavior
+
+- **Multiple filters** work together with AND logic (all conditions must be met)
+- **Empty filters** are ignored (no filtering applied)
+- **Sorting** works on filtered results
+- **Pagination** applies to filtered results
+- **Real-time filtering** - results update as you change filter values
+
+### API Filter Parameters
+
+All filters are available via the REST API:
+
+```bash
+# Player count filters
+curl "http://localhost:8080/api/games?minPlayers=2&maxPlayers=4&exactPlayerFilter=true"
+
+# Playing time filters
+curl "http://localhost:8080/api/games?minPlayingTime=30&maxPlayingTime=90"
+
+# Rating and age filters
+curl "http://localhost:8080/api/games?minRating=7.0&minAge=12"
+
+# Year filters
+curl "http://localhost:8080/api/games?yearFrom=2020&yearTo=2023"
+
+# Combined filters
+curl "http://localhost:8080/api/games?minPlayers=3&maxPlayers=5&minPlayingTime=45&maxPlayingTime=90&minRating=7.5"
+```
+
 ## Architecture
 
 ### Technology Stack

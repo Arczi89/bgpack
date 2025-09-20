@@ -49,6 +49,7 @@ export interface Translations {
   pageOf: string;
   emptyCollectionsInfo: string;
   userErrors: string;
+  exactPlayerFilter: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -106,6 +107,7 @@ export const translations: Record<string, Translations> = {
     pageOf: 'Page {current} of {total}',
     emptyCollectionsInfo: 'Users with empty collections:',
     userErrors: 'Errors while fetching collections:',
+    exactPlayerFilter: 'Exact player count match',
   },
   pl: {
     home: 'Strona główna',
@@ -161,5 +163,6 @@ export const translations: Record<string, Translations> = {
     pageOf: 'Strona {current} z {total}',
     emptyCollectionsInfo: 'Użytkownicy bez kolekcji:',
     userErrors: 'Błędy podczas pobierania kolekcji:',
+    exactPlayerFilter: 'Dokładne dopasowanie liczby graczy',
   },
 };

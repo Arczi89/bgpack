@@ -242,22 +242,44 @@ public class BggService {
             }
         }
 
-        // Player count filter: game range must overlap with filter range
+        // Player count filter
         if (searchRequest.getMinPlayers() != null && searchRequest.getMaxPlayers() != null) {
-            // Filter has both min and max - check if ranges overlap
-            if (game.getMinPlayers() > searchRequest.getMaxPlayers() ||
-                game.getMaxPlayers() < searchRequest.getMinPlayers()) {
-                return false;
+            if (Boolean.TRUE.equals(searchRequest.getExactPlayerFilter())) {
+                // Exact match: game must have exactly the same range
+                if (!game.getMinPlayers().equals(searchRequest.getMinPlayers()) ||
+                    !game.getMaxPlayers().equals(searchRequest.getMaxPlayers())) {
+                    return false;
+                }
+            } else {
+                // Non-exact: game range must overlap with filter range
+                if (game.getMinPlayers() > searchRequest.getMaxPlayers() ||
+                    game.getMaxPlayers() < searchRequest.getMinPlayers()) {
+                    return false;
+                }
             }
         } else if (searchRequest.getMinPlayers() != null) {
-            // Only min filter - game must support at least this many players
-            if (game.getMaxPlayers() < searchRequest.getMinPlayers()) {
-                return false;
+            if (Boolean.TRUE.equals(searchRequest.getExactPlayerFilter())) {
+                // Exact match: game must have exactly this min value
+                if (!game.getMinPlayers().equals(searchRequest.getMinPlayers())) {
+                    return false;
+                }
+            } else {
+                // Non-exact: game must support at least this many players
+                if (game.getMaxPlayers() < searchRequest.getMinPlayers()) {
+                    return false;
+                }
             }
         } else if (searchRequest.getMaxPlayers() != null) {
-            // Only max filter - game must not require more than this many players
-            if (game.getMinPlayers() > searchRequest.getMaxPlayers()) {
-                return false;
+            if (Boolean.TRUE.equals(searchRequest.getExactPlayerFilter())) {
+                // Exact match: game must have exactly this max value
+                if (!game.getMaxPlayers().equals(searchRequest.getMaxPlayers())) {
+                    return false;
+                }
+            } else {
+                // Non-exact: game must not support more than this many players
+                if (game.getMaxPlayers() > searchRequest.getMaxPlayers()) {
+                    return false;
+                }
             }
         }
 

@@ -43,20 +43,39 @@ export const HomePage: React.FC = () => {
       // Apply filters
       if (Object.keys(filters).length > 0) {
         filteredGames = filteredGames.filter(game => {
-          // Player count filter: game range must overlap with filter range
+          // Player count filter
           if (filters.minPlayers && filters.maxPlayers) {
-            // Filter has both min and max - check if ranges overlap
-            if (
-              game.minPlayers > filters.maxPlayers ||
-              game.maxPlayers < filters.minPlayers
-            )
-              return false;
+            if (filters.exactPlayerFilter) {
+              // Exact match: game must have exactly the same range
+              if (
+                game.minPlayers !== filters.minPlayers ||
+                game.maxPlayers !== filters.maxPlayers
+              )
+                return false;
+            } else {
+              // Non-exact: game range must overlap with filter range
+              if (
+                game.minPlayers > filters.maxPlayers ||
+                game.maxPlayers < filters.minPlayers
+              )
+                return false;
+            }
           } else if (filters.minPlayers) {
-            // Only min filter - game must support at least this many players
-            if (game.maxPlayers < filters.minPlayers) return false;
+            if (filters.exactPlayerFilter) {
+              // Exact match: game must have exactly this min value
+              if (game.minPlayers !== filters.minPlayers) return false;
+            } else {
+              // Non-exact: game must support at least this many players
+              if (game.maxPlayers < filters.minPlayers) return false;
+            }
           } else if (filters.maxPlayers) {
-            // Only max filter - game must not require more than this many players
-            if (game.minPlayers > filters.maxPlayers) return false;
+            if (filters.exactPlayerFilter) {
+              // Exact match: game must have exactly this max value
+              if (game.maxPlayers !== filters.maxPlayers) return false;
+            } else {
+              // Non-exact: game must not support more than this many players
+              if (game.maxPlayers > filters.maxPlayers) return false;
+            }
           }
           if (
             filters.minPlayingTime &&
@@ -212,6 +231,26 @@ export const HomePage: React.FC = () => {
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
+          </div>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="exactPlayerFilter"
+              checked={filters.exactPlayerFilter || false}
+              onChange={e =>
+                setFilters({
+                  ...filters,
+                  exactPlayerFilter: e.target.checked,
+                })
+              }
+              className="mr-2 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="exactPlayerFilter"
+              className="text-sm font-medium text-gray-700"
+            >
+              {t.exactPlayerFilter}
+            </label>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

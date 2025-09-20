@@ -1,6 +1,10 @@
 import { renderHook } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useGameSorting, useGamePagination } from '../useGameSorting';
+import {
+  useGameSorting,
+  useGamePagination,
+  useGameFiltering,
+} from '../useGameSorting';
 import { Game } from '../../types/Game';
 
 const createMockGame = (
@@ -27,6 +31,9 @@ const mockGames: Game[] = [
   createMockGame(1, 'Zombicide', 2012, 1, 6, 60, 7.5, ['user1']),
   createMockGame(2, 'Azul', 2017, 2, 4, 45, 8.2, ['user2']),
   createMockGame(3, 'Catan', 1995, 3, 4, 90, 7.1, ['user1', 'user3']),
+  createMockGame(4, 'Ticket to Ride', 2004, 2, 5, 45, 7.4, ['user2']),
+  createMockGame(5, 'Wingspan', 2019, 1, 5, 70, 8.1, ['user3']),
+  createMockGame(6, 'Gloomhaven', 2017, 1, 4, 120, 8.8, ['user1']),
 ];
 
 describe('useGameSorting', () => {
@@ -42,6 +49,9 @@ describe('useGameSorting', () => {
     expect(result.current).toEqual([
       mockGames[1], // Azul
       mockGames[2], // Catan
+      mockGames[5], // Gloomhaven
+      mockGames[3], // Ticket to Ride
+      mockGames[4], // Wingspan
       mockGames[0], // Zombicide
     ]);
   });
@@ -250,5 +260,184 @@ describe('useGamePagination', () => {
       useGamePagination(games, 1, 50)
     );
     expect(result50.current.totalPages).toBe(1);
+  });
+});
+
+describe('useGameFiltering', () => {
+  it('should filter games by player count range - both min and max', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { minPlayers: 3, maxPlayers: 4 })
+    );
+
+    // Should return games that support 3-4 players:
+    // - Catan (3-4) - exact match
+    // - Azul (2-4) - supports 3-4
+    // - Ticket to Ride (2-5) - supports 3-4
+    // - Wingspan (1-5) - supports 3-4
+    // - Gloomhaven (1-4) - supports 3-4
+    // - Zombicide (1-6) - supports 3-4
+    expect(result.current).toHaveLength(6);
+    expect(result.current.map(g => g.name)).toEqual([
+      'Zombicide', // 1-6 supports 3-4
+      'Azul', // 2-4 supports 3-4
+      'Catan', // 3-4 exact match
+      'Ticket to Ride', // 2-5 supports 3-4
+      'Wingspan', // 1-5 supports 3-4
+      'Gloomhaven', // 1-4 supports 3-4
+    ]);
+  });
+
+  it('should filter games by minimum players only', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { minPlayers: 4 })
+    );
+
+    // Should return games that support at least 4 players:
+    // - Zombicide (1-6) - supports 4+
+    // - Azul (2-4) - supports 4
+    // - Catan (3-4) - supports 4
+    // - Ticket to Ride (2-5) - supports 4+
+    // - Wingspan (1-5) - supports 4+
+    // - Gloomhaven (1-4) - supports 4
+    expect(result.current).toHaveLength(6);
+    expect(result.current.map(g => g.name)).toEqual([
+      'Zombicide',
+      'Azul',
+      'Catan',
+      'Ticket to Ride',
+      'Wingspan',
+      'Gloomhaven',
+    ]);
+  });
+
+  it('should filter games by maximum players only', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { maxPlayers: 3 })
+    );
+
+    // Should return games that don't support more than 3 players:
+    // - Azul (2-4) - max 4, supports more than 3 ❌
+    // - Catan (3-4) - max 4, supports more than 3 ❌
+    // - Wingspan (1-5) - max 5, supports more than 3 ❌
+    // - Gloomhaven (1-4) - max 4, supports more than 3 ❌
+    // - Ticket to Ride (2-5) - max 5, supports more than 3 ❌
+    // - Zombicide (1-6) - max 6, supports more than 3 ❌
+    expect(result.current).toHaveLength(0);
+  });
+
+  it('should return all games when no player filters applied', () => {
+    const { result } = renderHook(() => useGameFiltering(mockGames, {}));
+
+    expect(result.current).toHaveLength(6);
+    expect(result.current).toEqual(mockGames);
+  });
+
+  it('should filter games by playing time', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { minPlayingTime: 60, maxPlayingTime: 90 })
+    );
+
+    // Should return games with playing time between 60-90 minutes:
+    // - Zombicide (60) - exact match
+    // - Catan (90) - exact match
+    // - Wingspan (70) - within range
+    expect(result.current).toHaveLength(3);
+    expect(result.current.map(g => g.name)).toEqual([
+      'Zombicide',
+      'Catan',
+      'Wingspan',
+    ]);
+  });
+
+  it('should filter games by minimum rating', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { minRating: 8.0 })
+    );
+
+    // Should return games with rating >= 8.0:
+    // - Azul (8.2)
+    // - Wingspan (8.1)
+    // - Gloomhaven (8.8)
+    expect(result.current).toHaveLength(3);
+    expect(result.current.map(g => g.name)).toEqual([
+      'Azul',
+      'Wingspan',
+      'Gloomhaven',
+    ]);
+  });
+
+  it('should apply multiple filters simultaneously', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, {
+        minPlayers: 2,
+        maxPlayers: 4,
+        minPlayingTime: 45,
+        maxPlayingTime: 70,
+      })
+    );
+
+    // Should return games that:
+    // - Support 2-4 players
+    // - Have playing time 45-70 minutes
+    // - Azul (2-4, 45) - exact match
+    // - Ticket to Ride (2-5, 45) - supports 2-4, 45 min
+    // - Wingspan (1-5, 70) - supports 2-4, 70 min
+    // - Zombicide (1-6, 60) - supports 2-4, 60 min
+    expect(result.current).toHaveLength(4);
+    expect(result.current.map(g => g.name)).toEqual([
+      'Zombicide',
+      'Azul',
+      'Ticket to Ride',
+      'Wingspan',
+    ]);
+  });
+
+  it('should filter games by exact player count match', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, {
+        minPlayers: 2,
+        maxPlayers: 4,
+        exactPlayerFilter: true,
+      })
+    );
+
+    // Should return only games that have exactly 2-4 players:
+    // - Azul (2-4) - exact match ✓
+    // - All others have different ranges ❌
+    expect(result.current).toHaveLength(1);
+    expect(result.current.map(g => g.name)).toEqual(['Azul']);
+  });
+
+  it('should filter games by exact minimum players only', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { minPlayers: 3, exactPlayerFilter: true })
+    );
+
+    // Should return only games that have exactly min=3:
+    // - Catan (3-4) - exact match ✓
+    // - All others have different min values ❌
+    expect(result.current).toHaveLength(1);
+    expect(result.current.map(g => g.name)).toEqual(['Catan']);
+  });
+
+  it('should filter games by exact maximum players only', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { maxPlayers: 6, exactPlayerFilter: true })
+    );
+
+    // Should return only games that have exactly max=6:
+    // - Zombicide (1-6) - exact match ✓
+    // - All others have different max values ❌
+    expect(result.current).toHaveLength(1);
+    expect(result.current.map(g => g.name)).toEqual(['Zombicide']);
+  });
+
+  it('should use non-exact filter by default', () => {
+    const { result } = renderHook(() =>
+      useGameFiltering(mockGames, { minPlayers: 3, maxPlayers: 4 })
+    );
+
+    // Should return all games that support 3-4 players (non-exact)
+    expect(result.current).toHaveLength(6);
   });
 });

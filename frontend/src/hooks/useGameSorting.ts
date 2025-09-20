@@ -55,14 +55,45 @@ export const useGameFiltering = (
     minRating?: number;
     yearFrom?: number;
     yearTo?: number;
+    exactPlayerFilter?: boolean;
   }
 ) => {
   const filteredGames = useMemo(() => {
     return games.filter(game => {
-      if (filters.minPlayers && game.minPlayers < filters.minPlayers)
-        return false;
-      if (filters.maxPlayers && game.maxPlayers > filters.maxPlayers)
-        return false;
+      // Player count filter
+      if (filters.minPlayers && filters.maxPlayers) {
+        if (filters.exactPlayerFilter) {
+          // Exact match: game must have exactly the same range
+          if (
+            game.minPlayers !== filters.minPlayers ||
+            game.maxPlayers !== filters.maxPlayers
+          )
+            return false;
+        } else {
+          // Non-exact: game range must overlap with filter range
+          if (
+            game.minPlayers > filters.maxPlayers ||
+            game.maxPlayers < filters.minPlayers
+          )
+            return false;
+        }
+      } else if (filters.minPlayers) {
+        if (filters.exactPlayerFilter) {
+          // Exact match: game must have exactly this min value
+          if (game.minPlayers !== filters.minPlayers) return false;
+        } else {
+          // Non-exact: game must support at least this many players
+          if (game.maxPlayers < filters.minPlayers) return false;
+        }
+      } else if (filters.maxPlayers) {
+        if (filters.exactPlayerFilter) {
+          // Exact match: game must have exactly this max value
+          if (game.maxPlayers !== filters.maxPlayers) return false;
+        } else {
+          // Non-exact: game must not support more than this many players
+          if (game.maxPlayers > filters.maxPlayers) return false;
+        }
+      }
       if (filters.minPlayingTime && game.playingTime < filters.minPlayingTime)
         return false;
       if (filters.maxPlayingTime && game.playingTime > filters.maxPlayingTime)

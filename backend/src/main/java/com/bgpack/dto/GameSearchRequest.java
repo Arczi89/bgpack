@@ -69,4 +69,6 @@ public class GameSearchRequest {
 
     @Pattern(regexp = "^(asc|desc)$", message = "Sort order must be 'asc' or 'desc'")
     private String sortOrder = "desc";
+
+    private Boolean exactPlayerFilter = false;
 }
