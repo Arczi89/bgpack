@@ -93,3 +93,24 @@ export const useGameSearch = (games: Game[], searchQuery: string) => {
 
   return searchedGames;
 };
+
+export const useGamePagination = (
+  games: Game[],
+  currentPage: number,
+  itemsPerPage: number
+) => {
+  const paginatedGames = useMemo(() => {
+    if (itemsPerPage === -1) return games; // -1 means "all"
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return games.slice(startIndex, endIndex);
+  }, [games, currentPage, itemsPerPage]);
+
+  const totalPages = useMemo(() => {
+    if (itemsPerPage === -1) return 1;
+    return Math.ceil(games.length / itemsPerPage);
+  }, [games.length, itemsPerPage]);
+
+  return { paginatedGames, totalPages };
+};

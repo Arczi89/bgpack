@@ -2,30 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useLanguage } from '../../../hooks/useLanguage';
-import { useGameSorting } from '../../../hooks/useGameSorting';
+import {
+  useGameSorting,
+  useGamePagination,
+} from '../../../hooks/useGameSorting';
 import { Game, GameFilters } from '../../../types/Game';
-import { useOwnedGames } from '../../../hooks/useApi';
+import { useMultipleOwnedGames } from '../../../hooks/useApi';
 
 export const HomePage: React.FC = () => {
   const [bggNicks, setBggNicks] = useState<string>('');
   const [filters, setFilters] = useState<Partial<GameFilters>>({});
   const [sortBy, setSortBy] = useState<
     'name' | 'yearPublished' | 'bggRating' | 'playingTime' | 'complexity'
-  >('bggRating');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  >('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [games, setGames] = useState<Game[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
-  const [currentUsername, setCurrentUsername] = useState<string>('');
+  const [currentUsernames, setCurrentUsernames] = useState<string[]>([]);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(20);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { t } = useLanguage();
 
-  // Use API hook to fetch owned games only when username is provided
+  // Use API hook to fetch owned games for multiple users
   const {
     data: apiGames,
     loading: isLoading,
     error,
-  } = useOwnedGames(currentUsername);
+  } = useMultipleOwnedGames(currentUsernames);
 
   // Update games when API data changes
   useEffect(() => {
@@ -57,14 +62,22 @@ export const HomePage: React.FC = () => {
       }
 
       setGames(filteredGames);
+      setCurrentPage(1); // Reset to first page when games change
     }
   }, [apiGames, filters]);
 
   const handleSearch = async () => {
     if (!bggNicks.trim()) return;
 
-    const username = bggNicks.trim();
-    setCurrentUsername(username);
+    // Parse usernames separated by commas
+    const usernames = bggNicks
+      .split(',')
+      .map(username => username.trim())
+      .filter(username => username.length > 0);
+
+    if (usernames.length === 0) return;
+
+    setCurrentUsernames(usernames);
     setHasSearched(true);
   };
 
@@ -73,7 +86,21 @@ export const HomePage: React.FC = () => {
     alert('Results saved to your lists!');
   };
 
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1); // Reset to first page when changing items per page
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const sortedGames = useGameSorting({ games, sortBy, sortOrder });
+  const { paginatedGames, totalPages } = useGamePagination(
+    sortedGames,
+    currentPage,
+    itemsPerPage
+  );
 
   return (
     <div className="px-4 py-6 sm:px-0">
@@ -235,6 +262,13 @@ export const HomePage: React.FC = () => {
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h2 className="text-lg font-medium text-gray-900">
               {t.results} ({games.length} {t.gamesFound})
+              {currentUsernames.length > 0 && (
+                <span className="text-sm text-gray-500 ml-2">
+                  - {currentUsernames.length}{' '}
+                  {currentUsernames.length === 1 ? 'user' : 'users'}:{' '}
+                  {currentUsernames.join(', ')}
+                </span>
+              )}
             </h2>
             {isAuthenticated && games.length > 0 && (
               <button
@@ -314,7 +348,7 @@ export const HomePage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {sortedGames.map(game => (
+                  {paginatedGames.map(game => (
                     <tr key={game.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
@@ -351,6 +385,54 @@ export const HomePage: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {hasSearched && games.length > 0 && (
+            <div className="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+              {/* Items per page selector */}
+              <div className="flex items-center space-x-2">
+                <label className="text-sm text-gray-700">Show:</label>
+                <select
+                  value={itemsPerPage}
+                  onChange={e =>
+                    handleItemsPerPageChange(Number(e.target.value))
+                  }
+                  className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={-1}>All</option>
+                </select>
+                <span className="text-sm text-gray-700">per page</span>
+              </div>
+
+              {/* Page navigation */}
+              {totalPages > 1 && (
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+
+                  <span className="text-sm text-gray-700">
+                    Page {currentPage} of {totalPages}
+                  </span>
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

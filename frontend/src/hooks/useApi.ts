@@ -93,3 +93,59 @@ export function useOwnedGames(username: string) {
 export function useApiHealth() {
   return useApi(() => apiService.getApiHealth(), []);
 }
+
+export function useMultipleOwnedGames(usernames: string[]) {
+  const [state, setState] = useState<ApiState<any[]>>({
+    data: null,
+    loading: false,
+    error: null,
+  });
+
+  const fetchData = useCallback(async () => {
+    if (
+      !usernames ||
+      usernames.length === 0 ||
+      usernames.every(u => !u.trim())
+    ) {
+      setState({ data: [], loading: false, error: null });
+      return;
+    }
+
+    setState(prev => ({ ...prev, loading: true, error: null }));
+
+    try {
+      // Pobierz gry dla wszystkich użytkowników równolegle
+      const promises = usernames
+        .map(username => username.trim())
+        .filter(username => username.length > 0)
+        .map(username => apiService.getOwnedGames(username));
+
+      const results = await Promise.all(promises);
+
+      // Połącz wszystkie gry w jedną listę
+      const allGames = results.flat();
+
+      // Usuń duplikaty na podstawie ID gry
+      const uniqueGames = allGames.filter(
+        (game, index, self) => index === self.findIndex(g => g.id === game.id)
+      );
+
+      setState({ data: uniqueGames, loading: false, error: null });
+    } catch (error) {
+      setState({
+        data: null,
+        loading: false,
+        error: error instanceof Error ? error.message : 'An error occurred',
+      });
+    }
+  }, [usernames]); // Dependency na usernames array
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return {
+    ...state,
+    refetch: fetchData,
+  };
+}
