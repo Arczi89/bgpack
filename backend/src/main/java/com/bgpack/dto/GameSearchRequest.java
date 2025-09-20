@@ -16,39 +16,51 @@ import jakarta.validation.constraints.Size;
 @AllArgsConstructor
 public class GameSearchRequest {
 
-    @Size(max = 100, message = "Search query cannot exceed 100 characters")
+    private static final int MAX_SEARCH_LENGTH = 100;
+    private static final int MIN_PLAYERS = 1;
+    private static final int MAX_PLAYERS = 20;
+    private static final int MIN_PLAYING_TIME = 1;
+    private static final int MAX_PLAYING_TIME = 600;
+    private static final int MIN_AGE = 1;
+    private static final int MAX_AGE = 18;
+    private static final double MIN_RATING = 0.0;
+    private static final double MAX_RATING = 10.0;
+    private static final int MIN_YEAR = 1900;
+    private static final int MAX_YEAR = 2030;
+
+    @Size(max = MAX_SEARCH_LENGTH, message = "Search query cannot exceed 100 characters")
     private String search;
 
-    @Min(value = 1, message = "Minimum players must be at least 1")
-    @Max(value = 20, message = "Maximum players cannot exceed 20")
+    @Min(value = MIN_PLAYERS, message = "Minimum players must be at least 1")
+    @Max(value = MAX_PLAYERS, message = "Maximum players cannot exceed 20")
     private Integer minPlayers;
 
-    @Min(value = 1, message = "Maximum players must be at least 1")
-    @Max(value = 20, message = "Maximum players cannot exceed 20")
+    @Min(value = MIN_PLAYERS, message = "Maximum players must be at least 1")
+    @Max(value = MAX_PLAYERS, message = "Maximum players cannot exceed 20")
     private Integer maxPlayers;
 
-    @Min(value = 1, message = "Minimum playing time must be at least 1 minute")
-    @Max(value = 600, message = "Maximum playing time cannot exceed 600 minutes")
+    @Min(value = MIN_PLAYING_TIME, message = "Minimum playing time must be at least 1 minute")
+    @Max(value = MAX_PLAYING_TIME, message = "Maximum playing time cannot exceed 600 minutes")
     private Integer minPlayingTime;
 
-    @Min(value = 1, message = "Maximum playing time must be at least 1 minute")
-    @Max(value = 600, message = "Maximum playing time cannot exceed 600 minutes")
+    @Min(value = MIN_PLAYING_TIME, message = "Maximum playing time must be at least 1 minute")
+    @Max(value = MAX_PLAYING_TIME, message = "Maximum playing time cannot exceed 600 minutes")
     private Integer maxPlayingTime;
 
-    @Min(value = 1, message = "Minimum age must be at least 1")
-    @Max(value = 18, message = "Maximum age cannot exceed 18")
+    @Min(value = MIN_AGE, message = "Minimum age must be at least 1")
+    @Max(value = MAX_AGE, message = "Maximum age cannot exceed 18")
     private Integer minAge;
 
-    @Min(value = 0, message = "Minimum rating must be at least 0")
-    @Max(value = 10, message = "Maximum rating cannot exceed 10")
+    @Min(value = (int) MIN_RATING, message = "Minimum rating must be at least 0")
+    @Max(value = (int) MAX_RATING, message = "Maximum rating cannot exceed 10")
     private Double minRating;
 
-    @Min(value = 1900, message = "Year must be at least 1900")
-    @Max(value = 2030, message = "Year cannot exceed 2030")
+    @Min(value = MIN_YEAR, message = "Year must be at least 1900")
+    @Max(value = MAX_YEAR, message = "Year cannot exceed 2030")
     private Integer yearFrom;
 
-    @Min(value = 1900, message = "Year must be at least 1900")
-    @Max(value = 2030, message = "Year cannot exceed 2030")
+    @Min(value = MIN_YEAR, message = "Year must be at least 1900")
+    @Max(value = MAX_YEAR, message = "Year cannot exceed 2030")
     private Integer yearTo;
 
     @Pattern(regexp = "^(name|yearPublished|bggRating|playingTime|complexity)$",

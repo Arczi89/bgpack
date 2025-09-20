@@ -18,11 +18,12 @@ import java.util.List;
 @Slf4j
 public class BggXmlParserService {
 
-    public List<GameDto> parseSearchResults(String xmlResponse) {
+    public List<GameDto> parseSearchResults(final String xmlResponse) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes()));
+            Document doc = builder.parse(
+                new ByteArrayInputStream(xmlResponse.getBytes()));
 
             NodeList items = doc.getElementsByTagName("item");
             List<GameDto> games = new ArrayList<>();
@@ -42,15 +43,17 @@ public class BggXmlParserService {
             return games;
         } catch (Exception e) {
             log.error("Error parsing XML search response: {}", e.getMessage());
-            throw new RuntimeException("Failed to parse BGG API search response", e);
+            throw new RuntimeException(
+                "Failed to parse BGG API search response", e);
         }
     }
 
-    public GameDto parseGameDetails(String xmlResponse) {
+    public GameDto parseGameDetails(final String xmlResponse) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes()));
+            Document doc = builder.parse(
+                new ByteArrayInputStream(xmlResponse.getBytes()));
 
             NodeList items = doc.getElementsByTagName("item");
             if (items.getLength() > 0) {
@@ -61,15 +64,17 @@ public class BggXmlParserService {
             throw new RuntimeException("No game found in XML response");
         } catch (Exception e) {
             log.error("Error parsing XML game details response: {}", e.getMessage());
-            throw new RuntimeException("Failed to parse BGG API game details response", e);
+            throw new RuntimeException(
+                "Failed to parse BGG API game details response", e);
         }
     }
 
-    public List<GameDto> parseCollection(String xmlResponse) {
+    public List<GameDto> parseCollection(final String xmlResponse) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes()));
+            Document doc = builder.parse(
+                new ByteArrayInputStream(xmlResponse.getBytes()));
 
             NodeList items = doc.getElementsByTagName("item");
             List<GameDto> games = new ArrayList<>();
@@ -89,11 +94,12 @@ public class BggXmlParserService {
             return games;
         } catch (Exception e) {
             log.error("Error parsing XML collection response: {}", e.getMessage());
-            throw new RuntimeException("Failed to parse BGG API collection response", e);
+            throw new RuntimeException(
+                "Failed to parse BGG API collection response", e);
         }
     }
 
-    private GameDto parseGameFromSearchElement(Element element) {
+    private GameDto parseGameFromSearchElement(final Element element) {
         try {
             String id = getAttributeValue(element, "id");
             String name = getElementValue(element, "name");
@@ -163,7 +169,7 @@ public class BggXmlParserService {
         }
     }
 
-    private GameDto parseGameFromCollectionElement(Element element) {
+    private GameDto parseGameFromCollectionElement(final Element element) {
         try {
             String id = getAttributeValue(element, "objectid");
             String name = getElementValue(element, "name");
@@ -211,14 +217,14 @@ public class BggXmlParserService {
         }
     }
 
-    private String getAttributeValue(Element element, String attributeName) {
+    private String getAttributeValue(final Element element, final String attributeName) {
         if (element.hasAttribute(attributeName)) {
             return element.getAttribute(attributeName);
         }
         return null;
     }
 
-    private String getElementValue(Element element, String tagName) {
+    private String getElementValue(final Element element, final String tagName) {
         NodeList nodeList = element.getElementsByTagName(tagName);
         if (nodeList.getLength() > 0) {
             Node node = nodeList.item(0);
@@ -229,7 +235,7 @@ public class BggXmlParserService {
         return null;
     }
 
-    private Element getChildElement(Element parent, String tagName) {
+    private Element getChildElement(final Element parent, final String tagName) {
         NodeList nodeList = parent.getElementsByTagName(tagName);
         if (nodeList.getLength() > 0) {
             Node node = nodeList.item(0);
@@ -240,7 +246,7 @@ public class BggXmlParserService {
         return null;
     }
 
-    private Integer parseInteger(String value) {
+    private Integer parseInteger(final String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
         }
@@ -252,7 +258,7 @@ public class BggXmlParserService {
         }
     }
 
-    private Double parseDouble(String value) {
+    private Double parseDouble(final String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
         }

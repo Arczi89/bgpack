@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -31,7 +30,7 @@ public class BggService {
     }
 
     @Cacheable(value = "games", key = "#searchRequest.toString()")
-    public List<GameDto> getGames(GameSearchRequest searchRequest) {
+    public List<GameDto> getGames(final GameSearchRequest searchRequest) {
         log.info("Searching games with criteria: {}", searchRequest);
 
         // If search query is provided, try to search BGG API first
@@ -63,7 +62,7 @@ public class BggService {
     }
 
     @Cacheable(value = "game", key = "#id")
-    public GameDto getGameById(String id) {
+    public GameDto getGameById(final String id) {
         log.info("Getting game by id: {}", id);
 
         if (optimizationService.shouldMakeRequest("gameDetails")) {
@@ -89,7 +88,7 @@ public class BggService {
                 .orElseThrow(() -> new IllegalArgumentException("Game not found with id: " + id));
     }
 
-    public List<GameDto> getCollection(String username) {
+    public List<GameDto> getCollection(final String username) {
         if (optimizationService.shouldMakeRequest("collection")) {
             try {
                 rateLimiter.acquire();
@@ -111,7 +110,7 @@ public class BggService {
         return getMockCollection(username);
     }
 
-    private List<GameDto> searchGamesFromBgg(String query) {
+    private List<GameDto> searchGamesFromBgg(final String query) {
         try {
             String xmlResponse = bggApiClient.searchGames(query).block();
             if (xmlResponse != null && !xmlResponse.trim().isEmpty()) {
@@ -134,7 +133,8 @@ public class BggService {
                 .maxPlayers(4)
                 .playingTime(60)
                 .minAge(10)
-                .description("Classic strategy game about building settlements and cities on the island of Catan. Players collect resources, trade, and build settlements, cities, and roads.")
+                .description("Classic strategy game about building settlements and cities on the island of Catan. " +
+                    "Players collect resources, trade, and build settlements, cities, and roads.")
                 .bggRating(7.2)
                 .averageRating(7.2)
                 .complexity(2.3)
@@ -198,11 +198,11 @@ public class BggService {
         );
     }
 
-    private boolean matchesSearch(GameDto game, GameSearchRequest searchRequest) {
+    private boolean matchesSearch(final GameDto game, final GameSearchRequest searchRequest) {
         if (searchRequest.getSearch() != null && !searchRequest.getSearch().trim().isEmpty()) {
             String search = searchRequest.getSearch().toLowerCase();
-            if (!game.getName().toLowerCase().contains(search) &&
-                !game.getDescription().toLowerCase().contains(search)) {
+            if (!game.getName().toLowerCase().contains(search)
+                && !game.getDescription().toLowerCase().contains(search)) {
                 return false;
             }
         }
@@ -239,7 +239,7 @@ public class BggService {
         return true;
     }
 
-    private List<GameDto> getMockCollection(String username) {
+    private List<GameDto> getMockCollection(final String username) {
         if ("arczi89".equals(username)) {
             return List.of(
                 GameDto.builder()
@@ -289,7 +289,8 @@ public class BggService {
                     .maxPlayers(6)
                     .playingTime(120)
                     .minAge(12)
-                    .description("The objective of Power Grid is to supply the most cities with power when someone's network gains a predetermined size.")
+                    .description("The objective of Power Grid is to supply the most cities with power when someone's " +
+                        "network gains a predetermined size.")
                     .bggRating(7.9)
                     .averageRating(7.9)
                     .complexity(3.3)

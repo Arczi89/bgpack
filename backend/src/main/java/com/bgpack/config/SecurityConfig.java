@@ -11,7 +11,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,12 +29,13 @@ public class SecurityConfig {
     private boolean allowCredentials;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/test", "/api/games/**", "/api/own/**", "/api/stats/**").permitAll()
+                .requestMatchers("/api/test", "/api/games/**", "/api/own/**",
+                    "/api/stats/**").permitAll()
                 .anyRequest().authenticated()
             );
 
@@ -45,8 +45,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList(allowedOrigins.split(",")));
-        configuration.setAllowedMethods(Arrays.asList(allowedMethods.split(",")));
+        configuration.setAllowedOriginPatterns(
+            Arrays.asList(allowedOrigins.split(",")));
+        configuration.setAllowedMethods(
+            Arrays.asList(allowedMethods.split(",")));
         configuration.setAllowedHeaders(Arrays.asList(allowedHeaders));
         configuration.setAllowCredentials(allowCredentials);
 
