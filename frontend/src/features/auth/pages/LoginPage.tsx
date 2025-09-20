@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { loginStart, loginSuccess, loginFailure } from '../../../store/slices/authSlice';
-import { useLanguage } from '../../../hooks/useLanguage';
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+} from '../../../store/slices/authSlice';
+import { useLanguage } from '../../../contexts/LanguageContext';
 
 export const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
-  
+
   const dispatch = useDispatch();
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
   const { t } = useLanguage();
@@ -24,18 +28,20 @@ export const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(loginStart());
-    
+
     try {
       setTimeout(() => {
-        dispatch(loginSuccess({
-          id: '1',
-          username: formData.username,
-          email: `${formData.username}@example.com`,
-        }));
+        dispatch(
+          loginSuccess({
+            id: '1',
+            username: formData.username,
+            email: `${formData.username}@example.com`,
+          })
+        );
       }, 1000);
-            } catch (err) {
-              dispatch(loginFailure(t.loginFailed));
-            }
+    } catch (err) {
+      dispatch(loginFailure(t.loginFailed));
+    }
   };
 
   return (
@@ -84,9 +90,7 @@ export const LoginPage: React.FC = () => {
           </div>
 
           {error && (
-            <div className="text-red-600 text-sm text-center">
-              {error}
-            </div>
+            <div className="text-red-600 text-sm text-center">{error}</div>
           )}
 
           <div>

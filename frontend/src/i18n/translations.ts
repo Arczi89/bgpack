@@ -1,21 +1,16 @@
 export interface Translations {
-  // Navigation
   home: string;
   myLists: string;
   myCollection: string;
   login: string;
   logout: string;
   welcome: string;
-  
-  // Homepage
   title: string;
   subtitle: string;
   bggUsernames: string;
   bggUsernamesPlaceholder: string;
   searchGames: string;
   searching: string;
-  
-  // Filters
   minPlayers: string;
   maxPlayers: string;
   minPlayTime: string;
@@ -28,8 +23,6 @@ export interface Translations {
   name: string;
   year: string;
   playTime: string;
-  
-  // Results
   results: string;
   gamesFound: string;
   saveResults: string;
@@ -37,41 +30,40 @@ export interface Translations {
   noGamesFoundDesc: string;
   readyToDiscover: string;
   readyToDiscoverDesc: string;
-  
-  // Table headers
   game: string;
   players: string;
   time: string;
   ownedBy: string;
-  
-  // Login page
   loginTitle: string;
   username: string;
   password: string;
   loginButton: string;
   loggingIn: string;
   loginFailed: string;
+  excludeExpansions: string;
+  show: string;
+  perPage: string;
+  all: string;
+  previous: string;
+  next: string;
+  pageOf: string;
 }
 
 export const translations: Record<string, Translations> = {
   en: {
-    // Navigation
     home: 'Home',
     myLists: 'My Lists',
     myCollection: 'My Collection',
     login: 'Login',
     logout: 'Logout',
     welcome: 'Welcome',
-    
-    // Homepage
     title: 'BGPack',
-    subtitle: 'Board Games Pack - discover games from your friends\' collections, sort, filter and play together.',
+    subtitle:
+      "Board Games Pack - discover games from your friends' collections, sort, filter and play together.",
     bggUsernames: 'BGG Usernames (comma separated)',
     bggUsernamesPlaceholder: 'player1, player2, player3',
     searchGames: 'Search Games',
     searching: 'Searching...',
-    
-    // Filters
     minPlayers: 'Min Players',
     maxPlayers: 'Max Players',
     minPlayTime: 'Min Play Time (min)',
@@ -84,48 +76,47 @@ export const translations: Record<string, Translations> = {
     name: 'Name',
     year: 'Year',
     playTime: 'Play Time',
-    
-    // Results
     results: 'Results',
     gamesFound: 'games found',
     saveResults: 'Save Results',
     noGamesFound: 'No games found',
-    noGamesFoundDesc: 'Try adjusting your search criteria or add more BGG usernames.',
+    noGamesFoundDesc:
+      'Try adjusting your search criteria or add more BGG usernames.',
     readyToDiscover: 'Ready to discover games?',
-    readyToDiscoverDesc: 'Enter BGG usernames above to see what games your friends own and find your next favorite game!',
-    
-    // Table headers
+    readyToDiscoverDesc:
+      'Enter BGG usernames above to see what games your friends own and find your next favorite game!',
     game: 'Game',
     players: 'Players',
     time: 'Time',
     ownedBy: 'Owned By',
-    
-    // Login page
     loginTitle: 'Login to BGPack',
     username: 'Username',
     password: 'Password',
     loginButton: 'Login',
     loggingIn: 'Logging in...',
     loginFailed: 'Login failed. Please try again.',
+    excludeExpansions: 'Exclude expansions (board games only)',
+    show: 'Show:',
+    perPage: 'per page',
+    all: 'All',
+    previous: 'Previous',
+    next: 'Next',
+    pageOf: 'Page {current} of {total}',
   },
   pl: {
-    // Navigation
     home: 'Strona główna',
     myLists: 'Listy mojej paczki',
     myCollection: 'Moja kolekcja',
     login: 'Zaloguj się',
     logout: 'Wyloguj',
     welcome: 'Witaj',
-    
-    // Homepage
     title: 'BGPack',
-    subtitle: 'Board Games Pack - odkryj gry z kolekcji twojej paczki przyjaciół, sortuj, filtruj i graj razem.',
+    subtitle:
+      'Board Games Pack - odkryj gry z kolekcji twojej paczki przyjaciół, sortuj, filtruj i graj razem.',
     bggUsernames: 'Nazwy użytkowników BGG (oddzielone przecinkami)',
     bggUsernamesPlaceholder: 'gracz1, gracz2, gracz3',
     searchGames: 'Szukaj gier',
     searching: 'Szukam...',
-    
-    // Filters
     minPlayers: 'Min. graczy',
     maxPlayers: 'Max. graczy',
     minPlayTime: 'Min. czas gry (min)',
@@ -138,28 +129,31 @@ export const translations: Record<string, Translations> = {
     name: 'Nazwa',
     year: 'Rok',
     playTime: 'Czas gry',
-    
-    // Results
     results: 'Wyniki',
     gamesFound: 'znalezionych gier',
     saveResults: 'Zapisz wyniki',
     noGamesFound: 'Nie znaleziono gier',
-    noGamesFoundDesc: 'Spróbuj zmienić kryteria wyszukiwania lub dodaj więcej nazw użytkowników BGG.',
+    noGamesFoundDesc:
+      'Spróbuj zmienić kryteria wyszukiwania lub dodaj więcej nazw użytkowników BGG.',
     readyToDiscover: 'Gotowy na odkrywanie gier?',
-    readyToDiscoverDesc: 'Wprowadź nazwy użytkowników BGG powyżej, aby zobaczyć jakie gry posiadają Twoi znajomi i znajdź swoją następną ulubioną grę!',
-    
-    // Table headers
+    readyToDiscoverDesc:
+      'Wprowadź nazwy użytkowników BGG powyżej, aby zobaczyć jakie gry posiadają Twoi znajomi i znajdź swoją następną ulubioną grę!',
     game: 'Gra',
     players: 'Gracze',
     time: 'Czas',
     ownedBy: 'Posiadane przez',
-    
-    // Login page
     loginTitle: 'Zaloguj się do BGPack',
     username: 'Nazwa użytkownika',
     password: 'Hasło',
     loginButton: 'Zaloguj się',
     loggingIn: 'Logowanie...',
     loginFailed: 'Logowanie nie powiodło się. Spróbuj ponownie.',
-  }
+    excludeExpansions: 'Wyklucz dodatki (tylko gry planszowe)',
+    show: 'Pokaż:',
+    perPage: 'na stronę',
+    all: 'Wszystkie',
+    previous: 'Poprzednia',
+    next: 'Następna',
+    pageOf: 'Strona {current} z {total}',
+  },
 };

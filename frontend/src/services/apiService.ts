@@ -51,8 +51,14 @@ class ApiService {
     return this.request<Game>(`/games/${id}`);
   }
 
-  async getOwnedGames(username: string): Promise<Game[]> {
-    return this.request<Game[]>(`/own/${username}`);
+  async getOwnedGames(
+    username: string,
+    excludeExpansions: boolean = false
+  ): Promise<Game[]> {
+    const url = excludeExpansions
+      ? `/own/${username}?excludeExpansions=true`
+      : `/own/${username}`;
+    return this.request<Game[]>(url);
   }
 
   async getApiHealth(): Promise<{ successRate: number; timestamp: number }> {

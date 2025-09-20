@@ -1,0 +1,2101 @@
+<testsuites id="" name="" tests="45" failures="29" skipped="0" errors="0" time="232.69826999999998">
+<testsuite name="optimized-collection-ui.spec.ts" timestamp="2025-09-20T12:06:14.194Z" hostname="chromium" tests="15" failures="7" skipped="0" time="174.032" errors="0">
+<testcase name="Optimized Collection UI Tests › Basic Functionality › should display collection form and allow username input @smoke" classname="optimized-collection-ui.spec.ts" time="1.218">
+</testcase>
+<testcase name="Optimized Collection UI Tests › Basic Functionality › should search for single user and display results @smoke" classname="optimized-collection-ui.spec.ts" time="5.872">
+<system-out>
+<![CDATA[Found 20 games for single user
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle three valid users and show combined results @fast" classname="optimized-collection-ui.spec.ts" time="5.612">
+<system-out>
+<![CDATA[Found 20 games from three users
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle mixed valid and invalid usernames" classname="optimized-collection-ui.spec.ts" time="3.955">
+<system-out>
+<![CDATA[Found 20 games with mixed usernames
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle all non-existent usernames" classname="optimized-collection-ui.spec.ts" time="20.101">
+<failure message="optimized-collection-ui.spec.ts:68:9 should handle all non-existent usernames" type="FAILURE">
+<![CDATA[  [chromium] › optimized-collection-ui.spec.ts:68:9 › Optimized Collection UI Tests › Multi-User Functionality › should handle all non-existent usernames 
+
+    TimeoutError: locator.waitFor: Timeout 8000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:70:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.waitFor: Timeout 8000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:70:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should display pagination controls when there are many games" classname="optimized-collection-ui.spec.ts" time="9.116">
+<failure message="optimized-collection-ui.spec.ts:87:9 should display pagination controls when there are many games" type="FAILURE">
+<![CDATA[  [chromium] › optimized-collection-ui.spec.ts:87:9 › Optimized Collection UI Tests › Pagination › should display pagination controls when there are many games 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      90 |       if (gameCount > 10) {
+      91 |         const isPaginationVisible = await homePage.isPaginationVisible();
+    > 92 |         expect(isPaginationVisible).toBe(true);
+         |                                     ^
+      93 |       }
+      94 |     });
+      95 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:92:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      90 |       if (gameCount > 10) {
+      91 |         const isPaginationVisible = await homePage.isPaginationVisible();
+    > 92 |         expect(isPaginationVisible).toBe(true);
+         |                                     ^
+      93 |       }
+      94 |     });
+      95 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:92:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should change items per page" classname="optimized-collection-ui.spec.ts" time="30.198">
+<failure message="optimized-collection-ui.spec.ts:96:9 should change items per page" type="FAILURE">
+<![CDATA[  [chromium] › optimized-collection-ui.spec.ts:96:9 › Optimized Collection UI Tests › Pagination › should change items per page 
+
+    TimeoutError: locator.selectOption: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('select').first()
+        - locator resolved to <select class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        20 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+       at pages\HomePage.ts:93
+
+      91 |
+      92 |   async setItemsPerPage(value: string) {
+    > 93 |     await this.itemsPerPageSelect.selectOption(value);
+         |                                   ^
+      94 |   }
+      95 |
+      96 |   async goToNextPage() {
+        at HomePage.setItemsPerPage (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:93:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:100:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.selectOption: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('select').first()
+        - locator resolved to <select class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        19 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+       at pages\HomePage.ts:93
+
+      91 |
+      92 |   async setItemsPerPage(value: string) {
+    > 93 |     await this.itemsPerPageSelect.selectOption(value);
+         |                                   ^
+      94 |   }
+      95 |
+      96 |   async goToNextPage() {
+        at HomePage.setItemsPerPage (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:93:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:100:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should navigate between pages" classname="optimized-collection-ui.spec.ts" time="2.705">
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should toggle expansion filter" classname="optimized-collection-ui.spec.ts" time="4.46">
+<system-out>
+<![CDATA[Games before filter: 20, after: 20
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should apply player count filter" classname="optimized-collection-ui.spec.ts" time="28.031">
+<failure message="optimized-collection-ui.spec.ts:158:9 should apply player count filter" type="FAILURE">
+<![CDATA[  [chromium] › optimized-collection-ui.spec.ts:158:9 › Optimized Collection UI Tests › Filters › should apply player count filter 
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayers"], input[id*="minPlayers"]')
+
+
+       at pages\HomePage.ts:106
+
+      104 |   async applyPlayerFilter(minPlayers?: number, maxPlayers?: number) {
+      105 |     if (minPlayers !== undefined) {
+    > 106 |       await this.minPlayersFilter.fill(minPlayers.toString());
+          |                                   ^
+      107 |     }
+      108 |     if (maxPlayers !== undefined) {
+      109 |       await this.maxPlayersFilter.fill(maxPlayers.toString());
+        at HomePage.applyPlayerFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:106:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:162:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayers"], input[id*="minPlayers"]')
+
+
+       at pages\HomePage.ts:106
+
+      104 |   async applyPlayerFilter(minPlayers?: number, maxPlayers?: number) {
+      105 |     if (minPlayers !== undefined) {
+    > 106 |       await this.minPlayersFilter.fill(minPlayers.toString());
+          |                                   ^
+      107 |     }
+      108 |     if (maxPlayers !== undefined) {
+      109 |       await this.maxPlayersFilter.fill(maxPlayers.toString());
+        at HomePage.applyPlayerFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:106:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:162:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should apply playing time filter" classname="optimized-collection-ui.spec.ts" time="27.355">
+<failure message="optimized-collection-ui.spec.ts:173:9 should apply playing time filter" type="FAILURE">
+<![CDATA[  [chromium] › optimized-collection-ui.spec.ts:173:9 › Optimized Collection UI Tests › Filters › should apply playing time filter 
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayingTime"], input[id*="minPlayingTime"]')
+
+
+       at pages\HomePage.ts:115
+
+      113 |   async applyTimeFilter(minTime?: number, maxTime?: number) {
+      114 |     if (minTime !== undefined) {
+    > 115 |       await this.minPlayingTimeFilter.fill(minTime.toString());
+          |                                       ^
+      116 |     }
+      117 |     if (maxTime !== undefined) {
+      118 |       await this.maxPlayingTimeFilter.fill(maxTime.toString());
+        at HomePage.applyTimeFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:115:39)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:177:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayingTime"], input[id*="minPlayingTime"]')
+
+
+       at pages\HomePage.ts:115
+
+      113 |   async applyTimeFilter(minTime?: number, maxTime?: number) {
+      114 |     if (minTime !== undefined) {
+    > 115 |       await this.minPlayingTimeFilter.fill(minTime.toString());
+          |                                       ^
+      116 |     }
+      117 |     if (maxTime !== undefined) {
+      118 |       await this.maxPlayingTimeFilter.fill(maxTime.toString());
+        at HomePage.applyTimeFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:115:39)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:177:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Error Handling › should handle network errors gracefully" classname="optimized-collection-ui.spec.ts" time="13.455">
+<failure message="optimized-collection-ui.spec.ts:190:9 should handle network errors gracefully" type="FAILURE">
+<![CDATA[  [chromium] › optimized-collection-ui.spec.ts:190:9 › Optimized Collection UI Tests › Error Handling › should handle network errors gracefully 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:201:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:201:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Error Handling › should handle API timeout gracefully" classname="optimized-collection-ui.spec.ts" time="13.424">
+<failure message="optimized-collection-ui.spec.ts:208:9 should handle API timeout gracefully" type="FAILURE">
+<![CDATA[  [chromium] › optimized-collection-ui.spec.ts:208:9 › Optimized Collection UI Tests › Error Handling › should handle API timeout gracefully 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:216:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:216:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Performance › should load results within reasonable time" classname="optimized-collection-ui.spec.ts" time="2.901">
+<system-out>
+<![CDATA[Results loaded in 1607ms
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Performance › should handle multiple rapid searches" classname="optimized-collection-ui.spec.ts" time="5.629">
+<system-out>
+<![CDATA[Search "arczi89" returned 20 games
+Search "inz_informatyk" returned 20 games
+Search "arczi89, inz_informatyk" returned 20 games
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="optimized-collection-ui.spec.ts" timestamp="2025-09-20T12:06:14.194Z" hostname="firefox" tests="15" failures="15" skipped="0" time="0.217" errors="0">
+<testcase name="Optimized Collection UI Tests › Basic Functionality › should display collection form and allow username input @smoke" classname="optimized-collection-ui.spec.ts" time="0.013">
+<failure message="optimized-collection-ui.spec.ts:13:9 should display collection form and allow username input @smoke" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:13:9 › Optimized Collection UI Tests › Basic Functionality › should display collection form and allow username input @smoke 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-925fc--allow-username-input-smoke-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-925fc--allow-username-input-smoke-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-925fc--allow-username-input-smoke-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Basic Functionality › should search for single user and display results @smoke" classname="optimized-collection-ui.spec.ts" time="0.015">
+<failure message="optimized-collection-ui.spec.ts:21:9 should search for single user and display results @smoke" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:21:9 › Optimized Collection UI Tests › Basic Functionality › should search for single user and display results @smoke 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-77d60-r-and-display-results-smoke-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-77d60-r-and-display-results-smoke-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-77d60-r-and-display-results-smoke-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle three valid users and show combined results @fast" classname="optimized-collection-ui.spec.ts" time="0.014">
+<failure message="optimized-collection-ui.spec.ts:37:9 should handle three valid users and show combined results @fast" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:37:9 › Optimized Collection UI Tests › Multi-User Functionality › should handle three valid users and show combined results @fast 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-bab93--show-combined-results-fast-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-bab93--show-combined-results-fast-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-bab93--show-combined-results-fast-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle mixed valid and invalid usernames" classname="optimized-collection-ui.spec.ts" time="0.012">
+<failure message="optimized-collection-ui.spec.ts:54:9 should handle mixed valid and invalid usernames" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:54:9 › Optimized Collection UI Tests › Multi-User Functionality › should handle mixed valid and invalid usernames 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-07c67-valid-and-invalid-usernames-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-07c67-valid-and-invalid-usernames-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-07c67-valid-and-invalid-usernames-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle all non-existent usernames" classname="optimized-collection-ui.spec.ts" time="0.01">
+<failure message="optimized-collection-ui.spec.ts:68:9 should handle all non-existent usernames" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:68:9 › Optimized Collection UI Tests › Multi-User Functionality › should handle all non-existent usernames 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should display pagination controls when there are many games" classname="optimized-collection-ui.spec.ts" time="0.014">
+<failure message="optimized-collection-ui.spec.ts:87:9 should display pagination controls when there are many games" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:87:9 › Optimized Collection UI Tests › Pagination › should display pagination controls when there are many games 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      81 |     test.beforeEach(async () => {
+      82 |       // Search for users with many games to test pagination
+    > 83 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+         |                      ^
+      84 |       await homePage.waitForResults(10000);
+      85 |     });
+      86 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:83:22
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      81 |     test.beforeEach(async () => {
+      82 |       // Search for users with many games to test pagination
+    > 83 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+         |                      ^
+      84 |       await homePage.waitForResults(10000);
+      85 |     });
+      86 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:83:22
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should change items per page" classname="optimized-collection-ui.spec.ts" time="0.015">
+<failure message="optimized-collection-ui.spec.ts:96:9 should change items per page" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:96:9 › Optimized Collection UI Tests › Pagination › should change items per page 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      81 |     test.beforeEach(async () => {
+      82 |       // Search for users with many games to test pagination
+    > 83 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+         |                      ^
+      84 |       await homePage.waitForResults(10000);
+      85 |     });
+      86 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:83:22
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      81 |     test.beforeEach(async () => {
+      82 |       // Search for users with many games to test pagination
+    > 83 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+         |                      ^
+      84 |       await homePage.waitForResults(10000);
+      85 |     });
+      86 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:83:22
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should navigate between pages" classname="optimized-collection-ui.spec.ts" time="0.013">
+<failure message="optimized-collection-ui.spec.ts:108:9 should navigate between pages" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:108:9 › Optimized Collection UI Tests › Pagination › should navigate between pages 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      81 |     test.beforeEach(async () => {
+      82 |       // Search for users with many games to test pagination
+    > 83 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+         |                      ^
+      84 |       await homePage.waitForResults(10000);
+      85 |     });
+      86 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:83:22
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      81 |     test.beforeEach(async () => {
+      82 |       // Search for users with many games to test pagination
+    > 83 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+         |                      ^
+      84 |       await homePage.waitForResults(10000);
+      85 |     });
+      86 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:83:22
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-3ab85-ould-navigate-between-pages-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-3ab85-ould-navigate-between-pages-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-3ab85-ould-navigate-between-pages-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should toggle expansion filter" classname="optimized-collection-ui.spec.ts" time="0.015">
+<failure message="optimized-collection-ui.spec.ts:141:9 should toggle expansion filter" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:141:9 › Optimized Collection UI Tests › Filters › should toggle expansion filter 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      135 |   test.describe('Filters', () => {
+      136 |     test.beforeEach(async () => {
+    > 137 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+          |                      ^
+      138 |       await homePage.waitForResults(10000);
+      139 |     });
+      140 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:137:22
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      135 |   test.describe('Filters', () => {
+      136 |     test.beforeEach(async () => {
+    > 137 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+          |                      ^
+      138 |       await homePage.waitForResults(10000);
+      139 |     });
+      140 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:137:22
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-14b39-uld-toggle-expansion-filter-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-14b39-uld-toggle-expansion-filter-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-14b39-uld-toggle-expansion-filter-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should apply player count filter" classname="optimized-collection-ui.spec.ts" time="0.021">
+<failure message="optimized-collection-ui.spec.ts:158:9 should apply player count filter" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:158:9 › Optimized Collection UI Tests › Filters › should apply player count filter 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      135 |   test.describe('Filters', () => {
+      136 |     test.beforeEach(async () => {
+    > 137 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+          |                      ^
+      138 |       await homePage.waitForResults(10000);
+      139 |     });
+      140 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:137:22
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      135 |   test.describe('Filters', () => {
+      136 |     test.beforeEach(async () => {
+    > 137 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+          |                      ^
+      138 |       await homePage.waitForResults(10000);
+      139 |     });
+      140 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:137:22
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should apply playing time filter" classname="optimized-collection-ui.spec.ts" time="0.018">
+<failure message="optimized-collection-ui.spec.ts:173:9 should apply playing time filter" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:173:9 › Optimized Collection UI Tests › Filters › should apply playing time filter 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      135 |   test.describe('Filters', () => {
+      136 |     test.beforeEach(async () => {
+    > 137 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+          |                      ^
+      138 |       await homePage.waitForResults(10000);
+      139 |     });
+      140 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:137:22
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    TypeError: Cannot read properties of undefined (reading 'searchForUsers')
+
+      135 |   test.describe('Filters', () => {
+      136 |     test.beforeEach(async () => {
+    > 137 |       await homePage.searchForUsers('arczi89, inz_informatyk');
+          |                      ^
+      138 |       await homePage.waitForResults(10000);
+      139 |     });
+      140 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:137:22
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Error Handling › should handle network errors gracefully" classname="optimized-collection-ui.spec.ts" time="0.015">
+<failure message="optimized-collection-ui.spec.ts:190:9 should handle network errors gracefully" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:190:9 › Optimized Collection UI Tests › Error Handling › should handle network errors gracefully 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Error Handling › should handle API timeout gracefully" classname="optimized-collection-ui.spec.ts" time="0.017">
+<failure message="optimized-collection-ui.spec.ts:208:9 should handle API timeout gracefully" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:208:9 › Optimized Collection UI Tests › Error Handling › should handle API timeout gracefully 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Performance › should load results within reasonable time" classname="optimized-collection-ui.spec.ts" time="0.012">
+<failure message="optimized-collection-ui.spec.ts:227:9 should load results within reasonable time" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:227:9 › Optimized Collection UI Tests › Performance › should load results within reasonable time 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-667da-ults-within-reasonable-time-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-667da-ults-within-reasonable-time-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-667da-ults-within-reasonable-time-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Performance › should handle multiple rapid searches" classname="optimized-collection-ui.spec.ts" time="0.013">
+<failure message="optimized-collection-ui.spec.ts:240:9 should handle multiple rapid searches" type="FAILURE">
+<![CDATA[  [firefox] › optimized-collection-ui.spec.ts:240:9 › Optimized Collection UI Tests › Performance › should handle multiple rapid searches 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\Arczi\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8922c-dle-multiple-rapid-searches-firefox-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-8922c-dle-multiple-rapid-searches-firefox-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-8922c-dle-multiple-rapid-searches-firefox-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="optimized-collection-ui.spec.ts" timestamp="2025-09-20T12:06:14.194Z" hostname="webkit" tests="15" failures="7" skipped="0" time="178.263" errors="0">
+<testcase name="Optimized Collection UI Tests › Basic Functionality › should display collection form and allow username input @smoke" classname="optimized-collection-ui.spec.ts" time="1.786">
+</testcase>
+<testcase name="Optimized Collection UI Tests › Basic Functionality › should search for single user and display results @smoke" classname="optimized-collection-ui.spec.ts" time="5.317">
+<system-out>
+<![CDATA[Found 20 games for single user
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle three valid users and show combined results @fast" classname="optimized-collection-ui.spec.ts" time="4.22">
+<system-out>
+<![CDATA[Found 20 games from three users
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle mixed valid and invalid usernames" classname="optimized-collection-ui.spec.ts" time="3.425">
+<system-out>
+<![CDATA[Found 20 games with mixed usernames
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Multi-User Functionality › should handle all non-existent usernames" classname="optimized-collection-ui.spec.ts" time="20.886">
+<failure message="optimized-collection-ui.spec.ts:68:9 should handle all non-existent usernames" type="FAILURE">
+<![CDATA[  [webkit] › optimized-collection-ui.spec.ts:68:9 › Optimized Collection UI Tests › Multi-User Functionality › should handle all non-existent usernames 
+
+    TimeoutError: locator.waitFor: Timeout 8000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:70:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.waitFor: Timeout 8000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:70:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-d45d1--all-non-existent-usernames-webkit-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should display pagination controls when there are many games" classname="optimized-collection-ui.spec.ts" time="10.227">
+<failure message="optimized-collection-ui.spec.ts:87:9 should display pagination controls when there are many games" type="FAILURE">
+<![CDATA[  [webkit] › optimized-collection-ui.spec.ts:87:9 › Optimized Collection UI Tests › Pagination › should display pagination controls when there are many games 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      90 |       if (gameCount > 10) {
+      91 |         const isPaginationVisible = await homePage.isPaginationVisible();
+    > 92 |         expect(isPaginationVisible).toBe(true);
+         |                                     ^
+      93 |       }
+      94 |     });
+      95 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:92:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      90 |       if (gameCount > 10) {
+      91 |         const isPaginationVisible = await homePage.isPaginationVisible();
+    > 92 |         expect(isPaginationVisible).toBe(true);
+         |                                     ^
+      93 |       }
+      94 |     });
+      95 |
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:92:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-f061d-s-when-there-are-many-games-webkit-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should change items per page" classname="optimized-collection-ui.spec.ts" time="27.11">
+<failure message="optimized-collection-ui.spec.ts:96:9 should change items per page" type="FAILURE">
+<![CDATA[  [webkit] › optimized-collection-ui.spec.ts:96:9 › Optimized Collection UI Tests › Pagination › should change items per page 
+
+    TimeoutError: locator.selectOption: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('select').first()
+        - locator resolved to <select class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        19 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+       at pages\HomePage.ts:93
+
+      91 |
+      92 |   async setItemsPerPage(value: string) {
+    > 93 |     await this.itemsPerPageSelect.selectOption(value);
+         |                                   ^
+      94 |   }
+      95 |
+      96 |   async goToNextPage() {
+        at HomePage.setItemsPerPage (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:93:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:100:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.selectOption: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('select').first()
+        - locator resolved to <select class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        18 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+       at pages\HomePage.ts:93
+
+      91 |
+      92 |   async setItemsPerPage(value: string) {
+    > 93 |     await this.itemsPerPageSelect.selectOption(value);
+         |                                   ^
+      94 |   }
+      95 |
+      96 |   async goToNextPage() {
+        at HomePage.setItemsPerPage (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:93:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:100:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-a4d07-hould-change-items-per-page-webkit-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Pagination › should navigate between pages" classname="optimized-collection-ui.spec.ts" time="3.263">
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should toggle expansion filter" classname="optimized-collection-ui.spec.ts" time="5.745">
+<system-out>
+<![CDATA[Games before filter: 20, after: 20
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should apply player count filter" classname="optimized-collection-ui.spec.ts" time="27.529">
+<failure message="optimized-collection-ui.spec.ts:158:9 should apply player count filter" type="FAILURE">
+<![CDATA[  [webkit] › optimized-collection-ui.spec.ts:158:9 › Optimized Collection UI Tests › Filters › should apply player count filter 
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayers"], input[id*="minPlayers"]')
+
+
+       at pages\HomePage.ts:106
+
+      104 |   async applyPlayerFilter(minPlayers?: number, maxPlayers?: number) {
+      105 |     if (minPlayers !== undefined) {
+    > 106 |       await this.minPlayersFilter.fill(minPlayers.toString());
+          |                                   ^
+      107 |     }
+      108 |     if (maxPlayers !== undefined) {
+      109 |       await this.maxPlayersFilter.fill(maxPlayers.toString());
+        at HomePage.applyPlayerFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:106:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:162:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayers"], input[id*="minPlayers"]')
+
+
+       at pages\HomePage.ts:106
+
+      104 |   async applyPlayerFilter(minPlayers?: number, maxPlayers?: number) {
+      105 |     if (minPlayers !== undefined) {
+    > 106 |       await this.minPlayersFilter.fill(minPlayers.toString());
+          |                                   ^
+      107 |     }
+      108 |     if (maxPlayers !== undefined) {
+      109 |       await this.maxPlayersFilter.fill(maxPlayers.toString());
+        at HomePage.applyPlayerFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:106:35)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:162:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-efeeb-d-apply-player-count-filter-webkit-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Filters › should apply playing time filter" classname="optimized-collection-ui.spec.ts" time="27.795">
+<failure message="optimized-collection-ui.spec.ts:173:9 should apply playing time filter" type="FAILURE">
+<![CDATA[  [webkit] › optimized-collection-ui.spec.ts:173:9 › Optimized Collection UI Tests › Filters › should apply playing time filter 
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayingTime"], input[id*="minPlayingTime"]')
+
+
+       at pages\HomePage.ts:115
+
+      113 |   async applyTimeFilter(minTime?: number, maxTime?: number) {
+      114 |     if (minTime !== undefined) {
+    > 115 |       await this.minPlayingTimeFilter.fill(minTime.toString());
+          |                                       ^
+      116 |     }
+      117 |     if (maxTime !== undefined) {
+      118 |       await this.maxPlayingTimeFilter.fill(maxTime.toString());
+        at HomePage.applyTimeFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:115:39)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:177:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.fill: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('input[name*="minPlayingTime"], input[id*="minPlayingTime"]')
+
+
+       at pages\HomePage.ts:115
+
+      113 |   async applyTimeFilter(minTime?: number, maxTime?: number) {
+      114 |     if (minTime !== undefined) {
+    > 115 |       await this.minPlayingTimeFilter.fill(minTime.toString());
+          |                                       ^
+      116 |     }
+      117 |     if (maxTime !== undefined) {
+      118 |       await this.maxPlayingTimeFilter.fill(maxTime.toString());
+        at HomePage.applyTimeFilter (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:115:39)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:177:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-ac483-d-apply-playing-time-filter-webkit-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Error Handling › should handle network errors gracefully" classname="optimized-collection-ui.spec.ts" time="14.751">
+<failure message="optimized-collection-ui.spec.ts:190:9 should handle network errors gracefully" type="FAILURE">
+<![CDATA[  [webkit] › optimized-collection-ui.spec.ts:190:9 › Optimized Collection UI Tests › Error Handling › should handle network errors gracefully 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:201:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:201:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-b82d9-e-network-errors-gracefully-webkit-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Error Handling › should handle API timeout gracefully" classname="optimized-collection-ui.spec.ts" time="15.51">
+<failure message="optimized-collection-ui.spec.ts:208:9 should handle API timeout gracefully" type="FAILURE">
+<![CDATA[  [webkit] › optimized-collection-ui.spec.ts:208:9 › Optimized Collection UI Tests › Error Handling › should handle API timeout gracefully 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:216:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('table, .results, [data-testid*="results"]') to be visible
+
+
+       at pages\HomePage.ts:73
+
+      71 |     // Wait for results to appear or error/empty message
+      72 |     await Promise.race([
+    > 73 |       this.resultsContainer.waitFor({ timeout }),
+         |                             ^
+      74 |       this.errorMessage.waitFor({ timeout }),
+      75 |       this.emptyMessage.waitFor({ timeout })
+      76 |     ]);
+        at HomePage.waitForResults (C:\git\bgpack\frontend\tests\e2e\pages\HomePage.ts:73:29)
+        at C:\git\bgpack\frontend\tests\e2e\optimized-collection-ui.spec.ts:216:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\test-results\optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\video.webm]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\error-context.md]]
+
+[[ATTACHMENT|optimized-collection-ui-Op-8d7cc-ndle-API-timeout-gracefully-webkit-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Performance › should load results within reasonable time" classname="optimized-collection-ui.spec.ts" time="3.105">
+<system-out>
+<![CDATA[Results loaded in 1741ms
+]]>
+</system-out>
+</testcase>
+<testcase name="Optimized Collection UI Tests › Performance › should handle multiple rapid searches" classname="optimized-collection-ui.spec.ts" time="7.594">
+<system-out>
+<![CDATA[Search "arczi89" returned 20 games
+Search "inz_informatyk" returned 20 games
+Search "arczi89, inz_informatyk" returned 20 games
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

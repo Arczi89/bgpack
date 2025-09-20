@@ -94,7 +94,10 @@ export function useApiHealth() {
   return useApi(() => apiService.getApiHealth(), []);
 }
 
-export function useMultipleOwnedGames(usernames: string[]) {
+export function useMultipleOwnedGames(
+  usernames: string[],
+  excludeExpansions: boolean = false
+) {
   const [state, setState] = useState<ApiState<any[]>>({
     data: null,
     loading: false,
@@ -118,7 +121,7 @@ export function useMultipleOwnedGames(usernames: string[]) {
       const promises = usernames
         .map(username => username.trim())
         .filter(username => username.length > 0)
-        .map(username => apiService.getOwnedGames(username));
+        .map(username => apiService.getOwnedGames(username, excludeExpansions));
 
       const results = await Promise.all(promises);
 
@@ -138,7 +141,7 @@ export function useMultipleOwnedGames(usernames: string[]) {
         error: error instanceof Error ? error.message : 'An error occurred',
       });
     }
-  }, [usernames]); // Dependency na usernames array
+  }, [usernames, excludeExpansions]); // Dependency na usernames array i excludeExpansions
 
   useEffect(() => {
     fetchData();

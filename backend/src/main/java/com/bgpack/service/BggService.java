@@ -89,10 +89,20 @@ public class BggService {
     }
 
     public List<GameDto> getCollection(final String username) {
+        return getCollection(username, false);
+    }
+
+    public List<GameDto> getCollection(final String username, final boolean excludeExpansions) {
         if (optimizationService.shouldMakeRequest("collection")) {
             try {
                 rateLimiter.acquire();
-                String xmlResponse = bggApiClient.getCollection(username).block();
+                String xmlResponse;
+
+                if (excludeExpansions) {
+                    xmlResponse = bggApiClient.getCollection(username, "boardgame").block();
+                } else {
+                    xmlResponse = bggApiClient.getCollection(username).block();
+                }
 
                 if (xmlResponse != null && !xmlResponse.trim().isEmpty()) {
                     List<GameDto> games = xmlParserService.parseCollection(xmlResponse);

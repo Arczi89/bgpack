@@ -1,0 +1,70 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+    - navigation [ref=e4]:
+        - generic [ref=e6]:
+            - generic [ref=e7]:
+                - link "BGPack" [ref=e9]:
+                    - /url: /
+                - generic [ref=e10]:
+                    - link "Home" [ref=e11]:
+                        - /url: /
+                    - link "My Lists" [ref=e12]:
+                        - /url: /games
+            - generic [ref=e13]:
+                - generic [ref=e14]:
+                    - button "EN" [ref=e15] [cursor=pointer]
+                    - button "PL" [ref=e16] [cursor=pointer]
+                - link "Login" [ref=e17]:
+                    - /url: /login
+    - main [ref=e18]:
+        - generic [ref=e19]:
+            - generic [ref=e20]:
+                - heading "BGPack" [level=1] [ref=e21]
+                - paragraph [ref=e22]: Board Games Pack - discover games from your friends' collections, sort, filter and play together.
+            - generic [ref=e23]:
+                - generic [ref=e24]:
+                    - generic [ref=e25]:
+                        - generic [ref=e26]: BGG Usernames (comma separated)
+                        - textbox "BGG Usernames (comma separated)" [ref=e27]: arczi89
+                    - button "Search Games" [ref=e29] [cursor=pointer]
+                - generic [ref=e31]:
+                    - checkbox "Exclude expansions (board games only)" [ref=e32]
+                    - generic [ref=e33]: Exclude expansions (board games only)
+                - generic [ref=e34]:
+                    - generic [ref=e35]:
+                        - generic [ref=e36]: Min Players
+                        - spinbutton [ref=e37]
+                    - generic [ref=e38]:
+                        - generic [ref=e39]: Max Players
+                        - spinbutton [ref=e40]
+                    - generic [ref=e41]:
+                        - generic [ref=e42]: Min Play Time (min)
+                        - spinbutton [ref=e43]
+                    - generic [ref=e44]:
+                        - generic [ref=e45]: Max Play Time (min)
+                        - spinbutton [ref=e46]
+                - generic [ref=e47]:
+                    - generic [ref=e48]:
+                        - generic [ref=e49]: 'Sort by:'
+                        - combobox [ref=e50]:
+                            - option "Rating"
+                            - option "Name" [selected]
+                            - option "Year"
+                            - option "Play Time"
+                            - option "Complexity"
+                    - generic [ref=e51]:
+                        - generic [ref=e52]: 'Order:'
+                        - combobox [ref=e53]:
+                            - option "Descending"
+                            - option "Ascending" [selected]
+            - generic [ref=e54]:
+                - 'heading "Results (0 games found)- 1 user: arczi89" [level=2] [ref=e56]':
+                    - text: Results (0 games found)
+                    - generic [ref=e57]: '- 1 user: arczi89'
+                - generic [ref=e58]:
+                    - img [ref=e60]
+                    - heading "Błąd ładowania kolekcji" [level=3] [ref=e62]
+                    - paragraph [ref=e63]: Load failed
+```

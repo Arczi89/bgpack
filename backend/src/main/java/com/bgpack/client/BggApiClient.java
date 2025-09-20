@@ -108,4 +108,29 @@ public class BggApiClient {
                 .timeout(Duration.ofMillis(TIMEOUT_MS))
                 .doOnError(error -> log.error("Error getting multiple games: {}", error.getMessage()));
     }
+
+    /**
+     * Get user's game collection from BGG with subtype filter.
+     * @param username BGG username
+     * @param subtype game subtype (e.g., "boardgame", "boardgameexpansion")
+     * @return XML response with collection data
+     */
+    public Mono<String> getCollection(final String username, final String subtype) {
+        log.info("Getting collection for username: {} with subtype: {}", username, subtype);
+        return webClient.get()
+                .uri("/collection/{username}?own=1&stats=1&subtype={subtype}", username, subtype)
+                .retrieve()
+                .bodyToMono(String.class)
+                .timeout(Duration.ofMillis(TIMEOUT_MS))
+                .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(2))
+                        .filter(throwable -> {
+                            if (throwable.getMessage() != null
+                                && (throwable.getMessage().contains("timeout")
+                                 || throwable.getMessage().contains("connection"))) {
+                                return true;
+                            }
+                            return false;
+                        }))
+                .doOnError(error -> log.error("Error getting collection: {}", error.getMessage(), error));
+    }
 }

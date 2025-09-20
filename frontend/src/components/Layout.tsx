@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { logout } from '../store/slices/authSlice';
-import { useLanguage } from '../hooks/useLanguage';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +12,9 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
   const { t, language, changeLanguage } = useLanguage();
 
   const handleLogout = () => {
@@ -30,7 +32,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
-                <Link to="/" className="text-2xl font-bold text-primary-600">
+                <Link
+                  to="/"
+                  className="text-2xl font-bold text-primary-600 flex items-center"
+                >
+                  <span className="mr-2">🎲</span>
                   BGPack
                 </Link>
               </div>
@@ -38,8 +44,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   to="/"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    isActive('/') 
-                      ? 'border-primary-500 text-gray-900' 
+                    isActive('/')
+                      ? 'border-primary-500 text-gray-900'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                   }`}
                 >
@@ -48,8 +54,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   to="/games"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    isActive('/games') 
-                      ? 'border-primary-500 text-gray-900' 
+                    isActive('/games')
+                      ? 'border-primary-500 text-gray-900'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                   }`}
                 >
@@ -59,8 +65,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <Link
                     to="/collection"
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      isActive('/collection') 
-                        ? 'border-primary-500 text-gray-900' 
+                      isActive('/collection')
+                        ? 'border-primary-500 text-gray-900'
                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                     }`}
                   >
@@ -74,23 +80,25 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => changeLanguage('en')}
-                  className={`px-2 py-1 text-xs rounded ${
-                    language === 'en' 
-                      ? 'bg-primary-100 text-primary-700' 
+                  className={`px-2 py-1 text-xs rounded flex items-center space-x-1 ${
+                    language === 'en'
+                      ? 'bg-primary-100 text-primary-700'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  EN
+                  <span>🇺🇸</span>
+                  <span>EN</span>
                 </button>
                 <button
                   onClick={() => changeLanguage('pl')}
-                  className={`px-2 py-1 text-xs rounded ${
-                    language === 'pl' 
-                      ? 'bg-primary-100 text-primary-700' 
+                  className={`px-2 py-1 text-xs rounded flex items-center space-x-1 ${
+                    language === 'pl'
+                      ? 'bg-primary-100 text-primary-700'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  PL
+                  <span>🇵🇱</span>
+                  <span>PL</span>
                 </button>
               </div>
 
@@ -107,10 +115,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   </button>
                 </div>
               ) : (
-                <Link
-                  to="/login"
-                  className="btn-primary"
-                >
+                <Link to="/login" className="btn-primary">
                   {t.login}
                 </Link>
               )}
@@ -118,10 +123,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </nav>
-      
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {children}
-      </main>
+
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 };

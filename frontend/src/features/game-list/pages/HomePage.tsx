@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { useLanguage } from '../../../hooks/useLanguage';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import {
   useGameSorting,
   useGamePagination,
@@ -21,6 +21,7 @@ export const HomePage: React.FC = () => {
   const [currentUsernames, setCurrentUsernames] = useState<string[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState<number>(20);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [excludeExpansions, setExcludeExpansions] = useState<boolean>(false);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { t } = useLanguage();
@@ -30,7 +31,7 @@ export const HomePage: React.FC = () => {
     data: apiGames,
     loading: isLoading,
     error,
-  } = useMultipleOwnedGames(currentUsernames);
+  } = useMultipleOwnedGames(currentUsernames, excludeExpansions);
 
   // Update games when API data changes
   useEffect(() => {
@@ -144,6 +145,21 @@ export const HomePage: React.FC = () => {
               {isLoading ? t.searching : t.searchGames}
             </button>
           </div>
+        </div>
+
+        {/* Expansion Filter */}
+        <div className="mt-4">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={excludeExpansions}
+              onChange={e => setExcludeExpansions(e.target.checked)}
+              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+            />
+            <span className="ml-2 text-sm text-gray-700">
+              {t.excludeExpansions}
+            </span>
+          </label>
         </div>
 
         {/* Filters */}
@@ -331,7 +347,7 @@ export const HomePage: React.FC = () => {
                       {t.game}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t.year}
+                      {t.ownedBy}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.players}
@@ -343,7 +359,7 @@ export const HomePage: React.FC = () => {
                       {t.rating}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t.ownedBy}
+                      {t.year}
                     </th>
                   </tr>
                 </thead>
@@ -354,20 +370,6 @@ export const HomePage: React.FC = () => {
                         <div className="text-sm font-medium text-gray-900">
                           {game.name}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.yearPublished}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.minPlayers === game.maxPlayers
-                          ? game.minPlayers
-                          : `${game.minPlayers}-${game.maxPlayers}`}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.playingTime} min
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.bggRating}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex flex-wrap gap-1">
@@ -381,6 +383,20 @@ export const HomePage: React.FC = () => {
                           )) || <span className="text-gray-400">-</span>}
                         </div>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.minPlayers === game.maxPlayers
+                          ? game.minPlayers
+                          : `${game.minPlayers}-${game.maxPlayers}`}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.playingTime} min
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.bggRating}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.yearPublished}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -393,7 +409,7 @@ export const HomePage: React.FC = () => {
             <div className="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
               {/* Items per page selector */}
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-gray-700">Show:</label>
+                <label className="text-sm text-gray-700">{t.show}</label>
                 <select
                   value={itemsPerPage}
                   onChange={e =>
@@ -404,9 +420,9 @@ export const HomePage: React.FC = () => {
                   <option value={10}>10</option>
                   <option value={20}>20</option>
                   <option value={50}>50</option>
-                  <option value={-1}>All</option>
+                  <option value={-1}>{t.all}</option>
                 </select>
-                <span className="text-sm text-gray-700">per page</span>
+                <span className="text-sm text-gray-700">{t.perPage}</span>
               </div>
 
               {/* Page navigation */}
@@ -417,11 +433,13 @@ export const HomePage: React.FC = () => {
                     disabled={currentPage === 1}
                     className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Previous
+                    {t.previous}
                   </button>
 
                   <span className="text-sm text-gray-700">
-                    Page {currentPage} of {totalPages}
+                    {t.pageOf
+                      .replace('{current}', currentPage.toString())
+                      .replace('{total}', totalPages.toString())}
                   </span>
 
                   <button
@@ -429,7 +447,7 @@ export const HomePage: React.FC = () => {
                     disabled={currentPage === totalPages}
                     className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Next
+                    {t.next}
                   </button>
                 </div>
               )}

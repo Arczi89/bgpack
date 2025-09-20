@@ -52,11 +52,14 @@ public class BggController {
     /**
      * Get owned games for a specific user.
      * @param username BGG username
+     * @param excludeExpansions whether to exclude expansions
      * @return list of owned games
      */
     @GetMapping("/own/{username}")
-    public ResponseEntity<List<GameDto>> getOwnedGames(@PathVariable @NotBlank final String username) {
-        List<GameDto> games = bggService.getCollection(username);
+    public ResponseEntity<List<GameDto>> getOwnedGames(
+            @PathVariable @NotBlank final String username,
+            @RequestParam(defaultValue = "false") final boolean excludeExpansions) {
+        List<GameDto> games = bggService.getCollection(username, excludeExpansions);
         return ResponseEntity.ok(games);
     }
 }
