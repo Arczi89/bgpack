@@ -1,10 +1,6 @@
 export interface Translations {
   home: string;
   myLists: string;
-  myCollection: string;
-  login: string;
-  logout: string;
-  welcome: string;
   title: string;
   subtitle: string;
   bggUsernames: string;
@@ -34,12 +30,6 @@ export interface Translations {
   players: string;
   time: string;
   ownedBy: string;
-  loginTitle: string;
-  username: string;
-  password: string;
-  loginButton: string;
-  loggingIn: string;
-  loginFailed: string;
   excludeExpansions: string;
   show: string;
   perPage: string;
@@ -56,10 +46,6 @@ export const translations: Record<string, Translations> = {
   en: {
     home: 'Home',
     myLists: 'My Lists',
-    myCollection: 'My Collection',
-    login: 'Login',
-    logout: 'Logout',
-    welcome: 'Welcome',
     title: 'BGPack',
     subtitle:
       "Board Games Pack - discover games from your friends' collections, sort, filter and play together.",
@@ -92,12 +78,6 @@ export const translations: Record<string, Translations> = {
     players: 'Players',
     time: 'Time',
     ownedBy: 'Owned By',
-    loginTitle: 'Login to BGPack',
-    username: 'Username',
-    password: 'Password',
-    loginButton: 'Login',
-    loggingIn: 'Logging in...',
-    loginFailed: 'Login failed. Please try again.',
     excludeExpansions: 'Exclude expansions (board games only)',
     show: 'Show:',
     perPage: 'per page',
@@ -112,10 +92,6 @@ export const translations: Record<string, Translations> = {
   pl: {
     home: 'Strona główna',
     myLists: 'Listy mojej paczki',
-    myCollection: 'Moja kolekcja',
-    login: 'Zaloguj się',
-    logout: 'Wyloguj',
-    welcome: 'Witaj',
     title: 'BGPack',
     subtitle:
       'Board Games Pack - odkryj gry z kolekcji twojej paczki przyjaciół, sortuj, filtruj i graj razem.',
@@ -148,12 +124,6 @@ export const translations: Record<string, Translations> = {
     players: 'Gracze',
     time: 'Czas',
     ownedBy: 'Posiadane przez',
-    loginTitle: 'Zaloguj się do BGPack',
-    username: 'Nazwa użytkownika',
-    password: 'Hasło',
-    loginButton: 'Zaloguj się',
-    loggingIn: 'Logowanie...',
-    loginFailed: 'Logowanie nie powiodło się. Spróbuj ponownie.',
     excludeExpansions: 'Wyklucz dodatki (tylko gry planszowe)',
     show: 'Pokaż:',
     perPage: 'na stronę',

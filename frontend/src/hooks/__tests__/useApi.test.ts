@@ -58,10 +58,23 @@ describe('useMultipleOwnedGames', () => {
     ];
     const mockGames3 = [createMockGame(4, 'Pandemic', ['user3'])];
 
+    mockedApiService.getOwnedGames
+      .mockResolvedValueOnce(mockGames1)
+      .mockResolvedValueOnce(mockGames2)
+      .mockResolvedValueOnce(mockGames3);
+
+    const { result } = renderHook(() =>
+      useMultipleOwnedGames(['user1', 'user2', 'user3'])
+    );
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
     expect(result.current.data).toHaveLength(4);
     expect(result.current.data).toEqual([
       createMockGame(1, 'Catan', ['user1']),
-      createMockGame(2, 'Azul', ['user1']),
+      createMockGame(2, 'Azul', ['user1', 'user2']),
       createMockGame(3, 'Ticket to Ride', ['user2']),
       createMockGame(4, 'Pandemic', ['user3']),
     ]);
@@ -87,7 +100,7 @@ describe('useMultipleOwnedGames', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(result.current.data).toBe(null);
+    expect(result.current.data).toEqual([]);
     expect(result.current.error).toBe(errorMessage);
   });
 
@@ -178,7 +191,7 @@ describe('useMultipleOwnedGames', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(result.current.data).toBe(null);
+    expect(result.current.data).toEqual([]);
     expect(result.current.error).toBe('Request timeout');
   });
 
@@ -205,7 +218,7 @@ describe('useMultipleOwnedGames', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(result.current.data).toBe(null);
+    expect(result.current.data).toEqual([]);
     expect(result.current.error).toBe('Invalid JSON response');
   });
 

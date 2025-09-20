@@ -140,6 +140,7 @@ export const useGamePagination = (
 
   const totalPages = useMemo(() => {
     if (itemsPerPage === -1) return 1;
+    if (games.length === 0) return 0;
     return Math.ceil(games.length / itemsPerPage);
   }, [games.length, itemsPerPage]);
 

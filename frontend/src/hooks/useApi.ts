@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import apiService from '../services/apiService';
 
 interface ApiState<T> {
@@ -103,19 +103,23 @@ export function useMultipleOwnedGames(
     errors: [],
   });
 
+  // Stabilizuj usernames array aby uniknąć nieskończonej pętli
+  const stableUsernames = useMemo(() => usernames, [usernames.join(',')]);
+
   const fetchData = useCallback(async () => {
     if (
-      !usernames ||
-      usernames.length === 0 ||
-      usernames.every(u => !u.trim())
+      !stableUsernames ||
+      stableUsernames.length === 0 ||
+      stableUsernames.every(u => !u.trim())
     ) {
-      setState({
+      setState(prevState => ({
+        ...prevState,
         data: [],
         loading: false,
         error: null,
         emptyCollections: [],
         errors: [],
-      });
+      }));
       return;
     }
 
@@ -129,7 +133,7 @@ export function useMultipleOwnedGames(
 
     try {
       // Pobierz gry dla wszystkich użytkowników równolegle
-      const validUsernames = usernames
+      const validUsernames = stableUsernames
         .map(username => username.trim())
         .filter(username => username.length > 0);
 
@@ -190,7 +194,7 @@ export function useMultipleOwnedGames(
       setState({
         data: uniqueGames,
         loading: false,
-        error: null,
+        error: errors.length > 0 ? errors[0].error : null,
         emptyCollections,
         errors,
       });
@@ -203,7 +207,7 @@ export function useMultipleOwnedGames(
         errors: [],
       });
     }
-  }, [usernames, excludeExpansions]); // Dependency na usernames array i excludeExpansions
+  }, [stableUsernames, excludeExpansions]); // Dependency na stableUsernames i excludeExpansions
 
   useEffect(() => {
     fetchData();

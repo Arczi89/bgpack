@@ -67,6 +67,9 @@ describe('useGameSorting', () => {
 
     expect(result.current).toEqual([
       mockGames[0], // Zombicide
+      mockGames[4], // Wingspan
+      mockGames[3], // Ticket to Ride
+      mockGames[5], // Gloomhaven
       mockGames[2], // Catan
       mockGames[1], // Azul
     ]);
@@ -83,8 +86,11 @@ describe('useGameSorting', () => {
 
     expect(result.current).toEqual([
       mockGames[2], // Catan (1995)
+      mockGames[3], // Ticket to Ride (2004)
       mockGames[0], // Zombicide (2012)
       mockGames[1], // Azul (2017)
+      mockGames[5], // Gloomhaven (2017)
+      mockGames[4], // Wingspan (2019)
     ]);
   });
 
@@ -98,8 +104,11 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
+      mockGames[4], // Wingspan (2019)
       mockGames[1], // Azul (2017)
+      mockGames[5], // Gloomhaven (2017)
       mockGames[0], // Zombicide (2012)
+      mockGames[3], // Ticket to Ride (2004)
       mockGames[2], // Catan (1995)
     ]);
   });
@@ -115,8 +124,11 @@ describe('useGameSorting', () => {
 
     expect(result.current).toEqual([
       mockGames[2], // Catan (7.1)
+      mockGames[3], // Ticket to Ride (7.4)
       mockGames[0], // Zombicide (7.5)
+      mockGames[4], // Wingspan (8.1)
       mockGames[1], // Azul (8.2)
+      mockGames[5], // Gloomhaven (8.8)
     ]);
   });
 
@@ -130,8 +142,11 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
+      mockGames[5], // Gloomhaven (8.8)
       mockGames[1], // Azul (8.2)
+      mockGames[4], // Wingspan (8.1)
       mockGames[0], // Zombicide (7.5)
+      mockGames[3], // Ticket to Ride (7.4)
       mockGames[2], // Catan (7.1)
     ]);
   });
@@ -147,8 +162,11 @@ describe('useGameSorting', () => {
 
     expect(result.current).toEqual([
       mockGames[1], // Azul (45 min)
+      mockGames[3], // Ticket to Ride (45 min)
       mockGames[0], // Zombicide (60 min)
+      mockGames[4], // Wingspan (70 min)
       mockGames[2], // Catan (90 min)
+      mockGames[5], // Gloomhaven (120 min)
     ]);
   });
 
@@ -162,9 +180,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
+      mockGames[5], // Gloomhaven (120 min)
       mockGames[2], // Catan (90 min)
+      mockGames[4], // Wingspan (70 min)
       mockGames[0], // Zombicide (60 min)
       mockGames[1], // Azul (45 min)
+      mockGames[3], // Ticket to Ride (45 min)
     ]);
   });
 
@@ -210,28 +231,28 @@ describe('useGamePagination', () => {
     const { result } = renderHook(() => useGamePagination(mockGames, 1, 2));
 
     expect(result.current.paginatedGames).toEqual(mockGames.slice(0, 2));
-    expect(result.current.totalPages).toBe(2);
+    expect(result.current.totalPages).toBe(3);
   });
 
   it('should return second page correctly', () => {
     const { result } = renderHook(() => useGamePagination(mockGames, 2, 2));
 
     expect(result.current.paginatedGames).toEqual(mockGames.slice(2, 4));
-    expect(result.current.totalPages).toBe(2);
+    expect(result.current.totalPages).toBe(3);
   });
 
   it('should handle empty games array', () => {
     const { result } = renderHook(() => useGamePagination([], 1, 10));
 
     expect(result.current.paginatedGames).toEqual([]);
-    expect(result.current.totalPages).toBe(1);
+    expect(result.current.totalPages).toBe(0);
   });
 
   it('should handle current page beyond total pages', () => {
     const { result } = renderHook(() => useGamePagination(mockGames, 5, 2));
 
     expect(result.current.paginatedGames).toEqual([]);
-    expect(result.current.totalPages).toBe(2);
+    expect(result.current.totalPages).toBe(3);
   });
 
   it('should handle single page with all items', () => {

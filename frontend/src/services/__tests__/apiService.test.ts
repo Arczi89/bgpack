@@ -46,7 +46,12 @@ describe('apiService', () => {
 
       const result = await apiService.getOwnedGames('user1');
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/own/user1');
+      expect(mockFetch).toHaveBeenCalledWith(
+        'http://localhost:8080/api/own/user1',
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
       expect(result).toEqual(mockGames);
     });
 
@@ -60,7 +65,10 @@ describe('apiService', () => {
       const result = await apiService.getOwnedGames('user1', true);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        '/api/own/user1?excludeExpansions=true'
+        'http://localhost:8080/api/own/user1?excludeExpansions=true',
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
       expect(result).toEqual(mockGames);
     });
@@ -75,7 +83,7 @@ describe('apiService', () => {
 
       await expect(
         apiService.getOwnedGames('nonExistingUser1')
-      ).rejects.toThrow('API Error: 404 Not Found');
+      ).rejects.toThrow('HTTP error! status: 404');
     });
 
     it('should handle network errors', async () => {
@@ -111,21 +119,23 @@ describe('apiService', () => {
     });
   });
 
-  describe('checkHealth', () => {
-    it('should check API health successfully', async () => {
+  describe('testConnection', () => {
+    it('should test API connection successfully', async () => {
       const mockResponse = {
         ok: true,
-        json: jest.fn().mockResolvedValue({ status: 'ok' }),
+        json: jest.fn().mockResolvedValue('Connection successful'),
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      const result = await apiService.checkHealth();
+      const result = await apiService.testConnection();
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/health');
-      expect(result).toEqual({ status: 'ok' });
+      expect(mockFetch).toHaveBeenCalledWith('http://localhost:8080/api/test', {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      expect(result).toEqual('Connection successful');
     });
 
-    it('should handle health check failures', async () => {
+    it('should handle connection test failures', async () => {
       const mockResponse = {
         ok: false,
         status: 500,
@@ -133,8 +143,8 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      await expect(apiService.checkHealth()).rejects.toThrow(
-        'API Error: 500 Internal Server Error'
+      await expect(apiService.testConnection()).rejects.toThrow(
+        'HTTP error! status: 500'
       );
     });
   });
@@ -154,11 +164,14 @@ describe('apiService', () => {
         body: JSON.stringify({ test: 'data' }),
       });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ test: 'data' }),
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        'http://localhost:8080/api/api/test',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ test: 'data' }),
+        }
+      );
       expect(result).toEqual({ data: 'test' });
     });
 
@@ -186,7 +199,7 @@ describe('apiService', () => {
     it('should handle different response types', async () => {
       const mockResponse = {
         ok: true,
-        text: jest.fn().mockResolvedValue('plain text response'),
+        json: jest.fn().mockResolvedValue('plain text response'),
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
@@ -209,7 +222,7 @@ describe('apiService', () => {
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
       await expect(apiService.getOwnedGames('invalidUser')).rejects.toThrow(
-        'API Error: 400 Bad Request'
+        'HTTP error! status: 400'
       );
     });
 
@@ -222,7 +235,7 @@ describe('apiService', () => {
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
       await expect(apiService.getOwnedGames('user1')).rejects.toThrow(
-        'API Error: 401 Unauthorized'
+        'HTTP error! status: 401'
       );
     });
 
@@ -235,7 +248,7 @@ describe('apiService', () => {
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
       await expect(apiService.getOwnedGames('user1')).rejects.toThrow(
-        'API Error: 403 Forbidden'
+        'HTTP error! status: 403'
       );
     });
 
@@ -248,7 +261,7 @@ describe('apiService', () => {
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
       await expect(apiService.getOwnedGames('user1')).rejects.toThrow(
-        'API Error: 500 Internal Server Error'
+        'HTTP error! status: 500'
       );
     });
 
@@ -261,7 +274,7 @@ describe('apiService', () => {
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
       await expect(apiService.getOwnedGames('user1')).rejects.toThrow(
-        'API Error: 503 Service Unavailable'
+        'HTTP error! status: 503'
       );
     });
   });
