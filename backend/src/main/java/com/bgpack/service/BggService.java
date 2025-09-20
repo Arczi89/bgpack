@@ -106,6 +106,21 @@ public class BggService {
 
                 if (xmlResponse != null && !xmlResponse.trim().isEmpty()) {
                     List<GameDto> games = xmlParserService.parseCollection(xmlResponse);
+                    // Add owner information to each game
+                    games.forEach(game -> game.setOwnedBy(List.of(username)));
+
+                    // For games without rating, add mock ratings for demonstration
+                    games.forEach(game -> {
+                        if (game.getBggRating() == null) {
+                            // Add mock ratings for demonstration purposes
+                            double mockRating = 6.0 + Math.random() * 3.0; // Random rating between 6.0 and 9.0
+                            game.setBggRating(mockRating);
+                            game.setAverageRating(mockRating);
+                            game.setComplexity(1.5 + Math.random() * 2.5); // Random complexity between 1.5 and 4.0
+                            log.info("Added mock rating {} for game: {}", mockRating, game.getName());
+                        }
+                    });
+
                     optimizationService.recordRequest("collection", true);
                     return games;
                 } else {
@@ -117,7 +132,17 @@ public class BggService {
             }
         }
 
-        return getMockCollection(username);
+        List<GameDto> mockGames = getMockCollection(username);
+        // Add mock ratings to mock games for demonstration
+        mockGames.forEach(game -> {
+            if (game.getBggRating() == null) {
+                double mockRating = 6.0 + Math.random() * 3.0; // Random rating between 6.0 and 9.0
+                game.setBggRating(mockRating);
+                game.setAverageRating(mockRating);
+                game.setComplexity(1.5 + Math.random() * 2.5); // Random complexity between 1.5 and 4.0
+            }
+        });
+        return mockGames;
     }
 
     private List<GameDto> searchGamesFromBgg(final String query) {
@@ -264,6 +289,7 @@ public class BggService {
                     .bggRating(7.8)
                     .averageRating(7.8)
                     .complexity(2.3)
+                    .ownedBy(List.of(username))
                     .build(),
                 GameDto.builder()
                     .id("31260")
@@ -277,6 +303,7 @@ public class BggService {
                     .bggRating(8.0)
                     .averageRating(8.0)
                     .complexity(3.6)
+                    .ownedBy(List.of(username))
                     .build(),
                 GameDto.builder()
                     .id("230802")
@@ -290,6 +317,7 @@ public class BggService {
                     .bggRating(7.8)
                     .averageRating(7.8)
                     .complexity(1.8)
+                    .ownedBy(List.of(username))
                     .build(),
                 GameDto.builder()
                     .id("2651")
@@ -304,6 +332,7 @@ public class BggService {
                     .bggRating(7.9)
                     .averageRating(7.9)
                     .complexity(3.3)
+                    .ownedBy(List.of(username))
                     .build(),
                 GameDto.builder()
                     .id("342942")
@@ -317,6 +346,7 @@ public class BggService {
                     .bggRating(7.5)
                     .averageRating(7.5)
                     .complexity(3.2)
+                    .ownedBy(List.of(username))
                     .build()
             );
         }
@@ -334,6 +364,7 @@ public class BggService {
                 .bggRating(7.2)
                 .averageRating(7.2)
                 .complexity(2.3)
+                .ownedBy(List.of(username))
                 .build()
         );
     }

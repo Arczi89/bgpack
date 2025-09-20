@@ -31,6 +31,8 @@ export const HomePage: React.FC = () => {
     data: apiGames,
     loading: isLoading,
     error,
+    emptyCollections,
+    errors,
   } = useMultipleOwnedGames(currentUsernames, excludeExpansions);
 
   // Update games when API data changes
@@ -263,7 +265,7 @@ export const HomePage: React.FC = () => {
             <select
               value={sortOrder}
               onChange={e => setSortOrder(e.target.value as 'asc' | 'desc')}
-              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 min-w-[120px]"
             >
               <option value="desc">{t.descending}</option>
               <option value="asc">{t.ascending}</option>
@@ -295,6 +297,37 @@ export const HomePage: React.FC = () => {
               </button>
             )}
           </div>
+
+          {/* Informacje o pustych kolekcjach i błędach */}
+          {(emptyCollections && emptyCollections.length > 0) ||
+          (errors && errors.length > 0) ? (
+            <div className="px-6 py-3 bg-yellow-50 border-b border-yellow-200">
+              {emptyCollections && emptyCollections.length > 0 && (
+                <div className="mb-2">
+                  <span className="text-sm font-medium text-yellow-800">
+                    {t.emptyCollectionsInfo}
+                  </span>
+                  <span className="text-sm text-yellow-700 ml-2">
+                    {emptyCollections.join(', ')}
+                  </span>
+                </div>
+              )}
+              {errors && errors.length > 0 && (
+                <div>
+                  <span className="text-sm font-medium text-red-800">
+                    {t.userErrors}
+                  </span>
+                  <div className="mt-1">
+                    {errors.map(({ username, error }, index) => (
+                      <div key={index} className="text-sm text-red-700">
+                        <span className="font-medium">{username}:</span> {error}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : null}
 
           {error ? (
             <div className="p-8 text-center">
@@ -392,7 +425,7 @@ export const HomePage: React.FC = () => {
                         {game.playingTime} min
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.bggRating}
+                        {game.bggRating ? game.bggRating.toFixed(1) : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {game.yearPublished}

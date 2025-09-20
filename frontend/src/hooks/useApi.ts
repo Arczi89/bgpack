@@ -7,6 +7,11 @@ interface ApiState<T> {
   error: string | null;
 }
 
+interface MultipleOwnedGamesState<T> extends ApiState<T> {
+  emptyCollections?: string[];
+  errors?: { username: string; error: string }[];
+}
+
 export function useApi<T>(
   apiCall: () => Promise<T>,
   dependencies: any[] = []
@@ -49,10 +54,6 @@ export function useGames(searchParams: any = {}) {
   );
 }
 
-export function useGame(id: string) {
-  return useApi(() => apiService.getGameById(id), [id]);
-}
-
 export function useOwnedGames(username: string) {
   const [state, setState] = useState<ApiState<any[]>>({
     data: null,
@@ -90,18 +91,16 @@ export function useOwnedGames(username: string) {
   };
 }
 
-export function useApiHealth() {
-  return useApi(() => apiService.getApiHealth(), []);
-}
-
 export function useMultipleOwnedGames(
   usernames: string[],
   excludeExpansions: boolean = false
-) {
-  const [state, setState] = useState<ApiState<any[]>>({
+): MultipleOwnedGamesState<any[]> & { refetch: () => void } {
+  const [state, setState] = useState<MultipleOwnedGamesState<any[]>>({
     data: null,
     loading: false,
     error: null,
+    emptyCollections: [],
+    errors: [],
   });
 
   const fetchData = useCallback(async () => {
@@ -110,35 +109,98 @@ export function useMultipleOwnedGames(
       usernames.length === 0 ||
       usernames.every(u => !u.trim())
     ) {
-      setState({ data: [], loading: false, error: null });
+      setState({
+        data: [],
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
       return;
     }
 
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    setState(prev => ({
+      ...prev,
+      loading: true,
+      error: null,
+      emptyCollections: [],
+      errors: [],
+    }));
 
     try {
       // Pobierz gry dla wszystkich użytkowników równolegle
-      const promises = usernames
+      const validUsernames = usernames
         .map(username => username.trim())
-        .filter(username => username.length > 0)
-        .map(username => apiService.getOwnedGames(username, excludeExpansions));
+        .filter(username => username.length > 0);
+
+      const promises = validUsernames.map(async username => {
+        try {
+          const games = await apiService.getOwnedGames(
+            username,
+            excludeExpansions
+          );
+          return { username, games, error: null };
+        } catch (error) {
+          console.warn(`Failed to fetch games for user ${username}:`, error);
+          return {
+            username,
+            games: [],
+            error: error instanceof Error ? error.message : 'Unknown error',
+          };
+        }
+      });
 
       const results = await Promise.all(promises);
 
-      // Połącz wszystkie gry w jedną listę
-      const allGames = results.flat();
+      // Połącz wszystkie gry w jedną listę z informacją o właścicielach
+      const gameMap = new Map<string, any>();
+      const emptyCollections: string[] = [];
+      const errors: { username: string; error: string }[] = [];
 
-      // Usuń duplikaty na podstawie ID gry
-      const uniqueGames = allGames.filter(
-        (game, index, self) => index === self.findIndex(g => g.id === game.id)
-      );
+      results.forEach(({ username, games, error }) => {
+        if (error) {
+          errors.push({ username, error });
+        }
 
-      setState({ data: uniqueGames, loading: false, error: null });
+        if (games.length === 0 && !error) {
+          emptyCollections.push(username);
+        }
+
+        games.forEach(game => {
+          const gameId = game.id;
+          if (gameMap.has(gameId)) {
+            // Jeśli gra już istnieje, dodaj użytkownika do listy właścicieli
+            const existingGame = gameMap.get(gameId);
+            if (!existingGame.ownedBy.includes(username)) {
+              existingGame.ownedBy.push(username);
+            }
+          } else {
+            // Jeśli to nowa gra, dodaj ją z właścicielem
+            const gameWithOwner = {
+              ...game,
+              ownedBy: [username],
+            };
+            gameMap.set(gameId, gameWithOwner);
+          }
+        });
+      });
+
+      const uniqueGames = Array.from(gameMap.values());
+
+      setState({
+        data: uniqueGames,
+        loading: false,
+        error: null,
+        emptyCollections,
+        errors,
+      });
     } catch (error) {
       setState({
         data: null,
         loading: false,
         error: error instanceof Error ? error.message : 'An error occurred',
+        emptyCollections: [],
+        errors: [],
       });
     }
   }, [usernames, excludeExpansions]); // Dependency na usernames array i excludeExpansions

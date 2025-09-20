@@ -47,6 +47,8 @@ export interface Translations {
   previous: string;
   next: string;
   pageOf: string;
+  emptyCollectionsInfo: string;
+  userErrors: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -102,6 +104,8 @@ export const translations: Record<string, Translations> = {
     previous: 'Previous',
     next: 'Next',
     pageOf: 'Page {current} of {total}',
+    emptyCollectionsInfo: 'Users with empty collections:',
+    userErrors: 'Errors while fetching collections:',
   },
   pl: {
     home: 'Strona główna',
@@ -155,5 +159,7 @@ export const translations: Record<string, Translations> = {
     previous: 'Poprzednia',
     next: 'Następna',
     pageOf: 'Strona {current} z {total}',
+    emptyCollectionsInfo: 'Użytkownicy bez kolekcji:',
+    userErrors: 'Błędy podczas pobierania kolekcji:',
   },
 };

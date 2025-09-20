@@ -47,10 +47,6 @@ class ApiService {
     return this.request<Game[]>(endpoint);
   }
 
-  async getGameById(id: string): Promise<Game> {
-    return this.request<Game>(`/games/${id}`);
-  }
-
   async getOwnedGames(
     username: string,
     excludeExpansions: boolean = false
@@ -59,21 +55,6 @@ class ApiService {
       ? `/own/${username}?excludeExpansions=true`
       : `/own/${username}`;
     return this.request<Game[]>(url);
-  }
-
-  async getApiHealth(): Promise<{ successRate: number; timestamp: number }> {
-    return this.request<{ successRate: number; timestamp: number }>(
-      '/stats/api-health'
-    );
-  }
-
-  async resetCircuitBreaker(): Promise<{ message: string; timestamp: number }> {
-    return this.request<{ message: string; timestamp: number }>(
-      '/stats/reset-circuit-breaker',
-      {
-        method: 'POST',
-      }
-    );
   }
 
   async testConnection(): Promise<string> {

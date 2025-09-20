@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -43,11 +44,6 @@ public class BggController {
         return ResponseEntity.ok(games);
     }
 
-    @GetMapping("/games/{id}")
-    public ResponseEntity<GameDto> getGameById(@PathVariable @NotBlank final String id) {
-        GameDto game = bggService.getGameById(id);
-        return ResponseEntity.ok(game);
-    }
 
     /**
      * Get owned games for a specific user.
