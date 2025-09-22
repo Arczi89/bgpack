@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -29,6 +30,7 @@ public class BggController {
      * @return Hello message
      */
     @GetMapping("/test")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Hello from Backend - BGPack API is running!");
     }

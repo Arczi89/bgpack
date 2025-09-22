@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { apiService } from '../apiService';
 import { Game } from '../../types/Game';
+import { GameList, SaveGameListRequest } from '../../types/GameList';
 
 global.fetch = jest.fn();
 
@@ -329,6 +330,141 @@ describe('apiService', () => {
       expect(results[0].status).toBe('fulfilled');
       expect(results[1].status).toBe('rejected');
       expect(results[2].status).toBe('fulfilled');
+    });
+  });
+
+  describe('Game Lists API', () => {
+    const mockGameList: GameList = {
+      id: 'list-1',
+      listName: 'My Test List',
+      games: mockGames,
+      searchCriteria: {
+        usernames: ['user1'],
+        filters: {
+          minPlayers: 2,
+          maxPlayers: 4,
+        },
+        exactPlayerFilter: false,
+      },
+      createdAt: '2024-01-01T00:00:00Z',
+    };
+
+    const mockSaveRequest: SaveGameListRequest = {
+      listName: 'My Test List',
+      usernames: ['user1'],
+      games: mockGames,
+      filters: {
+        minPlayers: 2,
+        maxPlayers: 4,
+      },
+      exactPlayerFilter: false,
+    };
+
+    describe('saveGameList', () => {
+      it('should save a game list successfully', async () => {
+        const mockResponse = {
+          ok: true,
+          json: jest.fn().mockResolvedValue(mockGameList),
+        };
+        mockFetch.mockResolvedValue(mockResponse as any);
+
+        const result = await apiService.saveGameList(
+          'arczi89',
+          mockSaveRequest
+        );
+
+        expect(mockFetch).toHaveBeenCalledWith(
+          'http://localhost:8080/api/game-lists/arczi89',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(mockSaveRequest),
+          }
+        );
+        expect(result).toEqual(mockGameList);
+      });
+
+      it('should handle save game list error', async () => {
+        const mockResponse = {
+          ok: false,
+          status: 400,
+        };
+        mockFetch.mockResolvedValue(mockResponse as any);
+
+        await expect(
+          apiService.saveGameList('arczi89', mockSaveRequest)
+        ).rejects.toThrow('HTTP error! status: 400');
+      });
+    });
+
+    describe('getUserGameLists', () => {
+      it('should get user game lists successfully', async () => {
+        const mockGameLists = [mockGameList];
+        const mockResponse = {
+          ok: true,
+          json: jest.fn().mockResolvedValue(mockGameLists),
+        };
+        mockFetch.mockResolvedValue(mockResponse as any);
+
+        const result = await apiService.getUserGameLists('arczi89');
+
+        expect(mockFetch).toHaveBeenCalledWith(
+          'http://localhost:8080/api/game-lists/arczi89',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        expect(result).toEqual(mockGameLists);
+      });
+
+      it('should handle get user game lists error', async () => {
+        const mockResponse = {
+          ok: false,
+          status: 404,
+        };
+        mockFetch.mockResolvedValue(mockResponse as any);
+
+        await expect(apiService.getUserGameLists('arczi89')).rejects.toThrow(
+          'HTTP error! status: 404'
+        );
+      });
+    });
+
+    describe('deleteGameList', () => {
+      it('should delete a game list successfully', async () => {
+        const mockResponse = {
+          ok: true,
+        };
+        mockFetch.mockResolvedValue(mockResponse as any);
+
+        await apiService.deleteGameList('arczi89', 'list-1');
+
+        expect(mockFetch).toHaveBeenCalledWith(
+          'http://localhost:8080/api/game-lists/arczi89/list-1',
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      });
+
+      it('should handle delete game list error', async () => {
+        const mockResponse = {
+          ok: false,
+          status: 404,
+        };
+        mockFetch.mockResolvedValue(mockResponse as any);
+
+        await expect(
+          apiService.deleteGameList('arczi89', 'list-1')
+        ).rejects.toThrow('HTTP error! status: 404');
+      });
     });
   });
 });

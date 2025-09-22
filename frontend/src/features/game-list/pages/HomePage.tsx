@@ -6,6 +6,9 @@ import {
 } from '../../../hooks/useGameSorting';
 import { Game, GameFilters } from '../../../types/Game';
 import { useMultipleOwnedGames } from '../../../hooks/useApi';
+import { SaveGameListRequest } from '../../../types/GameList';
+import apiService from '../../../services/apiService';
+import { matchesAllFilters } from '../../../utils/gameFilters';
 
 export const HomePage: React.FC = () => {
   const [bggNicks, setBggNicks] = useState<string>('');
@@ -20,6 +23,8 @@ export const HomePage: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState<number>(20);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [excludeExpansions, setExcludeExpansions] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   const { t } = useLanguage();
 
@@ -39,56 +44,9 @@ export const HomePage: React.FC = () => {
 
       // Apply filters
       if (Object.keys(filters).length > 0) {
-        filteredGames = filteredGames.filter(game => {
-          // Player count filter
-          if (filters.minPlayers && filters.maxPlayers) {
-            if (filters.exactPlayerFilter) {
-              // Exact match: game must have exactly the same range
-              if (
-                game.minPlayers !== filters.minPlayers ||
-                game.maxPlayers !== filters.maxPlayers
-              )
-                return false;
-            } else {
-              // Non-exact: game range must overlap with filter range
-              if (
-                game.minPlayers > filters.maxPlayers ||
-                game.maxPlayers < filters.minPlayers
-              )
-                return false;
-            }
-          } else if (filters.minPlayers) {
-            if (filters.exactPlayerFilter) {
-              // Exact match: game must have exactly this min value
-              if (game.minPlayers !== filters.minPlayers) return false;
-            } else {
-              // Non-exact: game must support at least this many players
-              if (game.maxPlayers < filters.minPlayers) return false;
-            }
-          } else if (filters.maxPlayers) {
-            if (filters.exactPlayerFilter) {
-              // Exact match: game must have exactly this max value
-              if (game.maxPlayers !== filters.maxPlayers) return false;
-            } else {
-              // Non-exact: game must not support more than this many players
-              if (game.maxPlayers > filters.maxPlayers) return false;
-            }
-          }
-          if (
-            filters.minPlayingTime &&
-            game.playingTime < filters.minPlayingTime
-          )
-            return false;
-          if (
-            filters.maxPlayingTime &&
-            game.playingTime > filters.maxPlayingTime
-          )
-            return false;
-          if (filters.minAge && game.minAge < filters.minAge) return false;
-          if (filters.minRating && game.bggRating < filters.minRating)
-            return false;
-          return true;
-        });
+        filteredGames = filteredGames.filter(game =>
+          matchesAllFilters(game, filters)
+        );
       }
 
       setGames(filteredGames);
@@ -111,8 +69,40 @@ export const HomePage: React.FC = () => {
     setHasSearched(true);
   };
 
-  const handleSaveResults = () => {
-    alert('Results saved to your lists!');
+  const handleSaveResults = async () => {
+    if (games.length === 0) {
+      alert('No games to save!');
+      return;
+    }
+
+    const listName = prompt('Enter a name for this list:');
+    if (!listName || listName.trim() === '') {
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveSuccess(null);
+
+    try {
+      const saveRequest: SaveGameListRequest = {
+        listName: listName.trim(),
+        usernames: currentUsernames,
+        games: games,
+        filters: filters,
+        exactPlayerFilter: filters.exactPlayerFilter || false,
+      };
+
+      await apiService.saveGameList('arczi89', saveRequest);
+      setSaveSuccess(`List "${listName}" saved successfully!`);
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSaveSuccess(null), 3000);
+    } catch (error) {
+      console.error('Error saving game list:', error);
+      alert('Failed to save the list. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleItemsPerPageChange = (value: number) => {
@@ -342,12 +332,24 @@ export const HomePage: React.FC = () => {
               )}
             </h2>
             {games.length > 0 && (
-              <button
-                onClick={handleSaveResults}
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                {t.saveResults}
-              </button>
+              <div className="flex flex-col items-end space-y-2">
+                <button
+                  onClick={handleSaveResults}
+                  disabled={isSaving}
+                  className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
+                    isSaving
+                      ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                      : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
+                  }`}
+                >
+                  {isSaving ? 'Saving...' : t.saveResults}
+                </button>
+                {saveSuccess && (
+                  <div className="text-sm text-green-600 font-medium">
+                    {saveSuccess}
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

@@ -9,9 +9,9 @@ export interface Game {
   description: string;
   imageUrl?: string;
   thumbnailUrl?: string;
-  bggRating: number;
-  averageRating: number;
-  complexity: number;
+  bggRating: number | null;
+  averageRating: number | null;
+  complexity: number | null;
   ownedBy?: string[];
 }
 

@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class BggXmlParserService {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(
-                new ByteArrayInputStream(xmlResponse.getBytes()));
+                new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
 
             NodeList items = doc.getElementsByTagName("item");
             List<GameDto> games = new ArrayList<>();
@@ -41,6 +42,9 @@ public class BggXmlParserService {
 
             log.info("Parsed {} games from search results", games.size());
             return games;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Error with UTF-8 encoding: {}", e.getMessage());
+            throw new RuntimeException("UTF-8 encoding not supported", e);
         } catch (Exception e) {
             log.error("Error parsing XML search response: {}", e.getMessage());
             throw new RuntimeException(
@@ -53,7 +57,7 @@ public class BggXmlParserService {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(
-                new ByteArrayInputStream(xmlResponse.getBytes()));
+                new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
 
             NodeList items = doc.getElementsByTagName("item");
             if (items.getLength() > 0) {
@@ -62,6 +66,9 @@ public class BggXmlParserService {
             }
 
             throw new RuntimeException("No game found in XML response");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Error with UTF-8 encoding: {}", e.getMessage());
+            throw new RuntimeException("UTF-8 encoding not supported", e);
         } catch (Exception e) {
             log.error("Error parsing XML game details response: {}", e.getMessage());
             throw new RuntimeException(
@@ -74,7 +81,7 @@ public class BggXmlParserService {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(
-                new ByteArrayInputStream(xmlResponse.getBytes()));
+                new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
 
             NodeList items = doc.getElementsByTagName("item");
             List<GameDto> games = new ArrayList<>();
@@ -92,6 +99,9 @@ public class BggXmlParserService {
 
             log.info("Parsed {} games from collection", games.size());
             return games;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Error with UTF-8 encoding: {}", e.getMessage());
+            throw new RuntimeException("UTF-8 encoding not supported", e);
         } catch (Exception e) {
             log.error("Error parsing XML collection response: {}", e.getMessage());
             throw new RuntimeException(

@@ -41,9 +41,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   {t.home}
                 </Link>
                 <Link
-                  to="/games"
+                  to="/my-lists"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    isActive('/games')
+                    isActive('/my-lists')
                       ? 'border-primary-500 text-gray-900'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                   }`}

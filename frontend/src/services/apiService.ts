@@ -1,4 +1,5 @@
 import { Game, GameSearchParams } from '../types/Game';
+import { GameList, SaveGameListRequest } from '../types/GameList';
 
 const API_BASE_URL =
   process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
@@ -59,6 +60,27 @@ class ApiService {
 
   async testConnection(): Promise<string> {
     return this.request<string>('/test');
+  }
+
+  // Game Lists API
+  async saveGameList(
+    username: string,
+    request: SaveGameListRequest
+  ): Promise<GameList> {
+    return this.request<GameList>(`/game-lists/${username}`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async getUserGameLists(username: string): Promise<GameList[]> {
+    return this.request<GameList[]>(`/game-lists/${username}`);
+  }
+
+  async deleteGameList(username: string, gameListId: string): Promise<void> {
+    return this.request<void>(`/game-lists/${username}/${gameListId}`, {
+      method: 'DELETE',
+    });
   }
 }
 

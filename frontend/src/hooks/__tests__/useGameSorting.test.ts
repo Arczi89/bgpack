@@ -8,13 +8,13 @@ import {
 import { Game } from '../../types/Game';
 
 const createMockGame = (
-  id: number,
+  id: string,
   name: string,
   yearPublished: number,
   minPlayers: number,
   maxPlayers: number,
   playingTime: number,
-  bggRating: number,
+  bggRating: number | null,
   ownedBy: string[]
 ): Game => ({
   id,
@@ -23,17 +23,23 @@ const createMockGame = (
   minPlayers,
   maxPlayers,
   playingTime,
+  minAge: 8,
+  description: 'Mock game description',
+  imageUrl: undefined,
+  thumbnailUrl: undefined,
   bggRating,
+  averageRating: null,
+  complexity: null,
   ownedBy,
 });
 
 const mockGames: Game[] = [
-  createMockGame(1, 'Zombicide', 2012, 1, 6, 60, 7.5, ['user1']),
-  createMockGame(2, 'Azul', 2017, 2, 4, 45, 8.2, ['user2']),
-  createMockGame(3, 'Catan', 1995, 3, 4, 90, 7.1, ['user1', 'user3']),
-  createMockGame(4, 'Ticket to Ride', 2004, 2, 5, 45, 7.4, ['user2']),
-  createMockGame(5, 'Wingspan', 2019, 1, 5, 70, 8.1, ['user3']),
-  createMockGame(6, 'Gloomhaven', 2017, 1, 4, 120, 8.8, ['user1']),
+  createMockGame('1', 'Zombicide', 2012, 1, 6, 60, null, ['user1']),
+  createMockGame('2', 'Azul', 2017, 2, 4, 45, null, ['user2']),
+  createMockGame('3', 'Catan', 1995, 3, 4, 90, null, ['user1', 'user3']),
+  createMockGame('4', 'Ticket to Ride', 2004, 2, 5, 45, null, ['user2']),
+  createMockGame('5', 'Wingspan', 2019, 1, 5, 70, null, ['user3']),
+  createMockGame('6', 'Gloomhaven', 2017, 1, 4, 120, null, ['user1']),
 ];
 
 describe('useGameSorting', () => {
@@ -203,8 +209,8 @@ describe('useGameSorting', () => {
 
   it('should handle games with missing properties', () => {
     const gamesWithMissingProps: Game[] = [
-      createMockGame(1, 'Game 1', 2020, 2, 4, 60, undefined as any, ['user1']),
-      createMockGame(2, 'Game 2', undefined as any, 1, 6, 45, 8.0, ['user2']),
+      createMockGame('1', 'Game 1', 2020, 2, 4, 60, null, ['user1']),
+      createMockGame('2', 'Game 2', 2020, 1, 6, 45, null, ['user2']),
     ];
 
     const { result } = renderHook(() =>
@@ -264,7 +270,9 @@ describe('useGamePagination', () => {
 
   it('should calculate total pages correctly for various page sizes', () => {
     const games = Array.from({ length: 25 }, (_, i) =>
-      createMockGame(i + 1, `Game ${i + 1}`, 2020, 2, 4, 60, 7.0, ['user1'])
+      createMockGame(`${i + 1}`, `Game ${i + 1}`, 2020, 2, 4, 60, null, [
+        'user1',
+      ])
     );
 
     const { result: result10 } = renderHook(() =>

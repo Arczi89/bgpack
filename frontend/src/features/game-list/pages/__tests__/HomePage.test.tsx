@@ -1,14 +1,25 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { HomePage } from '../HomePage';
 import { Game } from '../../../../types/Game';
+import apiService from '../../../../services/apiService';
 
 jest.mock('../../../../hooks/useApi', () => ({
   useMultipleOwnedGames: jest.fn(),
+}));
+
+jest.mock('../../../../services/apiService', () => ({
+  saveGameList: jest.fn(),
 }));
 
 jest.mock('../../../../hooks/useGameSorting', () => ({
@@ -16,7 +27,7 @@ jest.mock('../../../../hooks/useGameSorting', () => ({
   useGamePagination: jest.fn(),
 }));
 
-jest.mock('../../../../hooks/useLanguage', () => ({
+jest.mock('../../../../contexts/LanguageContext', () => ({
   useLanguage: () => ({
     t: {
       title: 'BGPack',
@@ -53,13 +64,13 @@ jest.mock('../../../../hooks/useLanguage', () => ({
 }));
 
 const createMockGame = (
-  id: number,
+  id: string,
   name: string,
   yearPublished: number,
   minPlayers: number,
   maxPlayers: number,
   playingTime: number,
-  bggRating: number,
+  bggRating: number | null,
   ownedBy: string[]
 ): Game => ({
   id,
@@ -68,21 +79,50 @@ const createMockGame = (
   minPlayers,
   maxPlayers,
   playingTime,
+  minAge: 8,
+  description: 'Mock game description',
+  imageUrl: undefined,
+  thumbnailUrl: undefined,
   bggRating,
+  averageRating: null,
+  complexity: null,
   ownedBy,
 });
 
 const mockGames: Game[] = [
-  createMockGame(1, 'Catan', 1995, 3, 4, 90, 7.1, ['user1']),
-  createMockGame(2, 'Azul', 2017, 2, 4, 45, 8.2, ['user2']),
-  createMockGame(3, 'Ticket to Ride', 2004, 2, 5, 60, 7.4, ['user1', 'user3']),
+  createMockGame('68448', '7 Cudów Świata', 2016, 2, 7, 30, null, ['user1']),
+  createMockGame('173346', '7 Cudów Świata: Pojedynek', 2019, 2, 2, 30, null, [
+    'user2',
+  ]),
+  createMockGame('206915', 'Amazonki', 2018, 3, 10, 15, null, [
+    'user1',
+    'user3',
+  ]),
+  createMockGame(
+    '299659',
+    'Clash of Cultures: Monumental Edition',
+    2021,
+    2,
+    4,
+    240,
+    null,
+    ['user2']
+  ),
+  createMockGame(
+    '182028',
+    'Cywilizacja: Poprzez Wieki',
+    2015,
+    2,
+    4,
+    120,
+    null,
+    ['user1']
+  ),
 ];
 
 const createMockStore = (initialState = {}) => {
   return configureStore({
-    reducer: {
-      auth: (state = { isAuthenticated: false }, action) => state,
-    },
+    reducer: {},
     preloadedState: initialState,
   });
 };
@@ -111,6 +151,8 @@ describe('HomePage', () => {
       data: null,
       loading: false,
       error: null,
+      emptyCollections: [],
+      errors: [],
     });
 
     mockUseGameSorting.mockReturnValue(mockGames);
@@ -379,6 +421,295 @@ describe('HomePage', () => {
         ['user1', 'user2'],
         false
       );
+    });
+  });
+
+  describe('Save Results functionality', () => {
+    const mockApiService = apiService as jest.Mocked<typeof apiService>;
+
+    beforeEach(() => {
+      mockApiService.saveGameList.mockClear();
+      // Mock window.prompt
+      window.prompt = jest.fn();
+    });
+
+    afterEach(() => {
+      delete (window as any).prompt;
+    });
+
+    it('should show save button when games are loaded', async () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: mockGames,
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Save Results')).toBeInTheDocument();
+      });
+    });
+
+    it('should not show save button when no games are loaded', () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: [],
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      expect(screen.queryByText('Save Results')).not.toBeInTheDocument();
+    });
+
+    it('should call saveGameList when save button is clicked and list name is provided', async () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: mockGames,
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      (window.prompt as jest.Mock).mockReturnValue('My Test List');
+
+      mockApiService.saveGameList.mockResolvedValue({
+        id: 'list-1',
+        listName: 'My Test List',
+        games: mockGames,
+        searchCriteria: {
+          usernames: ['user1'],
+          filters: {},
+          exactPlayerFilter: false,
+        },
+        createdAt: '2024-01-01T00:00:00Z',
+      });
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Save Results')).toBeInTheDocument();
+      });
+
+      const saveButton = screen.getByText('Save Results');
+      fireEvent.click(saveButton);
+
+      await waitFor(() => {
+        expect(window.prompt).toHaveBeenCalledWith(
+          'Enter a name for this list:'
+        );
+      });
+
+      expect(mockApiService.saveGameList).toHaveBeenCalledWith('arczi89', {
+        listName: 'My Test List',
+        usernames: [],
+        games: mockGames,
+        filters: {},
+        exactPlayerFilter: false,
+      });
+    });
+
+    it('should not save when prompt is cancelled', async () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: mockGames,
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      (window.prompt as jest.Mock).mockReturnValue(null);
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Save Results')).toBeInTheDocument();
+      });
+
+      const saveButton = screen.getByText('Save Results');
+      fireEvent.click(saveButton);
+
+      expect(window.prompt).toHaveBeenCalledWith('Enter a name for this list:');
+      expect(mockApiService.saveGameList).not.toHaveBeenCalled();
+    });
+
+    it('should not save when prompt returns empty string', async () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: mockGames,
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      (window.prompt as jest.Mock).mockReturnValue('');
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Save Results')).toBeInTheDocument();
+      });
+
+      const saveButton = screen.getByText('Save Results');
+      fireEvent.click(saveButton);
+
+      expect(window.prompt).toHaveBeenCalledWith('Enter a name for this list:');
+      expect(mockApiService.saveGameList).not.toHaveBeenCalled();
+    });
+
+    it('should show loading state while saving', async () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: mockGames,
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      (window.prompt as jest.Mock).mockReturnValue('My Test List');
+
+      // Mock a slow save operation
+      mockApiService.saveGameList.mockImplementation(
+        () => new Promise(resolve => setTimeout(resolve, 100))
+      );
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Save Results')).toBeInTheDocument();
+      });
+
+      const saveButton = screen.getByText('Save Results');
+      fireEvent.click(saveButton);
+
+      expect(screen.getByText('Saving...')).toBeInTheDocument();
+      expect(saveButton).toBeDisabled();
+    });
+
+    it('should show success message after successful save', async () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: mockGames,
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      (window.prompt as jest.Mock).mockReturnValue('My Test List');
+
+      mockApiService.saveGameList.mockResolvedValue({
+        id: 'list-1',
+        listName: 'My Test List',
+        games: mockGames,
+        searchCriteria: {
+          usernames: ['user1'],
+          filters: {},
+          exactPlayerFilter: false,
+        },
+        createdAt: '2024-01-01T00:00:00Z',
+      });
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Save Results')).toBeInTheDocument();
+      });
+
+      const saveButton = screen.getByText('Save Results');
+      fireEvent.click(saveButton);
+
+      await waitFor(() => {
+        expect(
+          screen.getByText('List "My Test List" saved successfully!')
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('should show alert when save fails', async () => {
+      mockUseMultipleOwnedGames.mockReturnValue({
+        data: mockGames,
+        loading: false,
+        error: null,
+        emptyCollections: [],
+        errors: [],
+      });
+
+      (window.prompt as jest.Mock).mockReturnValue('My Test List');
+
+      mockApiService.saveGameList.mockRejectedValue(new Error('Save failed'));
+
+      // Mock window.alert
+      window.alert = jest.fn();
+
+      act(() => {
+        render(
+          <TestWrapper>
+            <HomePage />
+          </TestWrapper>
+        );
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Save Results')).toBeInTheDocument();
+      });
+
+      const saveButton = screen.getByText('Save Results');
+      fireEvent.click(saveButton);
+
+      await waitFor(() => {
+        expect(window.alert).toHaveBeenCalledWith(
+          'Failed to save the list. Please try again.'
+        );
+      });
+
+      delete (window as any).alert;
     });
   });
 });

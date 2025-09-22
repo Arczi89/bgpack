@@ -33,6 +33,9 @@ class BggServiceTest {
     @Mock
     private BggRateLimiter rateLimiter;
 
+    @Mock
+    private BggApiOptimizationService optimizationService;
+
     @InjectMocks
     private BggService bggService;
 
@@ -40,6 +43,9 @@ class BggServiceTest {
     void setUp() {
         // Mock rate limiter to not block tests
         doNothing().when(rateLimiter).acquire();
+
+        // Mock optimization service to always allow requests
+        when(optimizationService.shouldMakeRequest(anyString())).thenReturn(true);
     }
 
     @Test
@@ -233,9 +239,9 @@ class BggServiceTest {
         // When
         List<GameDto> result = bggService.getGames(searchRequest);
 
-        // Then
-        assertThat(result).hasSize(2);
+        // Then - nowa logika filtrowania zwraca gry które pasują do zakresu
+        assertThat(result).hasSize(3);
         assertThat(result).extracting(GameDto::getName)
-                .containsExactlyInAnyOrder("Ticket to Ride", "Azul");
+                .containsExactlyInAnyOrder("Ticket to Ride", "Wingspan", "Azul");
     }
 }

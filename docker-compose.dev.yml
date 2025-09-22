@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  mongodb:
+    image: mongo:7.0
+    container_name: bgpack-mongodb-dev
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=bgpack
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - bgpack-network
+
   backend:
     build:
       context: ./backend
@@ -8,17 +20,20 @@ services:
     container_name: bgpack-backend-dev
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=bgpack
     volumes:
       - ./backend/src:/app/src
       - maven-cache:/root/.m2
     networks:
       - bgpack-network
+    depends_on:
+      - mongodb
     command: ["./mvnw", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005'"]
-    ports:
-      - "8080:8080"
-      - "5005:5005"
 
   frontend:
     build:
@@ -45,4 +60,6 @@ networks:
 
 volumes:
   maven-cache:
+    driver: local
+  mongodb-data:
     driver: local

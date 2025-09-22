@@ -99,7 +99,12 @@ export const useGameFiltering = (
       if (filters.maxPlayingTime && game.playingTime > filters.maxPlayingTime)
         return false;
       if (filters.minAge && game.minAge < filters.minAge) return false;
-      if (filters.minRating && game.bggRating < filters.minRating) return false;
+      if (
+        filters.minRating &&
+        game.bggRating &&
+        game.bggRating < filters.minRating
+      )
+        return false;
       if (filters.yearFrom && game.yearPublished < filters.yearFrom)
         return false;
       if (filters.yearTo && game.yearPublished > filters.yearTo) return false;
