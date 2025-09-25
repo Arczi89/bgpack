@@ -1,24 +1,10 @@
-FROM openjdk:17-jdk-slim
+# Use existing bgpack-backend image as base to avoid Docker Hub issues
+FROM bgpack-backend:latest
 
 WORKDIR /app
 
-# Install Maven
-RUN apt-get update && \
-    apt-get install -y maven && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copy pom.xml first for better caching
-COPY pom.xml .
-
-# Download dependencies (this layer will be cached if pom.xml doesn't change)
-RUN mvn dependency:go-offline -B
-
-# Copy source code
-COPY src src
-
-# Build the application
-RUN mvn clean package -DskipTests
+# Copy the new JAR file over the old one
+COPY target/bgpack-backend-0.0.1-SNAPSHOT.jar target/bgpack-backend-0.0.1-SNAPSHOT.jar
 
 # Expose port
 EXPOSE 8080

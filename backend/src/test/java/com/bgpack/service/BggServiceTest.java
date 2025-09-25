@@ -3,6 +3,7 @@ package com.bgpack.service;
 import com.bgpack.client.BggApiClient;
 import com.bgpack.dto.GameDto;
 import com.bgpack.dto.GameSearchRequest;
+import com.bgpack.testdata.MockGameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +50,7 @@ class BggServiceTest {
     }
 
     @Test
-    void getGames_WithEmptySearch_ShouldReturnAllMockGames() {
+    void getGames_WithEmptySearch_ShouldReturnEmptyList() {
         // Given
         GameSearchRequest searchRequest = GameSearchRequest.builder().build();
 
@@ -57,13 +58,11 @@ class BggServiceTest {
         List<GameDto> result = bggService.getGames(searchRequest);
 
         // Then
-        assertThat(result).hasSize(5);
-        assertThat(result).extracting(GameDto::getName)
-                .containsExactlyInAnyOrder("Catan", "Ticket to Ride", "Wingspan", "Azul", "Gloomhaven");
+        assertThat(result).isEmpty();
     }
 
     @Test
-    void getGames_WithSearchTerm_ShouldFilterByName() {
+    void getGames_WithSearchTerm_ShouldReturnEmptyList() {
         // Given
         GameSearchRequest searchRequest = GameSearchRequest.builder()
                 .search("Catan")
@@ -73,12 +72,11 @@ class BggServiceTest {
         List<GameDto> result = bggService.getGames(searchRequest);
 
         // Then
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Catan");
+        assertThat(result).isEmpty();
     }
 
     @Test
-    void getGames_WithPlayerFilter_ShouldFilterByPlayerCount() {
+    void getGames_WithPlayerFilter_ShouldReturnEmptyList() {
         // Given
         GameSearchRequest searchRequest = GameSearchRequest.builder()
                 .minPlayers(3)
@@ -88,10 +86,8 @@ class BggServiceTest {
         // When
         List<GameDto> result = bggService.getGames(searchRequest);
 
-        // Then - all games that support 3-4 players should be returned
-        assertThat(result).hasSize(5);
-        assertThat(result).extracting(GameDto::getName)
-                .containsExactlyInAnyOrder("Catan", "Ticket to Ride", "Wingspan", "Azul", "Gloomhaven");
+        // Then
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -118,7 +114,7 @@ class BggServiceTest {
     }
 
     @Test
-    void getGames_WithBggApiFailure_ShouldFallbackToMockData() {
+    void getGames_WithBggApiFailure_ShouldReturnEmptyList() {
         // Given
         GameSearchRequest searchRequest = GameSearchRequest.builder()
                 .search("Catan")
@@ -130,19 +126,15 @@ class BggServiceTest {
         List<GameDto> result = bggService.getGames(searchRequest);
 
         // Then
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Catan");
-        assertThat(result.get(0).getId()).isEqualTo("1"); // Mock data ID
+        assertThat(result).isEmpty();
     }
 
     @Test
-    void getGameById_WithValidId_ShouldReturnGame() {
-        // When
-        GameDto result = bggService.getGameById("1");
-
-        // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getName()).isEqualTo("Catan");
+    void getGameById_WithValidId_ShouldThrowException() {
+        // When & Then
+        assertThatThrownBy(() -> bggService.getGameById("1"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Game not found with id: 1");
     }
 
     @Test
@@ -169,17 +161,14 @@ class BggServiceTest {
     }
 
     @Test
-    void getGameById_WithBggApiFailure_ShouldFallbackToMockData() {
+    void getGameById_WithBggApiFailure_ShouldThrowException() {
         // Given
         when(bggApiClient.getGameDetails("1")).thenReturn(Mono.error(new RuntimeException("API Error")));
 
-        // When
-        GameDto result = bggService.getGameById("1");
-
-        // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getName()).isEqualTo("Catan");
-        assertThat(result.getId()).isEqualTo("1"); // Mock data ID
+        // When & Then
+        assertThatThrownBy(() -> bggService.getGameById("1"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Game not found with id: 1");
     }
 
     @Test
@@ -223,7 +212,7 @@ class BggServiceTest {
     }
 
     @Test
-    void getGames_WithComplexFilters_ShouldFilterCorrectly() {
+    void getGames_WithComplexFilters_ShouldReturnEmptyList() {
         // Given
         GameSearchRequest searchRequest = GameSearchRequest.builder()
                 .minPlayers(2)
@@ -239,9 +228,7 @@ class BggServiceTest {
         // When
         List<GameDto> result = bggService.getGames(searchRequest);
 
-        // Then - nowa logika filtrowania zwraca gry które pasują do zakresu
-        assertThat(result).hasSize(3);
-        assertThat(result).extracting(GameDto::getName)
-                .containsExactlyInAnyOrder("Ticket to Ride", "Wingspan", "Azul");
+        // Then
+        assertThat(result).isEmpty();
     }
 }

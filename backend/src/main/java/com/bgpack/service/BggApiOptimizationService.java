@@ -51,7 +51,6 @@ public class BggApiOptimizationService {
             failedRequests.incrementAndGet();
         }
 
-        // Check circuit breaker
         if (stats.getConsecutiveFailures() >= circuitBreakerThreshold) {
             stats.openCircuit();
             log.warn("Circuit breaker opened for endpoint: {} due to {} consecutive failures",
@@ -92,7 +91,6 @@ public class BggApiOptimizationService {
         public boolean isCircuitOpen() {
             if (!circuitOpen) return false;
 
-            // Check if circuit breaker timeout has passed
             if (circuitOpenTime != null &&
                 ChronoUnit.SECONDS.between(circuitOpenTime, LocalDateTime.now()) > 300) {
                 circuitOpen = false;

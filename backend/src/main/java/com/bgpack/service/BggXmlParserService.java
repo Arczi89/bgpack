@@ -206,7 +206,6 @@ public class BggXmlParserService {
                 averageRating = parseDouble(getAttributeValue(statsElement, "average"));
                 complexity = parseDouble(getAttributeValue(statsElement, "avgweight"));
 
-                // Log rating parsing for debugging
                 if (bggRating == null) {
                     log.debug("No BGG rating found for game: {} (ID: {})", name, id);
                 } else {

@@ -4,13 +4,28 @@ BGPack (Board Games Pack) is a full-stack application for discovering and managi
 
 ## Features
 
-- **Friends' game discovery** - see what games your friends own on BGG
-- **Smart filtering** - filter by players, time, rating, and more
-- **Collection aggregation** - combine multiple friends' collections
-- **Save favorite lists** - save search results for later reference
-- **BGG integration** - real data from BoardGameGeek API
+### Core Functionality
+
+- **Board Game Search** - search for games from BoardGameGeek API with advanced filtering
+- **Friends' Collections** - browse and discover games owned by your friends on BGG
+- **Smart Filtering** - comprehensive filtering by players, time, rating, age, and year
+- **Game List Management** - save, organize, and manage custom game lists
+- **Real-time Data** - live integration with BoardGameGeek API (no mock data)
+
+### Advanced Features
+
+- **Exact vs Overlap Matching** - flexible player count filtering (exact match or overlap support)
+- **Collection Persistence** - MongoDB storage for saved game lists
+- **Rate Limiting** - intelligent API usage optimization and circuit breaker
+- **Error Handling** - graceful fallbacks when API is unavailable
+- **Caching** - Spring Cache integration for improved performance
+
+### User Experience
+
 - **Modern UI** - responsive interface with Tailwind CSS
-- **Multi-language** - English and Polish support
+- **Multi-language Support** - English and Polish localization
+- **Real-time Updates** - instant filtering and search results
+- **Mobile Responsive** - optimized for all device sizes
 
 ## Quick Start
 
@@ -138,9 +153,22 @@ bgpack/
 
 ## API Endpoints
 
-- `GET /api/test` - Test endpoint
-- `GET /api/games` - List games with optional filters
-- `GET /api/games/{id}` - Get specific game details
+### Game Search & Details
+
+- `GET /api/test` - Health check endpoint
+- `GET /api/games` - Search games with comprehensive filtering
+- `GET /api/games/{id}` - Get detailed game information by ID
+
+### User Collections
+
+- `GET /api/own/{username}` - Get user's board game collection from BGG
+- `GET /api/own/{username}?excludeExpansions=true` - Get collection excluding expansions
+
+### Game List Management
+
+- `POST /api/game-lists/{username}` - Save a new game list
+- `GET /api/game-lists/{username}` - Get all saved game lists for user
+- `DELETE /api/game-lists/{username}/{listId}` - Delete a specific game list
 
 ### Usage Examples
 
@@ -148,11 +176,27 @@ bgpack/
 # Test connection
 curl http://localhost:8080/api/test
 
-# List games
-curl http://localhost:8080/api/games
+# Search games with filters
+curl "http://localhost:8080/api/games?search=catan&minPlayers=3&maxPlayers=4"
 
-# Filter games
-curl "http://localhost:8080/api/games?minPlayers=2&maxPlayers=4"
+# Get user's BGG collection
+curl http://localhost:8080/api/own/username
+
+# Save a game list
+curl -X POST http://localhost:8080/api/game-lists/admin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "listName": "Family Games",
+    "usernames": ["user1", "user2"],
+    "games": [{"id": "1", "name": "Catan"}],
+    "exactPlayerFilter": false
+  }'
+
+# Get saved game lists
+curl http://localhost:8080/api/game-lists/admin
+
+# Delete a game list
+curl -X DELETE http://localhost:8080/api/game-lists/admin/list-id
 ```
 
 ## 🔍 Game Filtering System
@@ -280,16 +324,26 @@ curl "http://localhost:8080/api/games?minPlayers=3&maxPlayers=5&minPlayingTime=4
 - React Router for navigation
 - Tailwind CSS for styling
 - Axios for API communication
+- Playwright for E2E testing
 - Prettier for code formatting
 
 **Backend:**
 
 - Spring Boot 3.2 with Java 17
-- Spring Security for authentication
+- Spring Security for authentication and CORS
 - Spring Web for REST API
+- Spring Data MongoDB for persistence
+- Spring Cache for performance optimization
 - Lombok for code simplification
 - Jackson for XML parsing
 - Google Java Format + Checkstyle for code quality
+
+**Infrastructure:**
+
+- MongoDB for data persistence
+- Docker & Docker Compose for containerization
+- Nginx for frontend serving
+- Maven for build management
 
 ### Docker Configuration
 
@@ -310,8 +364,17 @@ The application is fully containerized:
 ### Application Flow
 
 ```
-Frontend (port 3000) → Nginx → Backend (port 8080) → BGG API
+Frontend (port 3000) → Nginx → Backend (port 8080) → MongoDB
+                                           ↓
+                                      BGG API
 ```
+
+### Data Flow
+
+1. **Game Search**: Frontend → Backend → BGG API → Filtered Results
+2. **Collection Fetch**: Frontend → Backend → BGG API → User's Games
+3. **List Management**: Frontend → Backend → MongoDB → Persistent Storage
+4. **Caching**: Spring Cache stores frequently accessed data for performance
 
 ### Code Quality
 

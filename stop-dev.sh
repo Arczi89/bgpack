@@ -33,12 +33,21 @@ fi
 # Stop frontend if PID file exists
 if [ -f .frontend.pid ]; then
     FRONTEND_PID=$(cat .frontend.pid)
-    print_status "Stopping frontend (PID: $FRONTEND_PID)..."
-    kill $FRONTEND_PID 2>/dev/null || true
-    rm .frontend.pid
-    print_success "Frontend stopped"
+    if [ ! -z "$FRONTEND_PID" ]; then
+        print_status "Stopping frontend (PID: $FRONTEND_PID)..."
+        kill $FRONTEND_PID 2>/dev/null || true
+        rm .frontend.pid
+        print_success "Frontend stopped"
+    else
+        print_warning "Frontend PID file is empty - frontend was already running"
+        rm .frontend.pid
+    fi
 else
-    print_warning "No frontend PID file found"
+    print_warning "No frontend PID file found - frontend might still be running on port 3000"
+    if curl -f http://localhost:3000 > /dev/null 2>&1; then
+        print_warning "Frontend is still running on http://localhost:3000"
+        print_status "You may need to stop it manually: Ctrl+C in the terminal where it's running"
+    fi
 fi
 
 print_success "All services stopped"
