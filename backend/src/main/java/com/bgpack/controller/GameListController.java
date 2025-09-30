@@ -20,12 +20,6 @@ public class GameListController {
 
     private final GameListService gameListService;
 
-    /**
-     * Save a new game list for a user.
-     * @param username BGG username
-     * @param request game list data to save
-     * @return saved game list
-     */
     @PostMapping("/{username}")
     public ResponseEntity<GameListDto> saveGameList(
             @PathVariable @NotBlank final String username,
@@ -34,11 +28,6 @@ public class GameListController {
         return ResponseEntity.ok(savedList);
     }
 
-    /**
-     * Get all game lists for a specific user.
-     * @param username BGG username
-     * @return list of user's game lists
-     */
     @GetMapping("/{username}")
     public ResponseEntity<List<GameListDto>> getUserGameLists(
             @PathVariable @NotBlank final String username) {

@@ -60,17 +60,14 @@ export const useGameFiltering = (
 ) => {
   const filteredGames = useMemo(() => {
     return games.filter(game => {
-      // Player count filter
       if (filters.minPlayers && filters.maxPlayers) {
         if (filters.exactPlayerFilter) {
-          // Exact match: game must have exactly the same range
           if (
             game.minPlayers !== filters.minPlayers ||
             game.maxPlayers !== filters.maxPlayers
           )
             return false;
         } else {
-          // Non-exact: game range must overlap with filter range
           if (
             game.minPlayers > filters.maxPlayers ||
             game.maxPlayers < filters.minPlayers
@@ -79,18 +76,14 @@ export const useGameFiltering = (
         }
       } else if (filters.minPlayers) {
         if (filters.exactPlayerFilter) {
-          // Exact match: game must have exactly this min value
           if (game.minPlayers !== filters.minPlayers) return false;
         } else {
-          // Non-exact: game must support at least this many players
           if (game.maxPlayers < filters.minPlayers) return false;
         }
       } else if (filters.maxPlayers) {
         if (filters.exactPlayerFilter) {
-          // Exact match: game must have exactly this max value
           if (game.maxPlayers !== filters.maxPlayers) return false;
         } else {
-          // Non-exact: game must not support more than this many players
           if (game.maxPlayers > filters.maxPlayers) return false;
         }
       }
@@ -136,7 +129,7 @@ export const useGamePagination = (
   itemsPerPage: number
 ) => {
   const paginatedGames = useMemo(() => {
-    if (itemsPerPage === -1) return games; // -1 means "all"
+    if (itemsPerPage === -1) return games;
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;

@@ -34,7 +34,6 @@ public class GameStatsService {
     public GameStatsDto getGameStats(String gameId) {
         log.info("Getting stats for game ID: {}", gameId);
 
-        // Check cache first
         Optional<GameStats> cachedStats = gameStatsRepository.findByGameId(gameId);
         if (cachedStats.isPresent() && isStatsComplete(cachedStats.get())) {
             log.info("Found complete cached stats for game ID: {}", gameId);
@@ -43,13 +42,11 @@ public class GameStatsService {
             return mapToDto(cachedStats.get());
         }
 
-        // Fetch from BGG API
         try {
             String xmlResponse = bggApiClient.getGameDetails(gameId).block();
             if (xmlResponse != null && !xmlResponse.trim().isEmpty()) {
                 GameStatsDto stats = bggXmlParserService.parseGameStats(xmlResponse);
                 if (stats != null) {
-                    // Cache the result
                     GameStats gameStats = mapToEntity(stats);
                     gameStats.setCachedAt(LocalDateTime.now());
                     gameStats.setLastUpdated(LocalDateTime.now());
@@ -78,32 +75,27 @@ public class GameStatsService {
         List<GameStatsDto> result = new ArrayList<>();
         List<String> missingGameIds = new ArrayList<>();
 
-        // Check cache for all games
         List<GameStats> cachedStats = gameStatsRepository.findByGameIdIn(gameIds);
         List<String> cachedGameIds = cachedStats.stream()
                 .map(GameStats::getGameId)
                 .collect(Collectors.toList());
 
-        // Add cached results (only if complete)
         for (GameStats stats : cachedStats) {
             if (isStatsComplete(stats)) {
                 stats.incrementCacheHits();
                 gameStatsRepository.save(stats);
                 result.add(mapToDto(stats));
             } else {
-                // Add to missing games if stats are incomplete
                 missingGameIds.add(stats.getGameId());
             }
         }
 
-        // Find missing games
         for (String gameId : gameIds) {
             if (!cachedGameIds.contains(gameId)) {
                 missingGameIds.add(gameId);
             }
         }
 
-        // Fetch missing games from BGG API
         if (!missingGameIds.isEmpty()) {
             log.info("Fetching {} missing games from BGG API", missingGameIds.size());
             try {
@@ -113,7 +105,6 @@ public class GameStatsService {
                 if (xmlResponse != null && !xmlResponse.trim().isEmpty()) {
                     List<GameStatsDto> fetchedStats = bggXmlParserService.parseMultipleGameStats(xmlResponse);
 
-                    // Cache the results
                     for (GameStatsDto stats : fetchedStats) {
                         GameStats gameStats = mapToEntity(stats);
                         gameStats.setCachedAt(LocalDateTime.now());

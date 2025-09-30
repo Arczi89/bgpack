@@ -25,7 +25,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   to="/"
                   className="text-2xl font-bold text-primary-600 flex items-center"
                 >
-                  <span className="mr-2">🎲</span>
                   BGPack
                 </Link>
               </div>
@@ -63,7 +62,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <span>🇬🇧</span>
                   <span>EN</span>
                 </button>
                 <button
@@ -74,7 +72,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <span>🇵🇱</span>
                   <span>PL</span>
                 </button>
               </div>

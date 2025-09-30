@@ -111,9 +111,9 @@ export const MyListsPage: React.FC = () => {
                     <p className="text-sm text-gray-500 mt-1">
                       Created on {formatDate(list.createdAt)}
                     </p>
-                    {list.searchCriteria?.usernames && (
+                    {list.usernames && list.usernames.length > 0 && (
                       <p className="text-sm text-gray-500">
-                        From users: {list.searchCriteria.usernames.join(', ')}
+                        From users: {list.usernames.join(', ')}
                       </p>
                     )}
                   </div>
@@ -138,37 +138,29 @@ export const MyListsPage: React.FC = () => {
                   </h4>
 
                   {/* Search Criteria Summary */}
-                  {list.searchCriteria && (
+                  {(list.filters || list.exactPlayerFilter) && (
                     <div className="mb-4 p-3 bg-gray-50 rounded-md">
                       <h5 className="text-sm font-medium text-gray-600 mb-2">
                         Search Criteria:
                       </h5>
                       <div className="text-sm text-gray-500 space-y-1">
-                        {list.searchCriteria.filters?.minPlayers && (
+                        {list.filters?.minPlayers && (
+                          <div>Min Players: {list.filters.minPlayers}</div>
+                        )}
+                        {list.filters?.maxPlayers && (
+                          <div>Max Players: {list.filters.maxPlayers}</div>
+                        )}
+                        {list.filters?.minPlayingTime && (
                           <div>
-                            Min Players:{' '}
-                            {list.searchCriteria.filters.minPlayers}
+                            Min Playing Time: {list.filters.minPlayingTime} min
                           </div>
                         )}
-                        {list.searchCriteria.filters?.maxPlayers && (
+                        {list.filters?.maxPlayingTime && (
                           <div>
-                            Max Players:{' '}
-                            {list.searchCriteria.filters.maxPlayers}
+                            Max Playing Time: {list.filters.maxPlayingTime} min
                           </div>
                         )}
-                        {list.searchCriteria.filters?.minPlayingTime && (
-                          <div>
-                            Min Playing Time:{' '}
-                            {list.searchCriteria.filters.minPlayingTime} min
-                          </div>
-                        )}
-                        {list.searchCriteria.filters?.maxPlayingTime && (
-                          <div>
-                            Max Playing Time:{' '}
-                            {list.searchCriteria.filters.maxPlayingTime} min
-                          </div>
-                        )}
-                        {list.searchCriteria.exactPlayerFilter && (
+                        {list.exactPlayerFilter && (
                           <div>Exact Player Filter: Yes</div>
                         )}
                       </div>

@@ -73,7 +73,6 @@ class ApiService {
     return this.request<string>('/test');
   }
 
-  // Game Lists API
   async saveGameList(
     username: string,
     request: SaveGameListRequest

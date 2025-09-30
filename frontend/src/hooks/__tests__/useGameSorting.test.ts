@@ -298,13 +298,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { minPlayers: 3, maxPlayers: 4 })
     );
 
-    // Should return games that support 3-4 players:
-    // - Catan (3-4) - exact match
-    // - Azul (2-4) - supports 3-4
-    // - Ticket to Ride (2-5) - supports 3-4
-    // - Wingspan (1-5) - supports 3-4
-    // - Gloomhaven (1-4) - supports 3-4
-    // - Zombicide (1-6) - supports 3-4
     expect(result.current).toHaveLength(6);
     expect(result.current.map(g => g.name)).toEqual([
       'Zombicide', // 1-6 supports 3-4
@@ -321,13 +314,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { minPlayers: 4 })
     );
 
-    // Should return games that support at least 4 players:
-    // - Zombicide (1-6) - supports 4+
-    // - Azul (2-4) - supports 4
-    // - Catan (3-4) - supports 4
-    // - Ticket to Ride (2-5) - supports 4+
-    // - Wingspan (1-5) - supports 4+
-    // - Gloomhaven (1-4) - supports 4
     expect(result.current).toHaveLength(6);
     expect(result.current.map(g => g.name)).toEqual([
       'Zombicide',
@@ -344,13 +330,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { maxPlayers: 3 })
     );
 
-    // Should return games that don't support more than 3 players:
-    // - Azul (2-4) - max 4, supports more than 3 ❌
-    // - Catan (3-4) - max 4, supports more than 3 ❌
-    // - Wingspan (1-5) - max 5, supports more than 3 ❌
-    // - Gloomhaven (1-4) - max 4, supports more than 3 ❌
-    // - Ticket to Ride (2-5) - max 5, supports more than 3 ❌
-    // - Zombicide (1-6) - max 6, supports more than 3 ❌
     expect(result.current).toHaveLength(0);
   });
 
@@ -366,10 +345,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { minPlayingTime: 60, maxPlayingTime: 90 })
     );
 
-    // Should return games with playing time between 60-90 minutes:
-    // - Zombicide (60) - exact match
-    // - Catan (90) - exact match
-    // - Wingspan (70) - within range
     expect(result.current).toHaveLength(3);
     expect(result.current.map(g => g.name)).toEqual([
       'Zombicide',
@@ -383,10 +358,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { minRating: 8.0 })
     );
 
-    // Should return games with rating >= 8.0:
-    // - Azul (8.2)
-    // - Wingspan (8.1)
-    // - Gloomhaven (8.8)
     expect(result.current).toHaveLength(3);
     expect(result.current.map(g => g.name)).toEqual([
       'Azul',
@@ -405,13 +376,6 @@ describe('useGameFiltering', () => {
       })
     );
 
-    // Should return games that:
-    // - Support 2-4 players
-    // - Have playing time 45-70 minutes
-    // - Azul (2-4, 45) - exact match
-    // - Ticket to Ride (2-5, 45) - supports 2-4, 45 min
-    // - Wingspan (1-5, 70) - supports 2-4, 70 min
-    // - Zombicide (1-6, 60) - supports 2-4, 60 min
     expect(result.current).toHaveLength(4);
     expect(result.current.map(g => g.name)).toEqual([
       'Zombicide',

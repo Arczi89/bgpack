@@ -24,28 +24,11 @@ export interface GameStats {
   averageRating: number | null;
   averageWeight: number | null;
   suggestedNumPlayers: string | null;
-  numOwned: number | null;
-  numWant: number | null;
-  numWishlist: number | null;
-  numComments: number | null;
-  numWeights: number | null;
-  yearPublished: number | null;
-  minPlayers: number | null;
-  maxPlayers: number | null;
-  playingTime: number | null;
-  minAge: number | null;
-  imageUrl?: string;
-  thumbnailUrl?: string;
 }
 
 export interface GameWithStats extends Game {
   averageWeight?: number | null;
   suggestedNumPlayers?: string | null;
-  numOwned?: number | null;
-  numWant?: number | null;
-  numWishlist?: number | null;
-  numComments?: number | null;
-  numWeights?: number | null;
 }
 
 export interface GameFilters {
@@ -55,8 +38,6 @@ export interface GameFilters {
   maxPlayingTime?: number;
   minAge?: number;
   minRating?: number;
-  yearFrom?: number;
-  yearTo?: number;
   exactPlayerFilter?: boolean;
 }
 
@@ -68,8 +49,6 @@ export interface GameSearchParams {
   maxPlayingTime?: number;
   minAge?: number;
   minRating?: number;
-  yearFrom?: number;
-  yearTo?: number;
   sortBy?:
     | 'name'
     | 'yearPublished'

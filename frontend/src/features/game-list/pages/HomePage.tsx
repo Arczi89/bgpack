@@ -28,7 +28,6 @@ export const HomePage: React.FC = () => {
 
   const { t } = useLanguage();
 
-  // Use API hook to fetch owned games for multiple users
   const {
     data: apiGames,
     loading: isLoading,
@@ -37,12 +36,10 @@ export const HomePage: React.FC = () => {
     errors,
   } = useMultipleOwnedGames(currentUsernames, excludeExpansions);
 
-  // Update games when API data changes
   useEffect(() => {
     if (apiGames) {
       let filteredGames = [...apiGames];
 
-      // Apply filters
       if (Object.keys(filters).length > 0) {
         filteredGames = filteredGames.filter(game =>
           matchesAllFilters(game, filters)
@@ -57,7 +54,6 @@ export const HomePage: React.FC = () => {
   const handleSearch = async () => {
     if (!bggNicks.trim()) return;
 
-    // Parse usernames separated by commas
     const usernames = bggNicks
       .split(',')
       .map(username => username.trim())
@@ -95,7 +91,6 @@ export const HomePage: React.FC = () => {
       await apiService.saveGameList('arczi89', saveRequest);
       setSaveSuccess(`List "${listName}" saved successfully!`);
 
-      // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(null), 3000);
     } catch (error) {
       console.error('Error saving game list:', error);
@@ -353,7 +348,7 @@ export const HomePage: React.FC = () => {
             )}
           </div>
 
-          {/* Informacje o pustych kolekcjach i błędach */}
+          {/* Information about empty collections and errors */}
           {(emptyCollections && emptyCollections.length > 0) ||
           (errors && errors.length > 0) ? (
             <div className="px-6 py-3 bg-yellow-50 border-b border-yellow-200">
@@ -397,7 +392,7 @@ export const HomePage: React.FC = () => {
                 </svg>
               </div>
               <h3 className="mt-2 text-sm font-medium text-gray-900">
-                Błąd ładowania kolekcji
+                Error loading collection
               </h3>
               <p className="mt-1 text-sm text-gray-500">{error}</p>
             </div>

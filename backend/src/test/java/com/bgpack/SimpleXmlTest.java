@@ -5,11 +5,10 @@ import com.bgpack.dto.GameDto;
 
 public class SimpleXmlTest {
     public static void main(String[] args) {
-        System.out.println("Test parsera XML...");
+        System.out.println("Testing XML parser...");
 
         BggXmlParserService parser = new BggXmlParserService();
 
-        // Przykładowa odpowiedź XML z API BGG
         String xmlResponse = """
             <?xml version="1.0" encoding="UTF-8"?>
             <boardgames>
@@ -59,18 +58,18 @@ public class SimpleXmlTest {
             """;
 
         try {
-            System.out.println("Parsowanie XML...");
+            System.out.println("Parsing XML...");
             GameDto game = parser.parseGameDetails(xmlResponse);
 
             if (game != null) {
-                System.out.println("✅ Gra sparsowana pomyślnie:");
-                System.out.println("  Nazwa: " + game.getName());
-                System.out.println("  Rok: " + game.getYearPublished());
-                System.out.println("  Gracze: " + game.getMinPlayers() + "-" + game.getMaxPlayers());
-                System.out.println("  Czas: " + game.getPlayingTime() + " min");
+                System.out.println("Game parsed successfully:");
+                System.out.println("  Name: " + game.getName());
+                System.out.println("  Year: " + game.getYearPublished());
+                System.out.println("  Players: " + game.getMinPlayers() + "-" + game.getMaxPlayers());
+                System.out.println("  Time: " + game.getPlayingTime() + " min");
                 System.out.println("  BGG Rating: " + game.getBggRating());
-                System.out.println("  Trudność: " + game.getComplexity());
-                System.out.println("  Zalecana liczba graczy: " + game.getSuggestedNumPlayers());
+                System.out.println("  Complexity: " + game.getComplexity());
+                System.out.println("  Recommended players: " + game.getSuggestedNumPlayers());
             } else {
                 System.out.println("❌ Nie udało się sparsować gry");
             }

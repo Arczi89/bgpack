@@ -429,7 +429,6 @@ describe('HomePage', () => {
 
     beforeEach(() => {
       mockApiService.saveGameList.mockClear();
-      // Mock window.prompt
       window.prompt = jest.fn();
     });
 
@@ -494,11 +493,11 @@ describe('HomePage', () => {
         id: 'list-1',
         listName: 'My Test List',
         games: mockGames,
-        searchCriteria: {
-          usernames: ['user1'],
-          filters: {},
-          exactPlayerFilter: false,
-        },
+        username: 'arczi89',
+        usernames: ['user1'],
+        filters: {},
+        exactPlayerFilter: false,
+        updatedAt: '2024-01-01T00:00:00Z',
         createdAt: '2024-01-01T00:00:00Z',
       });
 
@@ -603,7 +602,6 @@ describe('HomePage', () => {
 
       (window.prompt as jest.Mock).mockReturnValue('My Test List');
 
-      // Mock a slow save operation
       mockApiService.saveGameList.mockImplementation(
         () => new Promise(resolve => setTimeout(resolve, 100))
       );
@@ -642,11 +640,11 @@ describe('HomePage', () => {
         id: 'list-1',
         listName: 'My Test List',
         games: mockGames,
-        searchCriteria: {
-          usernames: ['user1'],
-          filters: {},
-          exactPlayerFilter: false,
-        },
+        username: 'arczi89',
+        usernames: ['user1'],
+        filters: {},
+        exactPlayerFilter: false,
+        updatedAt: '2024-01-01T00:00:00Z',
         createdAt: '2024-01-01T00:00:00Z',
       });
 
@@ -685,7 +683,6 @@ describe('HomePage', () => {
 
       mockApiService.saveGameList.mockRejectedValue(new Error('Save failed'));
 
-      // Mock window.alert
       window.alert = jest.fn();
 
       act(() => {

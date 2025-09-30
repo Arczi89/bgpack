@@ -11,7 +11,6 @@ public class TestXmlParser {
     public void testParseGameDetails() {
         BggXmlParserService parser = new BggXmlParserService();
 
-        // Przykładowa odpowiedź XML z API BGG
         String xmlResponse = """
             <?xml version="1.0" encoding="UTF-8"?>
             <boardgames>

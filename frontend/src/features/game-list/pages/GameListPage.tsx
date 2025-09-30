@@ -19,7 +19,6 @@ export const GameListPage: React.FC = () => {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
   const [localFilters, setLocalFilters] = useState(filters);
 
-  // Prepare search parameters for API
   const searchParams: GameSearchParams = {
     search: localSearchQuery || undefined,
     minPlayers: localFilters.minPlayers || undefined,
@@ -30,10 +29,8 @@ export const GameListPage: React.FC = () => {
     minRating: localFilters.minRating || undefined,
   };
 
-  // Use API hook to fetch games
   const { data: games, loading: isLoading, error } = useGames(searchParams);
 
-  // Update Redux store when data changes
   useEffect(() => {
     if (games) {
       dispatch(setGames(games));
@@ -61,9 +58,9 @@ export const GameListPage: React.FC = () => {
   return (
     <div className="px-4 py-6 sm:px-0">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Gry planszowe</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Board Games</h1>
         <p className="mt-2 text-gray-600">
-          Odkryj i przeglądaj gry planszowe z całego świata
+          Discover and browse board games from around the world
         </p>
       </div>
 
@@ -72,7 +69,7 @@ export const GameListPage: React.FC = () => {
           <div className="flex gap-4">
             <input
               type="text"
-              placeholder="Szukaj gier..."
+              placeholder="Search games..."
               value={localSearchQuery}
               onChange={e => setLocalSearchQuery(e.target.value)}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"

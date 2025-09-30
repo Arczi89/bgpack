@@ -32,13 +32,17 @@ const createMockGame = (
   bggRating: number,
   ownedBy: string[]
 ): Game => ({
-  id,
+  id: id.toString(),
   name,
   yearPublished,
   minPlayers,
   maxPlayers,
   playingTime,
+  minAge: 8,
+  description: `Description for ${name}`,
   bggRating,
+  averageRating: bggRating,
+  complexity: 2.5,
   ownedBy,
 });
 
@@ -51,30 +55,30 @@ const mockGames: Game[] = [
 const mockGameLists: GameList[] = [
   {
     id: 'list-1',
+    username: 'arczi89',
     listName: 'Strategy Games',
+    usernames: ['user1', 'user2'],
     games: mockGames,
-    searchCriteria: {
-      usernames: ['user1', 'user2'],
-      filters: {
-        minPlayers: 2,
-        maxPlayers: 4,
-      },
-      exactPlayerFilter: false,
+    filters: {
+      minPlayers: 2,
+      maxPlayers: 4,
     },
+    exactPlayerFilter: false,
     createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
   },
   {
     id: 'list-2',
+    username: 'arczi89',
     listName: 'Quick Games',
+    usernames: ['user2'],
     games: [mockGames[1], mockGames[2]],
-    searchCriteria: {
-      usernames: ['user2'],
-      filters: {
-        maxPlayingTime: 60,
-      },
-      exactPlayerFilter: true,
+    filters: {
+      maxPlayingTime: 60,
     },
+    exactPlayerFilter: true,
     createdAt: '2024-01-02T00:00:00Z',
+    updatedAt: '2024-01-02T00:00:00Z',
   },
 ];
 
@@ -357,14 +361,14 @@ describe('MyListsPage', () => {
 
     const largeGameList: GameList = {
       id: 'list-large',
+      username: 'arczi89',
       listName: 'Large List',
+      usernames: ['user1'],
       games: manyGames,
-      searchCriteria: {
-        usernames: ['user1'],
-        filters: {},
-        exactPlayerFilter: false,
-      },
+      filters: {},
+      exactPlayerFilter: false,
       createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     };
 
     mockApiService.getUserGameLists.mockResolvedValue([largeGameList]);

@@ -23,7 +23,7 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-echo "🚀 BGPack - Development Setup"
+echo "BGPack - Development Setup"
 echo "============================="
 
 # Function to check if port is in use
@@ -100,7 +100,7 @@ else
     print_success "Frontend started with PID: $FRONTEND_PID"
 fi
 
-print_success "🎉 BGPack is running!"
+print_success "BGPack is running!"
 echo ""
 echo "Backend ($BACKEND_TYPE):  http://localhost:8080"
 echo "Frontend (Local):         http://localhost:3000"

@@ -110,7 +110,6 @@ export function useMultipleOwnedGames(
     errors: [],
   });
 
-  // Stabilizuj usernames array aby uniknąć nieskończonej pętli
   const stableUsernames = useMemo(() => usernames, [usernames.join(',')]);
 
   const fetchData = useCallback(async () => {
@@ -139,7 +138,6 @@ export function useMultipleOwnedGames(
     }));
 
     try {
-      // Pobierz gry dla wszystkich użytkowników równolegle
       const validUsernames = stableUsernames
         .map(username => username.trim())
         .filter(username => username.length > 0);
@@ -163,7 +161,6 @@ export function useMultipleOwnedGames(
 
       const results = await Promise.all(promises);
 
-      // Połącz wszystkie gry w jedną listę z informacją o właścicielach
       const gameMap = new Map<string, any>();
       const emptyCollections: string[] = [];
       const errors: { username: string; error: string }[] = [];
@@ -180,13 +177,11 @@ export function useMultipleOwnedGames(
         games.forEach(game => {
           const gameId = game.id;
           if (gameMap.has(gameId)) {
-            // Jeśli gra już istnieje, dodaj użytkownika do listy właścicieli
             const existingGame = gameMap.get(gameId);
             if (!existingGame.ownedBy.includes(username)) {
               existingGame.ownedBy.push(username);
             }
           } else {
-            // Jeśli to nowa gra, dodaj ją z właścicielem
             const gameWithOwner = {
               ...game,
               ownedBy: [username],
@@ -214,7 +209,7 @@ export function useMultipleOwnedGames(
         errors: [],
       });
     }
-  }, [stableUsernames, excludeExpansions]); // Dependency na stableUsernames i excludeExpansions
+  }, [stableUsernames, excludeExpansions]);
 
   useEffect(() => {
     fetchData();

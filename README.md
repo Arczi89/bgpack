@@ -115,7 +115,7 @@ npm start
 # Windows - press Ctrl+C in start-app.bat window
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 bgpack/
@@ -199,7 +199,7 @@ curl http://localhost:8080/api/game-lists/admin
 curl -X DELETE http://localhost:8080/api/game-lists/admin/list-id
 ```
 
-## 🔍 Game Filtering System
+## Game Filtering System
 
 BGPack provides comprehensive filtering capabilities to help you find the perfect games for your group. The filtering system supports both **exact matching** and **overlap matching** for player counts, giving you flexibility in how you search for games.
 
@@ -384,7 +384,7 @@ The project includes automated code formatting and quality checks:
 - **Frontend**: Prettier for TypeScript/JavaScript/CSS formatting
 - **Backend**: Google Java Format + Checkstyle for Java code quality
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### BGG API Integration Issues
 
@@ -459,7 +459,7 @@ spring:
 3. **Rate limiting**: Ensure rate limits are not exceeded
 4. **SSL errors**: Backend is configured to ignore SSL certificate issues
 
-## 📊 Game Statistics Feature
+## Game Statistics Feature
 
 BGPack now includes advanced game statistics functionality that extends the basic BGG API with comprehensive game data caching and enhanced statistics retrieval.
 
@@ -700,6 +700,6 @@ curl -X POST http://localhost:8080/api/games/stats/batch \
   -d '["2536", "1234", "5678"]'
 ```
 
-## 📄 License
+## License
 
 This project is licensed under a custom license. See [LICENSE.md](LICENSE.md) for details.

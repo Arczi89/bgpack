@@ -1,28 +1,15 @@
-import { Game } from './Game';
+import { Game, GameFilters } from './Game';
 
 export interface GameList {
   id: string;
+  username: string;
   listName: string;
-  games: Game[];
-  searchCriteria: SearchCriteria;
-  createdAt: string;
-}
-
-export interface SearchCriteria {
   usernames: string[];
+  games: Game[];
   filters: GameFilters;
   exactPlayerFilter: boolean;
-}
-
-export interface GameFilters {
-  minPlayers?: number;
-  maxPlayers?: number;
-  minPlayingTime?: number;
-  maxPlayingTime?: number;
-  minAge?: number;
-  minRating?: number;
-  yearFrom?: number;
-  yearTo?: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface SaveGameListRequest {
