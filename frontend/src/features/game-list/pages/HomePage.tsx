@@ -161,6 +161,7 @@ export const HomePage: React.FC = () => {
             <input
               type="text"
               id="bgg-nicks"
+              data-testid="bgg-usernames-input"
               value={bggNicks}
               onChange={e => setBggNicks(e.target.value)}
               placeholder={t.bggUsernamesPlaceholder}
@@ -175,6 +176,7 @@ export const HomePage: React.FC = () => {
           <label className="flex items-center">
             <input
               type="checkbox"
+              data-testid="exclude-expansions-checkbox"
               checked={localExcludeExpansions}
               onChange={e => setLocalExcludeExpansions(e.target.checked)}
               disabled={isLoading}
@@ -348,6 +350,7 @@ export const HomePage: React.FC = () => {
         {/* Search Button */}
         <div className="mt-6">
           <button
+            data-testid="search-button"
             onClick={handleSearch}
             disabled={!bggNicks.trim() || isLoading}
             className="w-full bg-primary-600 text-white py-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-medium transition-all duration-200 flex items-center justify-center gap-3 relative overflow-hidden"

@@ -110,7 +110,8 @@ export function useMultipleOwnedGames(
     errors: [],
   });
 
-  const stableUsernames = useMemo(() => usernames, [usernames.join(',')]);
+  const usernamesKey = usernames.join(',');
+  const stableUsernames = useMemo(() => usernames, [usernamesKey]);
 
   const fetchData = useCallback(async () => {
     if (

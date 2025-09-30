@@ -133,7 +133,6 @@ const mockGames: Game[] = [
 const createMockStore = (initialState = {}) => {
   return configureStore({
     reducer: {
-      // Add minimal reducers for testing
       gameList: (state = { games: [], loading: false, error: null }) => state,
       filters: (state = {}) => state,
     },
@@ -183,8 +182,8 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByLabelText('BGG Usernames')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByTestId('bgg-usernames-input')).toBeInTheDocument();
+    expect(screen.getByTestId('search-button')).toBeInTheDocument();
   });
 
   it('should handle username input', () => {
@@ -207,8 +206,8 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const input = screen.getByLabelText('BGG Usernames');
-    const searchButton = screen.getByRole('button');
+    const input = screen.getByTestId('bgg-usernames-input');
+    const searchButton = screen.getByTestId('search-button');
 
     fireEvent.change(input, { target: { value: 'user1, user2' } });
     fireEvent.click(searchButton);
@@ -291,9 +290,7 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const expansionCheckbox = screen.getByLabelText(
-      'Exclude expansions (board games only)'
-    );
+    const expansionCheckbox = screen.getByTestId('exclude-expansions-checkbox');
     fireEvent.click(expansionCheckbox);
 
     expect(expansionCheckbox).toBeChecked();
@@ -319,13 +316,12 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const input = screen.getByLabelText('BGG Usernames');
-    const searchButton = screen.getByRole('button');
+    const input = screen.getByTestId('bgg-usernames-input');
+    const searchButton = screen.getByTestId('search-button');
 
     fireEvent.change(input, { target: { value: 'user1, user2' } });
     fireEvent.click(searchButton);
 
-    // Wait for the search to complete and results to be displayed
     await waitFor(() => {
       expect(screen.getByDisplayValue('20')).toBeInTheDocument();
     });
@@ -377,7 +373,7 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const input = screen.getByLabelText('BGG Usernames');
+    const input = screen.getByTestId('bgg-usernames-input');
     fireEvent.change(input, { target: { value: 'user1' } });
     expect(input).toHaveValue('user1');
   });
@@ -389,9 +385,7 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const checkbox = screen.getByLabelText(
-      'Exclude expansions (board games only)'
-    );
+    const checkbox = screen.getByTestId('exclude-expansions-checkbox');
     fireEvent.click(checkbox);
     expect(checkbox).toBeChecked();
   });
@@ -508,8 +502,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);
@@ -534,8 +528,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);
@@ -572,8 +566,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);
@@ -617,8 +611,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);
@@ -651,8 +645,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);
@@ -689,8 +683,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);
@@ -735,8 +729,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);
@@ -776,8 +770,8 @@ describe('HomePage', () => {
         </TestWrapper>
       );
 
-      const input = screen.getByLabelText('BGG Usernames');
-      const searchButton = screen.getByRole('button');
+      const input = screen.getByTestId('bgg-usernames-input');
+      const searchButton = screen.getByTestId('search-button');
 
       fireEvent.change(input, { target: { value: 'user1, user2' } });
       fireEvent.click(searchButton);

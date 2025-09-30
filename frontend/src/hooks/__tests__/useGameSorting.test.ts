@@ -404,9 +404,6 @@ describe('useGameFiltering', () => {
       })
     );
 
-    // Should return only games that have exactly 2-4 players:
-    // - Azul (2-4) - exact match ✓
-    // - All others have different ranges ❌
     expect(result.current).toHaveLength(1);
     expect(result.current.map(g => g.name)).toEqual(['Azul']);
   });
@@ -416,9 +413,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { minPlayers: 3, exactPlayerFilter: true })
     );
 
-    // Should return only games that have exactly min=3:
-    // - Catan (3-4) - exact match ✓
-    // - All others have different min values ❌
     expect(result.current).toHaveLength(1);
     expect(result.current.map(g => g.name)).toEqual(['Catan']);
   });
@@ -428,9 +422,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { maxPlayers: 6, exactPlayerFilter: true })
     );
 
-    // Should return only games that have exactly max=6:
-    // - Zombicide (1-6) - exact match ✓
-    // - All others have different max values ❌
     expect(result.current).toHaveLength(1);
     expect(result.current.map(g => g.name)).toEqual(['Zombicide']);
   });
@@ -440,7 +431,6 @@ describe('useGameFiltering', () => {
       useGameFiltering(mockGames, { minPlayers: 3, maxPlayers: 4 })
     );
 
-    // Should return all games that support 3-4 players (non-exact)
     expect(result.current).toHaveLength(6);
   });
 });

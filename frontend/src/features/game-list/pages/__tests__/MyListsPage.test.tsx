@@ -89,7 +89,6 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 describe('MyListsPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Mock window.confirm
     window.confirm = jest.fn();
   });
 
@@ -282,7 +281,6 @@ describe('MyListsPage', () => {
     mockApiService.deleteGameList.mockRejectedValue(new Error('Delete failed'));
     (window.confirm as jest.Mock).mockReturnValue(true);
 
-    // Mock window.alert
     window.alert = jest.fn();
 
     render(
