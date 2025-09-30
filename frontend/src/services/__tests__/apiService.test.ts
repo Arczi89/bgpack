@@ -52,7 +52,7 @@ describe('apiService', () => {
       const result = await apiService.getOwnedGamesWithStats('user1');
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/own/user1',
+        'http://localhost:8080/api/own/user1/with-stats',
         {
           headers: { 'Content-Type': 'application/json' },
         }
@@ -70,7 +70,7 @@ describe('apiService', () => {
       const result = await apiService.getOwnedGamesWithStats('user1', true);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/own/user1?excludeExpansions=true',
+        'http://localhost:8080/api/own/user1/with-stats?excludeExpansions=true',
         {
           headers: { 'Content-Type': 'application/json' },
         }
@@ -439,6 +439,7 @@ describe('apiService', () => {
       it('should delete a game list successfully', async () => {
         const mockResponse = {
           ok: true,
+          json: jest.fn().mockResolvedValue(undefined),
         };
         mockFetch.mockResolvedValue(mockResponse as any);
 

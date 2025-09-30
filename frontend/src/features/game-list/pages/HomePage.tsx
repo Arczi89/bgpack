@@ -191,10 +191,14 @@ export const HomePage: React.FC = () => {
           {/* Player Count Filters */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="minPlayers"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t.minPlayers}
               </label>
               <input
+                id="minPlayers"
                 type="number"
                 value={localFilters.minPlayers || ''}
                 onChange={e =>
@@ -210,10 +214,14 @@ export const HomePage: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="maxPlayers"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t.maxPlayers}
               </label>
               <input
+                id="maxPlayers"
                 type="number"
                 value={localFilters.maxPlayers || ''}
                 onChange={e =>
@@ -254,10 +262,14 @@ export const HomePage: React.FC = () => {
           {/* Playing Time Filters */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="minPlayTime"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t.minPlayTime}
               </label>
               <input
+                id="minPlayTime"
                 type="number"
                 value={localFilters.minPlayingTime || ''}
                 onChange={e =>
@@ -273,10 +285,14 @@ export const HomePage: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="maxPlayTime"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t.maxPlayTime}
               </label>
               <input
+                id="maxPlayTime"
                 type="number"
                 value={localFilters.maxPlayingTime || ''}
                 onChange={e =>

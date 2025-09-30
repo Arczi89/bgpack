@@ -203,7 +203,14 @@ export const GameListPage: React.FC = () => {
                 </span>
               </div>
 
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+              <p
+                className="text-gray-600 text-sm mb-4 overflow-hidden"
+                style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical',
+                }}
+              >
                 {game.description}
               </p>
 

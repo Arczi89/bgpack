@@ -34,7 +34,7 @@ jest.mock('../../../../contexts/LanguageContext', () => ({
       subtitle: 'Discover board games',
       bggUsernames: 'BGG Usernames',
       bggUsernamesPlaceholder: 'Enter usernames separated by commas',
-      searchGames: 'Search',
+      searchGames: 'Search Games',
       searching: 'Searching...',
       minPlayers: 'Min Players',
       maxPlayers: 'Max Players',
@@ -53,12 +53,22 @@ jest.mock('../../../../contexts/LanguageContext', () => ({
       saveResults: 'Save Results',
       noGamesFound: 'No games found',
       noGamesFoundDesc: 'Try different search criteria',
-      readyToDiscover: 'Ready to discover',
+      readyToDiscover: 'Ready to discover games?',
       readyToDiscoverDesc: 'Enter BGG usernames to get started',
       game: 'Game',
       players: 'Players',
       time: 'Time',
       ownedBy: 'Owned By',
+      excludeExpansions: 'Exclude expansions (board games only)',
+      show: 'Show:',
+      perPage: 'per page',
+      pageOf: 'Page {current} of {total}',
+      all: 'All',
+      previous: 'Previous',
+      next: 'Next',
+      emptyCollectionsInfo: 'Users with empty collections:',
+      userErrors: 'Errors while fetching collections:',
+      exactPlayerFilter: 'Exact player count match',
     },
   }),
 }));
@@ -122,7 +132,11 @@ const mockGames: Game[] = [
 
 const createMockStore = (initialState = {}) => {
   return configureStore({
-    reducer: {},
+    reducer: {
+      // Add minimal reducers for testing
+      gameList: (state = { games: [], loading: false, error: null }) => state,
+      filters: (state = {}) => state,
+    },
     preloadedState: initialState,
   });
 };
@@ -218,11 +232,13 @@ describe('HomePage', () => {
     expect(screen.getByText('Searching...')).toBeInTheDocument();
   });
 
-  it('should display error state', () => {
+  it('should display error state', async () => {
     mockUseMultipleOwnedGames.mockReturnValue({
       data: null,
       loading: false,
       error: 'User not found',
+      emptyCollections: [],
+      errors: [],
     });
 
     render(
@@ -231,14 +247,24 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByText('Error: Test error')).toBeInTheDocument();
+    const input = screen.getByLabelText('BGG Usernames');
+    const searchButton = screen.getByRole('button');
+
+    fireEvent.change(input, { target: { value: 'user1' } });
+    fireEvent.click(searchButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Error loading collection')).toBeInTheDocument();
+    });
   });
 
-  it('should display games when data is loaded', () => {
+  it('should display games when data is loaded', async () => {
     mockUseMultipleOwnedGames.mockReturnValue({
       data: mockGames,
       loading: false,
       error: null,
+      emptyCollections: [],
+      errors: [],
     });
 
     render(
@@ -247,7 +273,15 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByText('Catan')).toBeInTheDocument();
+    const input = screen.getByLabelText('BGG Usernames');
+    const searchButton = screen.getByRole('button');
+
+    fireEvent.change(input, { target: { value: 'user1' } });
+    fireEvent.click(searchButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('7 Cudów Świata')).toBeInTheDocument();
+    });
   });
 
   it('should handle expansion filter toggle', () => {
@@ -257,13 +291,23 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const expansionCheckbox = screen.getByLabelText('Exclude expansions');
+    const expansionCheckbox = screen.getByLabelText(
+      'Exclude expansions (board games only)'
+    );
     fireEvent.click(expansionCheckbox);
 
     expect(expansionCheckbox).toBeChecked();
   });
 
-  it('should handle pagination controls', () => {
+  it('should handle pagination controls', async () => {
+    mockUseMultipleOwnedGames.mockReturnValue({
+      data: mockGames,
+      loading: false,
+      error: null,
+      emptyCollections: [],
+      errors: [],
+    });
+
     mockUseGamePagination.mockReturnValue({
       paginatedGames: mockGames.slice(0, 2),
       totalPages: 2,
@@ -274,6 +318,17 @@ describe('HomePage', () => {
         <HomePage />
       </TestWrapper>
     );
+
+    const input = screen.getByLabelText('BGG Usernames');
+    const searchButton = screen.getByRole('button');
+
+    fireEvent.change(input, { target: { value: 'user1, user2' } });
+    fireEvent.click(searchButton);
+
+    // Wait for the search to complete and results to be displayed
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('20')).toBeInTheDocument();
+    });
 
     const itemsPerPageSelect = screen.getByDisplayValue('20');
     fireEvent.change(itemsPerPageSelect, { target: { value: '10' } });
@@ -288,8 +343,8 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const minPlayersInput = screen.getByLabelText('minPlayers');
-    const maxPlayersInput = screen.getByLabelText('maxPlayers');
+    const minPlayersInput = screen.getByLabelText('Min Players');
+    const maxPlayersInput = screen.getByLabelText('Max Players');
 
     fireEvent.change(minPlayersInput, { target: { value: '2' } });
     fireEvent.change(maxPlayersInput, { target: { value: '4' } });
@@ -322,7 +377,7 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const input = screen.getByDisplayValue('');
+    const input = screen.getByLabelText('BGG Usernames');
     fireEvent.change(input, { target: { value: 'user1' } });
     expect(input).toHaveValue('user1');
   });
@@ -334,7 +389,9 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    const checkbox = screen.getByLabelText('Exclude expansions');
+    const checkbox = screen.getByLabelText(
+      'Exclude expansions (board games only)'
+    );
     fireEvent.click(checkbox);
     expect(checkbox).toBeChecked();
   });
@@ -346,7 +403,7 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByText('Ready to discover')).toBeInTheDocument();
+    expect(screen.getByText('Ready to discover games?')).toBeInTheDocument();
   });
 
   it('should render search button', () => {
@@ -356,7 +413,7 @@ describe('HomePage', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByText('Search')).toBeInTheDocument();
+    expect(screen.getByText('Search Games')).toBeInTheDocument();
   });
 
   it('should not show save results button by default', () => {
@@ -445,13 +502,17 @@ describe('HomePage', () => {
         errors: [],
       });
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       await waitFor(() => {
         expect(screen.getByText('Save Results')).toBeInTheDocument();
@@ -467,13 +528,17 @@ describe('HomePage', () => {
         errors: [],
       });
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       expect(screen.queryByText('Save Results')).not.toBeInTheDocument();
     });
@@ -501,13 +566,17 @@ describe('HomePage', () => {
         createdAt: '2024-01-01T00:00:00Z',
       });
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       await waitFor(() => {
         expect(screen.getByText('Save Results')).toBeInTheDocument();
@@ -524,7 +593,7 @@ describe('HomePage', () => {
 
       expect(mockApiService.saveGameList).toHaveBeenCalledWith('arczi89', {
         listName: 'My Test List',
-        usernames: [],
+        usernames: ['user1', 'user2'],
         games: mockGames,
         filters: {},
         exactPlayerFilter: false,
@@ -542,13 +611,17 @@ describe('HomePage', () => {
 
       (window.prompt as jest.Mock).mockReturnValue(null);
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       await waitFor(() => {
         expect(screen.getByText('Save Results')).toBeInTheDocument();
@@ -572,13 +645,17 @@ describe('HomePage', () => {
 
       (window.prompt as jest.Mock).mockReturnValue('');
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       await waitFor(() => {
         expect(screen.getByText('Save Results')).toBeInTheDocument();
@@ -606,13 +683,17 @@ describe('HomePage', () => {
         () => new Promise(resolve => setTimeout(resolve, 100))
       );
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       await waitFor(() => {
         expect(screen.getByText('Save Results')).toBeInTheDocument();
@@ -648,13 +729,17 @@ describe('HomePage', () => {
         createdAt: '2024-01-01T00:00:00Z',
       });
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       await waitFor(() => {
         expect(screen.getByText('Save Results')).toBeInTheDocument();
@@ -685,13 +770,17 @@ describe('HomePage', () => {
 
       window.alert = jest.fn();
 
-      act(() => {
-        render(
-          <TestWrapper>
-            <HomePage />
-          </TestWrapper>
-        );
-      });
+      render(
+        <TestWrapper>
+          <HomePage />
+        </TestWrapper>
+      );
+
+      const input = screen.getByLabelText('BGG Usernames');
+      const searchButton = screen.getByRole('button');
+
+      fireEvent.change(input, { target: { value: 'user1, user2' } });
+      fireEvent.click(searchButton);
 
       await waitFor(() => {
         expect(screen.getByText('Save Results')).toBeInTheDocument();

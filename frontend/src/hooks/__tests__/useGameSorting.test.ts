@@ -34,12 +34,12 @@ const createMockGame = (
 });
 
 const mockGames: Game[] = [
-  createMockGame('1', 'Zombicide', 2012, 1, 6, 60, null, ['user1']),
-  createMockGame('2', 'Azul', 2017, 2, 4, 45, null, ['user2']),
-  createMockGame('3', 'Catan', 1995, 3, 4, 90, null, ['user1', 'user3']),
-  createMockGame('4', 'Ticket to Ride', 2004, 2, 5, 45, null, ['user2']),
-  createMockGame('5', 'Wingspan', 2019, 1, 5, 70, null, ['user3']),
-  createMockGame('6', 'Gloomhaven', 2017, 1, 4, 120, null, ['user1']),
+  createMockGame('1', 'Zombicide', 2012, 1, 6, 60, 7.5, ['user1']),
+  createMockGame('2', 'Azul', 2017, 2, 4, 45, 8.2, ['user2']),
+  createMockGame('3', 'Catan', 1995, 3, 4, 90, 7.1, ['user1', 'user3']),
+  createMockGame('4', 'Ticket to Ride', 2004, 2, 5, 45, 7.4, ['user2']),
+  createMockGame('5', 'Wingspan', 2019, 1, 5, 70, 8.1, ['user3']),
+  createMockGame('6', 'Gloomhaven', 2017, 1, 4, 120, 8.8, ['user1']),
 ];
 
 describe('useGameSorting', () => {
@@ -120,40 +120,50 @@ describe('useGameSorting', () => {
   });
 
   it('should sort games by BGG rating ascending', () => {
+    const gamesWithRatings = mockGames.map((game, index) => ({
+      ...game,
+      bggRating: [7.5, 8.2, 7.1, 7.4, 8.1, 8.8][index],
+    }));
+
     const { result } = renderHook(() =>
       useGameSorting({
-        games: mockGames,
+        games: gamesWithRatings,
         sortBy: 'bggRating',
         sortOrder: 'asc',
       })
     );
 
     expect(result.current).toEqual([
-      mockGames[2], // Catan (7.1)
-      mockGames[3], // Ticket to Ride (7.4)
-      mockGames[0], // Zombicide (7.5)
-      mockGames[4], // Wingspan (8.1)
-      mockGames[1], // Azul (8.2)
-      mockGames[5], // Gloomhaven (8.8)
+      gamesWithRatings[2], // Catan (7.1)
+      gamesWithRatings[3], // Ticket to Ride (7.4)
+      gamesWithRatings[0], // Zombicide (7.5)
+      gamesWithRatings[4], // Wingspan (8.1)
+      gamesWithRatings[1], // Azul (8.2)
+      gamesWithRatings[5], // Gloomhaven (8.8)
     ]);
   });
 
   it('should sort games by BGG rating descending', () => {
+    const gamesWithRatings = mockGames.map((game, index) => ({
+      ...game,
+      bggRating: [7.5, 8.2, 7.1, 7.4, 8.1, 8.8][index],
+    }));
+
     const { result } = renderHook(() =>
       useGameSorting({
-        games: mockGames,
+        games: gamesWithRatings,
         sortBy: 'bggRating',
         sortOrder: 'desc',
       })
     );
 
     expect(result.current).toEqual([
-      mockGames[5], // Gloomhaven (8.8)
-      mockGames[1], // Azul (8.2)
-      mockGames[4], // Wingspan (8.1)
-      mockGames[0], // Zombicide (7.5)
-      mockGames[3], // Ticket to Ride (7.4)
-      mockGames[2], // Catan (7.1)
+      gamesWithRatings[5], // Gloomhaven (8.8)
+      gamesWithRatings[1], // Azul (8.2)
+      gamesWithRatings[4], // Wingspan (8.1)
+      gamesWithRatings[0], // Zombicide (7.5)
+      gamesWithRatings[3], // Ticket to Ride (7.4)
+      gamesWithRatings[2], // Catan (7.1)
     ]);
   });
 
