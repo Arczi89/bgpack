@@ -12,7 +12,40 @@ export interface Game {
   bggRating: number | null;
   averageRating: number | null;
   complexity: number | null;
+  averageWeight?: number | null;
+  suggestedNumPlayers?: string | null;
   ownedBy?: string[];
+}
+
+export interface GameStats {
+  gameId: string;
+  name: string;
+  bggRating: number | null;
+  averageRating: number | null;
+  averageWeight: number | null;
+  suggestedNumPlayers: string | null;
+  numOwned: number | null;
+  numWant: number | null;
+  numWishlist: number | null;
+  numComments: number | null;
+  numWeights: number | null;
+  yearPublished: number | null;
+  minPlayers: number | null;
+  maxPlayers: number | null;
+  playingTime: number | null;
+  minAge: number | null;
+  imageUrl?: string;
+  thumbnailUrl?: string;
+}
+
+export interface GameWithStats extends Game {
+  averageWeight?: number | null;
+  suggestedNumPlayers?: string | null;
+  numOwned?: number | null;
+  numWant?: number | null;
+  numWishlist?: number | null;
+  numComments?: number | null;
+  numWeights?: number | null;
 }
 
 export interface GameFilters {

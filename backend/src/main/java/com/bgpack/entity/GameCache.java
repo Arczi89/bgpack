@@ -4,60 +4,48 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Game {
-    @Field("id")
+@Document(collection = "game_cache")
+public class GameCache {
+
+    @Id
     private String id;
 
-    @Field("name")
+    private String gameId;
     private String name;
-
-    @Field("yearPublished")
     private Integer yearPublished;
-
-    @Field("minPlayers")
     private Integer minPlayers;
-
-    @Field("maxPlayers")
     private Integer maxPlayers;
-
-    @Field("playingTime")
     private Integer playingTime;
-
-    @Field("minAge")
     private Integer minAge;
-
-    @Field("description")
     private String description;
-
-    @Field("imageUrl")
     private String imageUrl;
-
-    @Field("thumbnailUrl")
     private String thumbnailUrl;
-
-    @Field("bggRating")
     private Double bggRating;
-
-    @Field("averageRating")
     private Double averageRating;
-
-    @Field("complexity")
     private Double complexity;
-
-    @Field("averageWeight")
     private Double averageWeight;
-
-    @Field("suggestedNumPlayers")
     private String suggestedNumPlayers;
+    private String recommendedPlayers;
 
-    @Field("ownedBy")
-    private List<String> ownedBy;
+    // Cache metadata
+    private LocalDateTime cachedAt;
+    private LocalDateTime lastUpdated;
+    private Integer cacheHits; // How many times this cache was used
+
+    public void incrementCacheHits() {
+        this.cacheHits = (this.cacheHits == null ? 0 : this.cacheHits) + 1;
+    }
+
+    public void updateCacheTimestamp() {
+        this.lastUpdated = LocalDateTime.now();
+    }
 }

@@ -70,7 +70,7 @@ export function useOwnedGames(username: string) {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const data = await apiService.getOwnedGames(username);
+      const data = await apiService.getOwnedGamesWithStats(username);
       setState({ data, loading: false, error: null });
     } catch (error) {
       setState({
@@ -89,6 +89,13 @@ export function useOwnedGames(username: string) {
     ...state,
     refetch: fetchData,
   };
+}
+
+export function useGameStats(gameIds: string[]) {
+  return useApi(
+    () => apiService.getGameStats(gameIds),
+    [JSON.stringify(gameIds)]
+  );
 }
 
 export function useMultipleOwnedGames(
@@ -139,7 +146,7 @@ export function useMultipleOwnedGames(
 
       const promises = validUsernames.map(async username => {
         try {
-          const games = await apiService.getOwnedGames(
+          const games = await apiService.getOwnedGamesWithStats(
             username,
             excludeExpansions
           );

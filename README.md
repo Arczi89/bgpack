@@ -459,6 +459,247 @@ spring:
 3. **Rate limiting**: Ensure rate limits are not exceeded
 4. **SSL errors**: Backend is configured to ignore SSL certificate issues
 
+## 📊 Game Statistics Feature
+
+BGPack now includes advanced game statistics functionality that extends the basic BGG API with comprehensive game data caching and enhanced statistics retrieval.
+
+### Overview
+
+The new functionality extends the BGPack system with the ability to fetch and store extended game statistics from the BoardGameGeek API. The system automatically fetches and caches statistics to avoid slow BGG API queries.
+
+### New Backend Endpoints
+
+#### 1. `GET /api/games/{gameId}/stats`
+
+Retrieves statistics for a single game.
+
+**Parameters:**
+
+- `gameId` (path) - BGG game ID
+
+**Response:**
+
+```json
+{
+  "gameId": "2536",
+  "name": "Vabanque",
+  "bggRating": 6.46569,
+  "averageRating": 5.75008,
+  "averageWeight": 1.44593,
+  "suggestedNumPlayers": "3, 4, 5"
+}
+```
+
+#### 2. `GET /api/own/{username}/with-stats`
+
+Retrieves user's games with extended statistics.
+
+**Parameters:**
+
+- `username` (path) - BGG username
+- `excludeExpansions` (query, optional) - whether to exclude expansions (default: false)
+
+**Response:**
+
+```json
+[
+  {
+    "id": "2536",
+    "name": "Vabanque",
+    "yearPublished": 2001,
+    "minPlayers": 3,
+    "maxPlayers": 6,
+    "playingTime": 45,
+    "minAge": 12,
+    "description": "A party meets for a game...",
+    "imageUrl": "https://cf.geekdo-images.com/...",
+    "thumbnailUrl": "https://cf.geekdo-images.com/...",
+    "bggRating": 6.46569,
+    "averageRating": 5.75008,
+    "complexity": 1.44593,
+    "ownedBy": ["user1", "user2"],
+    "averageWeight": 1.44593,
+    "suggestedNumPlayers": "3, 4, 5"
+  }
+]
+```
+
+#### 3. `POST /api/games/stats/batch`
+
+Retrieves statistics for multiple games at once.
+
+**Body:**
+
+```json
+["2536", "1234", "5678"]
+```
+
+**Response:**
+
+```json
+[
+  {
+    "gameId": "2536",
+    "name": "Vabanque",
+    "bggRating": 6.46569,
+    "averageRating": 5.75008,
+    "averageWeight": 1.44593,
+    "suggestedNumPlayers": "3, 4, 5"
+  }
+]
+```
+
+### Data Sources from BGG API
+
+The system uses the following BGG API endpoints:
+
+#### Basic endpoints (existing):
+
+- `/thing?id={id}&stats=1` - single game details with statistics
+- `/collection/{username}?own=1&stats=1` - user collection with basic statistics
+- `/thing?id={ids}&stats=1` - multiple games with statistics
+
+#### New endpoints:
+
+- `/thing?id={id}&stats=1` - extended statistics for single game
+- `/thing?id={ids}&stats=1` - extended statistics for multiple games
+
+### Data Structure
+
+#### New fields in Game model:
+
+- `averageWeight` - average game weight (difficulty)
+- `suggestedNumPlayers` - suggested number of players
+
+#### New GameStats entity:
+
+```java
+@Document(collection = "game_stats")
+public class GameStats {
+    private String gameId;
+    private String name;
+    private Double bggRating;
+    private Double averageRating;
+    private Double averageWeight;
+    private String suggestedNumPlayers;
+    // Cache metadata
+    private LocalDateTime cachedAt;
+    private LocalDateTime lastUpdated;
+    private Integer cacheHits;
+}
+```
+
+### Caching Mechanism
+
+1. **Cache Check** - system first checks if statistics are already in the database
+2. **BGG Fetch** - if not in cache, fetches from BGG API
+3. **Cache Save** - saves fetched data to database with metadata
+4. **Usage Tracking** - counts how many times data was used
+
+### Frontend
+
+#### New TypeScript types:
+
+```typescript
+export interface GameStats {
+  gameId: string;
+  name: string;
+  bggRating: number | null;
+  averageRating: number | null;
+  averageWeight: number | null;
+  suggestedNumPlayers: string | null;
+}
+
+export interface GameWithStats extends Game {
+  averageWeight?: number | null;
+  suggestedNumPlayers?: string | null;
+}
+```
+
+#### New API Service methods:
+
+```typescript
+async getOwnedGamesWithStats(username: string, excludeExpansions?: boolean): Promise<GameWithStats[]>
+async getGameStats(gameId: string): Promise<GameStats>
+async getMultipleGameStats(gameIds: string[]): Promise<GameStats[]>
+```
+
+### Logging and Monitoring
+
+The system logs the following information:
+
+- Number of games fetched for a given user
+- Number of elements fetched for a given game
+- Errors during BGG API fetching
+- Cache hit/miss information
+
+Example logs:
+
+```
+INFO - Getting stats for 5 games
+INFO - Found cached stats for game ID: 2536
+INFO - Fetching 3 missing games from BGG API
+INFO - Successfully fetched and cached stats for 3 games
+```
+
+### Performance Optimization
+
+1. **Cache Priority** - always checks cache before BGG API
+2. **Batch Requests** - fetches multiple games simultaneously
+3. **Rate Limiting** - respects BGG API limits
+4. **Retry Mechanism** - automatic retries on errors
+5. **Circuit Breaker** - protection against API overload
+
+### Configuration
+
+All settings are in `application.yml`:
+
+```yaml
+bgg:
+  api:
+    base-url: "https://www.boardgamegeek.com/xmlapi2"
+    timeout: 60000
+    rate-limit: 1.0 # requests per second
+    max-requests-per-hour: 3600
+    circuit-breaker-threshold: 5
+    circuit-breaker-timeout: 300
+```
+
+### Statistics Completeness Criteria
+
+Statistics are considered complete when they contain all four key fields:
+
+- `bggRating` - BGG rating
+- `averageRating` - average rating
+- `averageWeight` - average difficulty
+- `suggestedNumPlayers` - suggested number of players
+
+Other fields are optional and do not affect completeness assessment.
+
+### Testing
+
+To test the new endpoints:
+
+1. **Single game:**
+
+```bash
+curl http://localhost:8080/api/games/2536/stats
+```
+
+2. **User games with statistics:**
+
+```bash
+curl http://localhost:8080/api/own/username/with-stats
+```
+
+3. **Multiple games:**
+
+```bash
+curl -X POST http://localhost:8080/api/games/stats/batch \
+  -H "Content-Type: application/json" \
+  -d '["2536", "1234", "5678"]'
+```
+
 ## 📄 License
 
 This project is licensed under a custom license. See [LICENSE.md](LICENSE.md) for details.

@@ -1,0 +1,287 @@
+<boardgames termsofuse="https://boardgamegeek.com/xmlapi/termsofuse">
+			<boardgame objectid="2536">
+   <yearpublished>2001</yearpublished>
+   <minplayers>3</minplayers>
+   <maxplayers>6</maxplayers>
+   <playingtime>45</playingtime>
+   <minplaytime>30</minplaytime>
+   <maxplaytime>45</maxplaytime>
+   <age>12</age>
+
+   	   <name primary="true" sortindex="1">Vabanque</name>
+   	   <name  sortindex="1">바방크</name>
+   
+   <description>A party meets for a game in the casino. After the players determine how much money can be won at the casino tables they play their character cards and move their pawns to a casino table. The payout can be multiplied or lost to card sharks. In the beginning the stakes are low but they increase from round to round. In Vabanque, if you carefully watch the others, and guess their bluffs, you can win a lot. The player with the most money after four rounds is the winner.&lt;br/&gt;&lt;br/&gt;</description>
+
+   	   <thumbnail>https://cf.geekdo-images.com/wOZ1EZRFzwG4v3oVAcgDQg__small/img/-hGuNRktptEkdhHSoITUG_Na7U0=/fit-in/200x150/filters:strip_icc()/pic5196896.jpg</thumbnail>
+	   <image>https://cf.geekdo-images.com/wOZ1EZRFzwG4v3oVAcgDQg__original/img/XY5qcnbpQr6E-uCk0LmSEWssu48=/0x0/filters:format(jpeg)/pic5196896.jpg</image>
+   
+   	   		   <boardgamepublisher objectid="30928">Igiari</boardgamepublisher>
+      	   		   <boardgamepublisher objectid="9881">New Games Order, LLC</boardgamepublisher>
+      	   		   <boardgamepublisher objectid="26208">Winning Moves Germany</boardgamepublisher>
+      	   		   <boardgamepodcastepisode objectid="448735">[FIJ Cannes 2022] Raphaël Bernardi – Igiari</boardgamepodcastepisode>
+      	   		   <boardgamehonor objectid="19620">2002 Japan Boardgame Prize Best Foreign Game for Beginners Nominee</boardgamehonor>
+      	   		   <boardgamefamily objectid="22783">Admin: Better Description Needed!</boardgamefamily>
+      	   		   <boardgamemechanic objectid="2014">Betting and Bluffing</boardgamemechanic>
+      	   		   <boardgamecategory objectid="1023">Bluffing</boardgamecategory>
+      	      	   		   <boardgamedesigner objectid="138">Leo Colovini</boardgamedesigner>
+      	   		   <boardgamefamily objectid="76458">Digital Implementations: BrettspielWelt</boardgamefamily>
+      	   		   <boardgamefamily objectid="70948">Digital Implementations: Tabletopia</boardgamefamily>
+      	   		   <boardgameversion objectid="450246">English/French edition</boardgameversion>
+      	   		   <boardgamedesigner objectid="125">Bruno Faidutti</boardgamedesigner>
+      	   		   <boardgamesubdomain objectid="5499">Family Games</boardgamesubdomain>
+      	      	   		   <boardgameversion objectid="53191">German edition</boardgameversion>
+      	      	      	      	      	      	      	      	      	   		   <boardgameartist objectid="124026">Yolaine Glénisson</boardgameartist>
+      	   		   <cardset objectid="95870">Igiari English/French ed (2021)</cardset>
+      	   		   <boardgameversion objectid="375716">Japanese edition</boardgameversion>
+      	   		   <boardgameversion objectid="573772">Korean edition</boardgameversion>
+      	      	   		   <boardgameartist objectid="78139">Clément Masson</boardgameartist>
+      	   		   <boardgameartist objectid="59">Marcel-André Casasola Merkle</boardgameartist>
+      	   		   <boardgameeditor objectid="59">Marcel-André Casasola Merkle</boardgameeditor>
+      	      	      	      	      	      	      	   		   <cardset objectid="95869">Winning Moves Games German ed (2001)</cardset>
+      	   		   <cardset objectid="102352">Winning Moves German edition (2001)</cardset>
+      	   		   <boardgamepodcastepisode objectid="174182">보톡스(Boardgame Talks) 제27회 - Francis Tresham, Caylus Magna Carta, Cavum, Vabanque</boardgamepodcastepisode>
+      
+   <poll name="suggested_numplayers" title="User Suggested Number of Players" totalvotes="10">
+			
+		<results numplayers="1">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="5" />
+				</results>					
+			
+		<results numplayers="2">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="5" />
+				</results>					
+			
+		<results numplayers="3">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="3" />
+					<result value="Not Recommended" numvotes="2" />
+				</results>					
+			
+		<results numplayers="4">		
+					<result value="Best" numvotes="3" />
+					<result value="Recommended" numvotes="6" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="5">		
+					<result value="Best" numvotes="6" />
+					<result value="Recommended" numvotes="1" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="6">		
+					<result value="Best" numvotes="6" />
+					<result value="Recommended" numvotes="1" />
+					<result value="Not Recommended" numvotes="0" />
+				</results>					
+			
+		<results numplayers="6+">		
+					<result value="Best" numvotes="0" />
+					<result value="Recommended" numvotes="0" />
+					<result value="Not Recommended" numvotes="4" />
+				</results>					
+	</poll>
+<poll-summary name="suggested_numplayers"  title="User Suggested Number of Players">
+  <result name="bestwith" value="Best with 5–6 players" />
+  <result name="recommmendedwith" value="Recommended with 3–6 players" />
+</poll-summary>
+
+   <poll name="language_dependence" title="Language Dependence" totalvotes="5">
+			
+		<results>		
+					<result level="1" value="No necessary in-game text" numvotes="4" />
+					<result level="2" value="Some necessary text - easily memorized or small crib sheet" numvotes="1" />
+					<result level="3" value="Moderate in-game text - needs crib sheet or paste ups" numvotes="0" />
+					<result level="4" value="Extensive use of text - massive conversion needed to be playable" numvotes="0" />
+					<result level="5" value="Unplayable in another language" numvotes="0" />
+				</results>					
+	</poll>
+
+   <poll name="suggested_playerage" title="User Suggested Player Age" totalvotes="5">
+			<results>		
+					<result value="2" numvotes="0" />
+					<result value="3" numvotes="0" />
+					<result value="4" numvotes="0" />
+					<result value="5" numvotes="0" />
+					<result value="6" numvotes="0" />
+					<result value="8" numvotes="2" />
+					<result value="10" numvotes="1" />
+					<result value="12" numvotes="2" />
+					<result value="14" numvotes="0" />
+					<result value="16" numvotes="0" />
+					<result value="18" numvotes="0" />
+					<result value="21 and up" numvotes="0" />
+				</results>					
+	</poll>
+
+
+      <comment username="npetry" rating="N/A">Played this once, and it was -- strange.  I won the game, but it seemed purely a matter of luck.  Will need to play this some more before deciding on a rating.</comment>
+      <comment username="chaman bri" rating="N/A">Jeu fait maison.</comment>
+      <comment username="chaman" rating="N/A">Jeu fait maison.</comment>
+      <comment username="markhu" rating="N/A">3-6p, 30m.  bluffing by brunoF</comment>
+      <comment username="tpancoast" rating="N/A">Picked up off the TBGT Prize Table.</comment>
+      <comment username="starkeyboy" rating="N/A">Beer-pretzel.  Bluffing.</comment>
+      <comment username="wcordewiner" rating="N/A">Unplayed</comment>
+      <comment username="Nickel City Gamers" rating="N/A">Scott</comment>
+      <comment username="jostrand" rating="N/A">Looks interesting, and I do love bluffing and Colovini...</comment>
+      <comment username="alvae64" rating="N/A">Purchased from Troll and Toad</comment>
+      <comment username="verdigast" rating="N/A">Bruno Faidutti and Leo Colvini; A party meets for a game in the casino. After the players determine how much money can be won at the casino tables they play their character cards and move their pawns to a casino table. The payout can be multiplied or lost to card sharks.
+In the beginning the stakes are low but they increase from round to round. If you carefully watch the others, and guess their bluffs, you can win a lot.
+
+</comment>
+      <comment username="pater pan" rating="N/A">1/02,</comment>
+      <comment username="Coffeebike" rating="N/A">Note, ScubaPA wrote, &quot;I wrote to Bruno Faidutti and he was kind enough to reply and said that indeed character cards can be played on more than one table as the rules imply but don&#039;t state specifically.&quot;</comment>
+      <comment username="gamellerbe" rating="N/A">678</comment>
+      <comment username="yama147" rating="N/A">NGOへ貸出し中
+保留</comment>
+      <comment username="splot" rating="N/A">Unplayed.</comment>
+      <comment username="zhaiqichen" rating="N/A">winning moves</comment>
+      <comment username="RightWrong" rating="N/A">Missing 5 bills, but still quite playable.</comment>
+      <comment username="gavken" rating="N/A">Sold</comment>
+      <comment username="Brederic" rating="N/A">@ BSW</comment>
+      <comment username="bayspiel" rating="N/A">04.04.06.02</comment>
+      <comment username="nconc" rating="N/A">感想としては評判どおりと言う感じがしましたね
+こういうのが盛り上がれる人とやる場合はいいかも
+インタラクションのみで、理詰めで考えても仕方がないゲームなので、そういう点を許容できるかどうかで評価がかわってくると思う
+ツッコミどころ満載で、システムの欠点みたいなものはあるのだけど、遊んで面白いかどうかってところだけ見ると面白いんだよね
+だからと言ってはなんなんだけど、どのゲームにも言えることなのだけどこういうのを楽しめる人と是非遊んでもらいたいな</comment>
+      <comment username="IsItMyTurnYet" rating="N/A">Top 50 WTP # 25</comment>
+      <comment username="chestond" rating="N/A">3-6</comment>
+      <comment username="Katabrok" rating="N/A">Bluff game out of print for up to 6 players. Seems chaotic.</comment>
+      <comment username="Alcuinus" rating="N/A">Colvini + Faidutti. Fun bluffing game that works well with 6 players.</comment>
+      <comment username="mellow300" rating="N/A">D2-3</comment>
+      <comment username="dddddddokkkii" rating="N/A">2.65</comment>
+      <comment username="evdm" rating="N/A">Sold at Spiel 2024</comment>
+      <comment username="ewhalen01" rating="N/A">new version coming out? tom vassel</comment>
+      <comment username="BastardCafe" rating="N/A">1 ESSEN_201.3</comment>
+      <comment username="dtivadar" rating="N/A">Essen 2021</comment>
+      <comment username="Geigersc" rating="N/A">6</comment>
+      <comment username="pikkdogs" rating="N/A">Made a homemade copy. Yet to play.</comment>
+      <comment username="jensen515" rating="N/A">2 players
+3 players
+4 players
+5 players
+6 players
+
+24 x 5s
+18 x 10s
+12 x 20s
+6 x 50s
+840 total
+
+10 x 5000
+20 x 10 000
+10 x 20 000
+10 x 50 000
+20 x 100 000
+10 x 500 000
+7950 000</comment>
+      <comment username="oopstoons" rating="N/A">DIY in Las Vegas</comment>
+      <comment username="RobertBrem" rating="N/A">https://www.youtube.com/watch?v=qQUutdH3AVI</comment>
+      <comment username="andy5463" rating="N/A">Sleeved</comment>
+      <comment username="Southpaw01" rating="N/A">6 Players</comment>
+      <comment username="Mister_Peon" rating="N/A">L sagt nein weil Spieleranzahl </comment>
+      <comment username="monkeyburp" rating="N/A">1.67</comment>
+      <comment username="bulfrog" rating="N/A">Lots of Fun! Played with TV &amp; MS DTR 2022</comment>
+      <comment username="boneroller" rating="N/A">German edition. No in-game language dependency.</comment>
+      <comment username="alive123" rating="N/A">Tom V really really likes this</comment>
+      <comment username="mobiltel75" rating="N/A">Nem. Nem szép.</comment>
+      <comment username="Mayagod" rating="N/A">25$</comment>
+      <comment username="packrat84" rating="N/A">TTS unofficial</comment>
+      <comment username="Arkeo" rating="N/A">Låda 3</comment>
+      <comment username="spelgalen100" rating="N/A">PH NIS.
+(275kr)
+wt. 1108</comment>
+      <comment username="Gregus48" rating="N/A">BoardGameBliss $44.66</comment>
+      <comment username="Asern" rating="N/A">P</comment>
+      <comment username="TundraThunder" rating="N/A">Bluffing/Bidding Party-style game.  Tom Vasel loves it...but it didn&#039;t look like something I&#039;d get to the table much.  Would rather play Vegas Dice Game(aka Las Vegas) with a similar theme at this player count.</comment>
+      <comment username="tea93" rating="N/A">V7</comment>
+      <comment username="keekohmygod" rating="N/A">Mayday Standard</comment>
+      <comment username="Zalbar" rating="N/A">B: 5-6
+C: 1,65
+T: 30-45</comment>
+      <comment username="Darks10" rating="N/A">Tom 55</comment>
+      <comment username="finnstones" rating="N/A">368</comment>
+      <comment username="Vidanovitch" rating="N/A">PREV OWNED</comment>
+      <comment username="PERAC" rating="N/A">[CAR L PTY B]
+CASINO
+5️⃣ 6️⃣</comment>
+      <comment username="boardgamehaja" rating="N/A">F4</comment>
+      <comment username="STOpandthink" rating="N/A">8: silly fun, easy bluff, best 6P</comment>
+      <comment username="shannyn_north" rating="N/A">Tom Vasel all time fav</comment>
+      <comment username="cbdarden" rating="2">What a truly awful game.  No meaningful decisions to be made, no enjoyment to be had.</comment>
+      <comment username="Arnott" rating="3">Too easy to fall behind with no chance of catching up, and even if you do keep pace (or lead), the big money final round will determine the winner, regardless, making most of your earlier moves kind of pointless.  And since the last round has a good deal of randomness to it, the whole game is kind of pointless.</comment>
+      <comment username="wlam" rating="3">Played a few times on BSW (with 3-4 players). This game probably has something more than pure, random guessing. Too bad I could not find it yet. Still, as it is short enough and on BSW, I might try it again some day.</comment>
+      <comment username="robartin" rating="3">Interesting but kind of strange game.  After playing it a couple of times, it seems that the only thing that matters is doing well in the last round or so.  This makes one wonder why the earlier rounds exist at all...</comment>
+      <comment username="ExeterGeek" rating="3">Just didn&#039;t work for me</comment>
+      <comment username="maddiedogson" rating="3">don&#039;t plan. do whatever you want without thinking and see who wins</comment>
+      <comment username="astroglide" rating="3">disappointed.  the box is a nice size, the bits are absolutely excellent.  i&#039;m not sure why english rules weren&#039;t included with the game, but they&#039;re available on bgg and very simple.  the game escalates up 4 rounds of betting and bluffing.  it doesn&#039;t seem like the earlier rounds matter at all barring a bizarrely excessive payout, and the whole game feels like hoity toity with less content.  i would have never predicted saying that about a game.  i know they&#039;re targeting light and fun, but it was more like we had fun in spite of the game.  i do love the rule about changing seats for turn order, though.</comment>
+      <comment username="rseater" rating="3">both bad and forgettable</comment>
+      <comment username="moramis" rating="3">Vasel rec&#039;d. Pretty terrible at 3p. I&#039;d like to try this again with more.</comment>
+      <comment username="ptm_junk" rating="3">wow... pretty bad bluffing game</comment>
+      <comment username="BrunoDeVries" rating="3">Complete randomness. Utter frustration.</comment>
+      <comment username="mkgray" rating="3.5">I really want to like this, and at some level I think I do, but every time I play it everyone else despises it so, I doubt I&#039;ll bring it out often because I don&#039;t want to inflict this on others.</comment>
+      <comment username="MarkEJohnson" rating="4">Even though I like some other games that are mostly about group-think (e.g.Hol&amp;#039;s der Geier family), this one didn&amp;#039;t appeal beyond the nice bits.</comment>
+      <comment username="Baldboy_1" rating="4">Played this on BSW a few times but never got into it. Another paper/rock/scissors type game that seems even more random then most. This one just isn&amp;#039;t my thing.</comment>
+      <comment username="brendanf" rating="4">A light and silly bluffing game.  For me it doesn&#039;t quite work, because there&#039;s just not information on which to guess what your opponent might be up to, so it ends up seeming like dumb luck.</comment>
+      <comment username="5th Beatles" rating="4">reviewed on my blog.</comment>
+      <comment username="sdiberar" rating="4">Not bad, but the blind-bidding/groupthink guesswork is just not my idea of great gaming.</comment>
+      <comment username="akapastorguy" rating="4">Great components... just so-so bluffing game.</comment>
+      <comment username="dr glaze et al" rating="4">[Colovini / Faidutti] Easy to explain, gorgeous bits, actual tension, and handles up to six with ease. It is entirely too much about groupthink though. Playing with bluffers would be much more interesting than playing with logical players, which is unfortunately my entire group.</comment>
+      <comment username="Armadi" rating="4">Components are nice.  Not much game here.</comment>
+      <comment username="TaliaIsabelle" rating="4">Another blind guessing game (in the same vein as Basari or Hoity Toity) that I just don&#039;t enjoy.  If you like bluffing games then give this a try, but if you&#039;re like me and find bluffing games more like completely random games (along the lines of Candy Land or Chutes &amp; Ladders) then you can skip this one and count yourself lucky.</comment>
+      <comment username="Kosmonaut" rating="4">Pure bluffing game with no extra elements or twists to make the game more interesting. </comment>
+      <comment username="alzsara" rating="4">Players seed different tables with money, then each player plays a cheat card, a doubler card and a bluff card face down across different tables. And here&#039;s the skillful part ... you try and guess where opponent&#039;s didn&#039;t play their cheat cards and move to that table (otherwise they&#039;ll get your money) AND you try and guess where opponents would like to go and place your cheat card there (so you&#039;ll get their money), hoping opponents will think it&#039;s your bluff card. Oh, what skill, what fun!  Repeat for 4 rounds, with each round having more money so that the early rounds are fairly meaningless. As you can gather, not my kind of game. It&#039;s kind of fun seeing the cards revealed and whether you guessed right or not, but there&#039;s not much else pulling me back. </comment>
+      <comment username="Geeken" rating="4">Too much Vizzini effect</comment>
+      <comment username="Urbanwatts" rating="4">Fun but nothing more. I have other bluffing/push-your-luck games I&#039;d rather play.</comment>
+      <comment username="Defdamesdompi" rating="4.5">It&#039;s supposed to be a bluffing game, but I find the mechanics too difficult for that.</comment>
+      <comment username="TheGoblin" rating="5">Just a game, not exciting nor especially amusing. </comment>
+      <comment username="montsegur" rating="5">The end is random. If you love a little bit control who wins the game then don´t play the game.</comment>
+      <comment username="no_where_dense" rating="5">The last round has huge impact and why bother playing the first 3 rounds?</comment>
+      <comment username="ed95005" rating="5">Nice chips for wagering.  Game itself is meh.</comment>
+      <comment username="Thorwolf" rating="5">Simultaneous action, see what happens afterwards game.</comment>
+      <comment username="MariHo" rating="5">En plaçant au mieux leurs cartes personnage, et en déplaçant au mieux leurs pions, les joueurs s&#039;efforcent de gagner le plus d&#039;argent possible.
+
+Le plus riche après quatre tours de jeu est vainqueur </comment>
+      <comment username="WilcoxDave" rating="5">BSW</comment>
+      <comment username="Exilas" rating="5">The bluff factor is quite fun, but the game is nearly uncontrollable. There are way better games to play.</comment>
+      <comment username="Ajax" rating="5">Excellent components...except for the cards: they&#039;re weird.  Not a bad game, to be sure, but I&#039;d rather play any number of bluffing games for the time investment.</comment>
+      <comment username="pulla" rating="5">Boring and randomish.</comment>
+      <comment username="garg" rating="5">After one play: elegant idea and quick gameplay (something I like). It seems that much depends on the players - have to test it a few times more.
+
+EDIT: the number of tactics is extremely limited. For sale.</comment>
+      <comment username="kystas" rating="5">Nothing special here. Easy to play, but offers very little strategic choices. Filler.</comment>
+   
+
+      <statistics>
+	   <ratings>
+		   <usersrated>833</usersrated>
+		   <average>6.46569</average>
+		   <bayesaverage>5.75008</bayesaverage>
+
+		   <ranks>
+			   				   				   <rank type="subtype" id="1" name="boardgame" friendlyname="Board Game Rank" value="5250" bayesaverage="5.75008" />
+				   			   				   				   <rank type="family" id="5499" name="familygames" friendlyname="Family Game Rank" value="1579" bayesaverage="5.83075" />
+				   			   		   </ranks>
+
+		   <stddev>1.44593</stddev>
+		   <median>0</median>
+		   <owned>1166</owned>
+		   <trading>36</trading>
+		   <wanting>142</wanting>
+		   <wishing>416</wishing>
+		   <numcomments>244</numcomments>
+		   <numweights>52</numweights>
+		   <averageweight>1.6538</averageweight>
+	   </ratings>
+   </statistics>
+
+
+</boardgame>
+
+</boardgames>

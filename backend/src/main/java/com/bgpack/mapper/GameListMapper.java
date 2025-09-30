@@ -71,6 +71,8 @@ public class GameListMapper {
                 .bggRating(entity.getBggRating())
                 .averageRating(entity.getAverageRating())
                 .complexity(entity.getComplexity())
+                .averageWeight(entity.getAverageWeight())
+                .suggestedNumPlayers(entity.getSuggestedNumPlayers())
                 .ownedBy(entity.getOwnedBy())
                 .build();
     }
@@ -94,6 +96,8 @@ public class GameListMapper {
                 .bggRating(dto.getBggRating())
                 .averageRating(dto.getAverageRating())
                 .complexity(dto.getComplexity())
+                .averageWeight(dto.getAverageWeight())
+                .suggestedNumPlayers(dto.getSuggestedNumPlayers())
                 .ownedBy(dto.getOwnedBy())
                 .build();
     }

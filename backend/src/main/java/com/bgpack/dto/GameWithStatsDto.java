@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameDto {
+public class GameWithStatsDto {
     private String id;
     private String name;
     private Integer yearPublished;
@@ -25,7 +25,9 @@ public class GameDto {
     private Double bggRating;
     private Double averageRating;
     private Double complexity;
+    private List<String> ownedBy;
+
+    // Extended stats
     private Double averageWeight;
     private String suggestedNumPlayers;
-    private List<String> ownedBy;
 }

@@ -1,6 +1,7 @@
 package com.bgpack.service;
 
 import com.bgpack.dto.GameDto;
+import com.bgpack.dto.GameStatsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -231,6 +232,145 @@ public class BggXmlParserService {
                     .build();
         } catch (Exception e) {
             log.warn("Error parsing game from collection element: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    public GameStatsDto parseGameStats(final String xmlResponse) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(
+                new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
+
+            NodeList items = doc.getElementsByTagName("item");
+            if (items.getLength() > 0) {
+                Element element = (Element) items.item(0);
+                return parseGameStatsFromElement(element);
+            }
+
+            throw new RuntimeException("No game found in XML response");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Error with UTF-8 encoding: {}", e.getMessage());
+            throw new RuntimeException("UTF-8 encoding not supported", e);
+        } catch (Exception e) {
+            log.error("Error parsing XML game stats response: {}", e.getMessage());
+            throw new RuntimeException(
+                "Failed to parse BGG API game stats response", e);
+        }
+    }
+
+    public List<GameStatsDto> parseMultipleGameStats(final String xmlResponse) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(
+                new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
+
+            NodeList items = doc.getElementsByTagName("item");
+            List<GameStatsDto> statsList = new ArrayList<>();
+
+            for (int i = 0; i < items.getLength(); i++) {
+                Node item = items.item(i);
+                if (item.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) item;
+                    GameStatsDto stats = parseGameStatsFromElement(element);
+                    if (stats != null) {
+                        statsList.add(stats);
+                    }
+                }
+            }
+
+            log.info("Parsed {} game stats from multiple games response", statsList.size());
+            return statsList;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Error with UTF-8 encoding: {}", e.getMessage());
+            throw new RuntimeException("UTF-8 encoding not supported", e);
+        } catch (Exception e) {
+            log.error("Error parsing XML multiple game stats response: {}", e.getMessage());
+            throw new RuntimeException(
+                "Failed to parse BGG API multiple game stats response", e);
+        }
+    }
+
+    private GameStatsDto parseGameStatsFromElement(final Element element) {
+        try {
+            String id = getAttributeValue(element, "id");
+            String name = getElementValue(element, "name");
+
+            // Parse statistics
+            Element statsElement = getChildElement(element, "statistics");
+            Double bggRating = null;
+            Double averageRating = null;
+            Double averageWeight = null;
+            String suggestedNumPlayers = null;
+
+            if (statsElement != null) {
+                log.info("Found statistics element for gameId: {}", id);
+                Element ratingsElement = getChildElement(statsElement, "ratings");
+                if (ratingsElement != null) {
+                    log.info("Found ratings element for gameId: {}", id);
+                    bggRating = parseDouble(getElementValue(ratingsElement, "bayesaverage"));
+                    averageRating = parseDouble(getElementValue(ratingsElement, "average"));
+                    averageWeight = parseDouble(getElementValue(ratingsElement, "averageweight"));
+                    log.info("Parsed statistics for gameId {}: bggRating={}, averageRating={}, averageWeight={}",
+                        id, bggRating, averageRating, averageWeight);
+                } else {
+                    log.warn("No ratings element found in statistics for gameId: {}", id);
+                }
+            } else {
+                log.warn("No statistics element found for gameId: {}", id);
+            }
+
+            // Parse suggested number of players from poll-summary
+            NodeList pollSummaryNodes = element.getElementsByTagName("poll-summary");
+            for (int i = 0; i < pollSummaryNodes.getLength(); i++) {
+                Element pollSummaryElement = (Element) pollSummaryNodes.item(i);
+                String pollName = getAttributeValue(pollSummaryElement, "name");
+                if ("suggested_numplayers".equals(pollName)) {
+                    suggestedNumPlayers = getElementValue(pollSummaryElement, "value");
+                    log.info("Found suggestedNumPlayers for gameId {}: {}", id, suggestedNumPlayers);
+                    break;
+                }
+            }
+
+            return GameStatsDto.builder()
+                    .gameId(id)
+                    .name(name)
+                    .bggRating(bggRating)
+                    .averageRating(averageRating)
+                    .averageWeight(averageWeight)
+                    .suggestedNumPlayers(suggestedNumPlayers)
+                    .build();
+        } catch (Exception e) {
+            log.warn("Error parsing game stats from element: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private String parseSuggestedNumPlayers(final Element pollElement) {
+        try {
+            NodeList resultNodes = pollElement.getElementsByTagName("result");
+            StringBuilder suggestedPlayers = new StringBuilder();
+
+            for (int i = 0; i < resultNodes.getLength(); i++) {
+                Element resultElement = (Element) resultNodes.item(i);
+                String numPlayers = getAttributeValue(resultElement, "numplayers");
+                String best = getAttributeValue(resultElement, "best");
+                String recommended = getAttributeValue(resultElement, "recommended");
+                String notRecommended = getAttributeValue(resultElement, "notrecommended");
+
+                if ("1".equals(best) || "1".equals(recommended)) {
+                    if (suggestedPlayers.length() > 0) {
+                        suggestedPlayers.append(", ");
+                    }
+                    suggestedPlayers.append(numPlayers);
+                }
+            }
+
+            return suggestedPlayers.length() > 0 ? suggestedPlayers.toString() : null;
+        } catch (Exception e) {
+            log.warn("Error parsing suggested number of players: {}", e.getMessage());
             return null;
         }
     }

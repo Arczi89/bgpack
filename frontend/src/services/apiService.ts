@@ -1,4 +1,9 @@
-import { Game, GameSearchParams } from '../types/Game';
+import {
+  Game,
+  GameSearchParams,
+  GameStats,
+  GameWithStats,
+} from '../types/Game';
 import { GameList, SaveGameListRequest } from '../types/GameList';
 
 const API_BASE_URL =
@@ -47,15 +52,21 @@ class ApiService {
 
     return this.request<Game[]>(endpoint);
   }
-
-  async getOwnedGames(
+  async getOwnedGamesWithStats(
     username: string,
     excludeExpansions: boolean = false
-  ): Promise<Game[]> {
+  ): Promise<GameWithStats[]> {
     const url = excludeExpansions
-      ? `/own/${username}?excludeExpansions=true`
-      : `/own/${username}`;
-    return this.request<Game[]>(url);
+      ? `/own/${username}/with-stats?excludeExpansions=true`
+      : `/own/${username}/with-stats`;
+    return this.request<GameWithStats[]>(url);
+  }
+
+  async getGameStats(gameIds: string[]): Promise<GameStats[]> {
+    return this.request<GameStats[]>('/games/stats/batch', {
+      method: 'POST',
+      body: JSON.stringify(gameIds),
+    });
   }
 
   async testConnection(): Promise<string> {

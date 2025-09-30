@@ -83,10 +83,21 @@ public class BggApiClient {
      */
     public Mono<String> getCollection(final String username) {
         log.info("Getting collection for username: {}", username);
+        String uri = "/collection?username=" + username + "&own=1&stats=1";
+        log.info("BGG API Request: {}{}", baseUrl, uri);
         return webClient.get()
-                .uri("/collection/{username}?own=1&stats=1", username)
-                .retrieve()
-                .bodyToMono(String.class)
+                .uri("/collection?username={username}&own=1&stats=1", username)
+                .exchangeToMono(response -> {
+                    if (response.statusCode().value() == 202) {
+                        log.info("BGG API returned 202 - request queued for user '{}', retrying in 5 seconds", username);
+                        return Mono.delay(Duration.ofSeconds(5))
+                                .then(getCollection(username));
+                    } else if (response.statusCode().is2xxSuccessful()) {
+                        return response.bodyToMono(String.class);
+                    } else {
+                        return Mono.error(new RuntimeException("HTTP " + response.statusCode().value()));
+                    }
+                })
                 .timeout(Duration.ofMillis(TIMEOUT_MS))
                 .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(2))
                         .filter(throwable -> {
@@ -118,9 +129,18 @@ public class BggApiClient {
     public Mono<String> getCollection(final String username, final String subtype) {
         log.info("Getting collection for username: {} with subtype: {}", username, subtype);
         return webClient.get()
-                .uri("/collection/{username}?own=1&stats=1&subtype={subtype}", username, subtype)
-                .retrieve()
-                .bodyToMono(String.class)
+                .uri("/collection?username={username}&own=1&stats=1&subtype={subtype}", username, subtype)
+                .exchangeToMono(response -> {
+                    if (response.statusCode().value() == 202) {
+                        log.info("BGG API returned 202 - request queued for user '{}' with subtype '{}', retrying in 5 seconds", username, subtype);
+                        return Mono.delay(Duration.ofSeconds(5))
+                                .then(getCollection(username, subtype));
+                    } else if (response.statusCode().is2xxSuccessful()) {
+                        return response.bodyToMono(String.class);
+                    } else {
+                        return Mono.error(new RuntimeException("HTTP " + response.statusCode().value()));
+                    }
+                })
                 .timeout(Duration.ofMillis(TIMEOUT_MS))
                 .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(2))
                         .filter(throwable -> {
