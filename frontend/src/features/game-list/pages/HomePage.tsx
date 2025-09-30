@@ -13,6 +13,7 @@ import { matchesAllFilters } from '../../../utils/gameFilters';
 export const HomePage: React.FC = () => {
   const [bggNicks, setBggNicks] = useState<string>('');
   const [filters, setFilters] = useState<Partial<GameFilters>>({});
+  const [localFilters, setLocalFilters] = useState<Partial<GameFilters>>({});
   const [sortBy, setSortBy] = useState<
     'name' | 'yearPublished' | 'bggRating' | 'playingTime' | 'complexity'
   >('name');
@@ -23,6 +24,8 @@ export const HomePage: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState<number>(20);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [excludeExpansions, setExcludeExpansions] = useState<boolean>(false);
+  const [localExcludeExpansions, setLocalExcludeExpansions] =
+    useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
@@ -47,9 +50,24 @@ export const HomePage: React.FC = () => {
       }
 
       setGames(filteredGames);
-      setCurrentPage(1); // Reset to first page when games change
+      setCurrentPage(1);
     }
-  }, [apiGames, filters]);
+  }, [apiGames]);
+
+  useEffect(() => {
+    if (hasSearched && apiGames) {
+      let filteredGames = [...apiGames];
+
+      if (Object.keys(filters).length > 0) {
+        filteredGames = filteredGames.filter(game =>
+          matchesAllFilters(game, filters)
+        );
+      }
+
+      setGames(filteredGames);
+      setCurrentPage(1);
+    }
+  }, [filters, hasSearched, apiGames]);
 
   const handleSearch = async () => {
     if (!bggNicks.trim()) return;
@@ -62,6 +80,8 @@ export const HomePage: React.FC = () => {
     if (usernames.length === 0) return;
 
     setCurrentUsernames(usernames);
+    setFilters(localFilters);
+    setExcludeExpansions(localExcludeExpansions);
     setHasSearched(true);
   };
 
@@ -129,7 +149,7 @@ export const HomePage: React.FC = () => {
 
       {/* Search Form */}
       <div className="bg-white shadow rounded-lg p-6 mb-8">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6">
           {/* BGG Nicks Input */}
           <div>
             <label
@@ -144,19 +164,9 @@ export const HomePage: React.FC = () => {
               value={bggNicks}
               onChange={e => setBggNicks(e.target.value)}
               placeholder={t.bggUsernamesPlaceholder}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+              disabled={isLoading}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             />
-          </div>
-
-          {/* Search Button */}
-          <div className="flex items-end">
-            <button
-              onClick={handleSearch}
-              disabled={!bggNicks.trim() || isLoading}
-              className="w-full bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? t.searching : t.searchGames}
-            </button>
           </div>
         </div>
 
@@ -165,9 +175,10 @@ export const HomePage: React.FC = () => {
           <label className="flex items-center">
             <input
               type="checkbox"
-              checked={excludeExpansions}
-              onChange={e => setExcludeExpansions(e.target.checked)}
-              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+              checked={localExcludeExpansions}
+              onChange={e => setLocalExcludeExpansions(e.target.checked)}
+              disabled={isLoading}
+              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <span className="ml-2 text-sm text-gray-700">
               {t.excludeExpansions}
@@ -185,16 +196,17 @@ export const HomePage: React.FC = () => {
               </label>
               <input
                 type="number"
-                value={filters.minPlayers || ''}
+                value={localFilters.minPlayers || ''}
                 onChange={e =>
-                  setFilters({
-                    ...filters,
+                  setLocalFilters({
+                    ...localFilters,
                     minPlayers: e.target.value
                       ? parseInt(e.target.value)
                       : undefined,
                   })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                disabled={isLoading}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
             <div>
@@ -203,30 +215,32 @@ export const HomePage: React.FC = () => {
               </label>
               <input
                 type="number"
-                value={filters.maxPlayers || ''}
+                value={localFilters.maxPlayers || ''}
                 onChange={e =>
-                  setFilters({
-                    ...filters,
+                  setLocalFilters({
+                    ...localFilters,
                     maxPlayers: e.target.value
                       ? parseInt(e.target.value)
                       : undefined,
                   })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                disabled={isLoading}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
             <div className="flex items-center">
               <input
                 type="checkbox"
                 id="exactPlayerFilter"
-                checked={filters.exactPlayerFilter || false}
+                checked={localFilters.exactPlayerFilter || false}
                 onChange={e =>
-                  setFilters({
-                    ...filters,
+                  setLocalFilters({
+                    ...localFilters,
                     exactPlayerFilter: e.target.checked,
                   })
                 }
-                className="mr-2 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                disabled={isLoading}
+                className="mr-2 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <label
                 htmlFor="exactPlayerFilter"
@@ -245,16 +259,17 @@ export const HomePage: React.FC = () => {
               </label>
               <input
                 type="number"
-                value={filters.minPlayingTime || ''}
+                value={localFilters.minPlayingTime || ''}
                 onChange={e =>
-                  setFilters({
-                    ...filters,
+                  setLocalFilters({
+                    ...localFilters,
                     minPlayingTime: e.target.value
                       ? parseInt(e.target.value)
                       : undefined,
                   })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                disabled={isLoading}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
             <div>
@@ -263,16 +278,17 @@ export const HomePage: React.FC = () => {
               </label>
               <input
                 type="number"
-                value={filters.maxPlayingTime || ''}
+                value={localFilters.maxPlayingTime || ''}
                 onChange={e =>
-                  setFilters({
-                    ...filters,
+                  setLocalFilters({
+                    ...localFilters,
                     maxPlayingTime: e.target.value
                       ? parseInt(e.target.value)
                       : undefined,
                   })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                disabled={isLoading}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
           </div>
@@ -287,7 +303,8 @@ export const HomePage: React.FC = () => {
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value as typeof sortBy)}
-              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+              disabled={isLoading}
+              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="bggRating">{t.rating}</option>
               <option value="name">{t.name}</option>
@@ -303,12 +320,38 @@ export const HomePage: React.FC = () => {
             <select
               value={sortOrder}
               onChange={e => setSortOrder(e.target.value as 'asc' | 'desc')}
-              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 min-w-[120px]"
+              disabled={isLoading}
+              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 min-w-[120px] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="desc">{t.descending}</option>
               <option value="asc">{t.ascending}</option>
             </select>
           </div>
+        </div>
+
+        {/* Search Button */}
+        <div className="mt-6">
+          <button
+            onClick={handleSearch}
+            disabled={!bggNicks.trim() || isLoading}
+            className="w-full bg-primary-600 text-white py-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-medium transition-all duration-200 flex items-center justify-center gap-3 relative overflow-hidden"
+          >
+            {/* Content */}
+            <div className="relative z-10 flex items-center gap-3">
+              {isLoading && (
+                <div
+                  className="h-5 w-5 text-white text-2xl flex items-center justify-center"
+                  style={{
+                    animation: 'spin 1s linear infinite',
+                    transformOrigin: 'center center',
+                  }}
+                >
+                  🎲
+                </div>
+              )}
+              {isLoading ? t.searching : t.searchGames}
+            </div>
+          </button>
         </div>
       </div>
 
