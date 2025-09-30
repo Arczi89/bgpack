@@ -26,6 +26,7 @@ interface LanguageProviderProps {
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
 }) => {
+  // ===== STATE MANAGEMENT =====
   const [language, setLanguage] = useState<string>(() => {
     const saved = localStorage.getItem('bgpack-language');
     return saved || 'en';
@@ -35,6 +36,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     return translations[language] || translations['en'];
   });
 
+  // ===== EFFECTS =====
   useEffect(() => {
     console.log('Language changed to:', language);
     console.log('Loading translations for:', language);
@@ -43,11 +45,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     localStorage.setItem('bgpack-language', language);
   }, [language]);
 
+  // ===== EVENT HANDLERS =====
   const changeLanguage = (newLanguage: string) => {
     console.log('Changing language to:', newLanguage);
     setLanguage(newLanguage);
   };
 
+  // ===== COMPUTED VALUES =====
   const value: LanguageContextType = {
     language,
     t,
@@ -56,6 +60,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     isPolish: language === 'pl',
   };
 
+  // ===== RENDER =====
   return (
     <LanguageContext.Provider value={value}>
       {children}

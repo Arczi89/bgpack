@@ -11,14 +11,17 @@ import { GameSearchParams } from '../../../types/Game';
 import { useGames } from '../../../hooks/useApi';
 
 export const GameListPage: React.FC = () => {
+  // ===== HOOKS =====
   const dispatch = useDispatch();
   const { searchQuery, filters } = useSelector(
     (state: RootState) => state.games
   );
 
+  // ===== STATE MANAGEMENT =====
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
   const [localFilters, setLocalFilters] = useState(filters);
 
+  // ===== COMPUTED VALUES =====
   const searchParams: GameSearchParams = {
     search: localSearchQuery || undefined,
     minPlayers: localFilters.minPlayers || undefined,
@@ -31,6 +34,7 @@ export const GameListPage: React.FC = () => {
 
   const { data: games, loading: isLoading, error } = useGames(searchParams);
 
+  // ===== EFFECTS =====
   useEffect(() => {
     if (games) {
       dispatch(setGames(games));
@@ -41,6 +45,7 @@ export const GameListPage: React.FC = () => {
     dispatch(setLoading(isLoading));
   }, [isLoading, dispatch]);
 
+  // ===== EVENT HANDLERS =====
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(setSearchQuery(localSearchQuery));
@@ -55,6 +60,7 @@ export const GameListPage: React.FC = () => {
     dispatch(setFilters(newFilters));
   };
 
+  // ===== RENDER =====
   return (
     <div className="px-4 py-6 sm:px-0">
       <div className="mb-8">

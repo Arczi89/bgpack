@@ -13,6 +13,7 @@ interface State {
 }
 
 class ErrorBoundaryClass extends Component<Props, State> {
+  // ===== LIFECYCLE METHODS =====
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
@@ -27,6 +28,7 @@ class ErrorBoundaryClass extends Component<Props, State> {
     this.setState({ error, errorInfo });
   }
 
+  // ===== RENDER =====
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
@@ -41,9 +43,11 @@ class ErrorBoundaryClass extends Component<Props, State> {
 }
 
 const ErrorFallback: React.FC<{ error?: Error }> = ({ error }) => {
+  // ===== HOOKS =====
   const { language } = useLanguage();
   const isEnglish = language === 'en';
 
+  // ===== RENDER =====
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">

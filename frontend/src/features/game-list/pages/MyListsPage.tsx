@@ -4,17 +4,21 @@ import { GameList } from '../../../types/GameList';
 import apiService from '../../../services/apiService';
 
 export const MyListsPage: React.FC = () => {
+  // ===== STATE MANAGEMENT =====
   const [gameLists, setGameLists] = useState<GameList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  // ===== HOOKS =====
   const { t } = useLanguage();
 
+  // ===== EFFECTS =====
   useEffect(() => {
     loadGameLists();
   }, []);
 
+  // ====== EVENT HANDLERS =====
   const loadGameLists = async () => {
     try {
       setLoading(true);
@@ -46,6 +50,7 @@ export const MyListsPage: React.FC = () => {
     }
   };
 
+  // ===== UTILITY FUNCTIONS =====
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -56,6 +61,7 @@ export const MyListsPage: React.FC = () => {
     });
   };
 
+  // ===== RENDER =====
   if (loading) {
     return (
       <div className="px-4 py-6 sm:px-0">

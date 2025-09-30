@@ -7,13 +7,16 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
+  // ===== HOOKS =====
   const location = useLocation();
   const { t, language, changeLanguage } = useLanguage();
 
+  // ===== UTILITY FUNCTIONS =====
   const isActive = (path: string) => {
     return location.pathname === path;
   };
 
+  // ===== RENDER =====
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm border-b">

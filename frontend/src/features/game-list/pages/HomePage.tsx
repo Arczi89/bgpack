@@ -11,24 +11,26 @@ import apiService from '../../../services/apiService';
 import { matchesAllFilters } from '../../../utils/gameFilters';
 
 export const HomePage: React.FC = () => {
+  // ===== STATE MANAGEMENT =====
   const [bggNicks, setBggNicks] = useState<string>('');
+  const [hasSearched, setHasSearched] = useState(false);
+  const [currentUsernames, setCurrentUsernames] = useState<string[]>([]);
   const [filters, setFilters] = useState<Partial<GameFilters>>({});
   const [localFilters, setLocalFilters] = useState<Partial<GameFilters>>({});
+  const [excludeExpansions, setExcludeExpansions] = useState<boolean>(false);
+  const [localExcludeExpansions, setLocalExcludeExpansions] =
+    useState<boolean>(false);
   const [sortBy, setSortBy] = useState<
     'name' | 'yearPublished' | 'bggRating' | 'playingTime' | 'complexity'
   >('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [games, setGames] = useState<Game[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [currentUsernames, setCurrentUsernames] = useState<string[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState<number>(20);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [excludeExpansions, setExcludeExpansions] = useState<boolean>(false);
-  const [localExcludeExpansions, setLocalExcludeExpansions] =
-    useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
+  // ===== HOOKS =====
   const { t } = useLanguage();
 
   const {
@@ -39,36 +41,32 @@ export const HomePage: React.FC = () => {
     errors,
   } = useMultipleOwnedGames(currentUsernames, excludeExpansions);
 
+  // ===== EFFECTS =====
   useEffect(() => {
-    if (apiGames) {
-      let filteredGames = [...apiGames];
+    if (!apiGames) return;
 
-      if (Object.keys(filters).length > 0) {
-        filteredGames = filteredGames.filter(game =>
-          matchesAllFilters(game, filters)
-        );
-      }
+    const hasFilters = Object.keys(filters).length > 0;
+    const filteredGames = hasFilters
+      ? apiGames.filter(game => matchesAllFilters(game, filters))
+      : apiGames;
 
-      setGames(filteredGames);
-      setCurrentPage(1);
-    }
-  }, [apiGames]);
+    setGames(filteredGames);
+    setCurrentPage(1);
+  }, [apiGames, filters]);
 
   useEffect(() => {
-    if (hasSearched && apiGames) {
-      let filteredGames = [...apiGames];
+    if (!hasSearched || !apiGames) return;
 
-      if (Object.keys(filters).length > 0) {
-        filteredGames = filteredGames.filter(game =>
-          matchesAllFilters(game, filters)
-        );
-      }
+    const hasFilters = Object.keys(filters).length > 0;
+    const filteredGames = hasFilters
+      ? apiGames.filter(game => matchesAllFilters(game, filters))
+      : apiGames;
 
-      setGames(filteredGames);
-      setCurrentPage(1);
-    }
+    setGames(filteredGames);
+    setCurrentPage(1);
   }, [filters, hasSearched, apiGames]);
 
+  // ===== EVENT HANDLERS =====
   const handleSearch = async () => {
     if (!bggNicks.trim()) return;
 
@@ -122,13 +120,14 @@ export const HomePage: React.FC = () => {
 
   const handleItemsPerPageChange = (value: number) => {
     setItemsPerPage(value);
-    setCurrentPage(1); // Reset to first page when changing items per page
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
+  // ===== COMPUTED VALUES =====
   const sortedGames = useGameSorting({ games, sortBy, sortOrder });
   const { paginatedGames, totalPages } = useGamePagination(
     sortedGames,
@@ -136,6 +135,7 @@ export const HomePage: React.FC = () => {
     itemsPerPage
   );
 
+  // ===== RENDER =====
   return (
     <div className="px-4 py-6 sm:px-0">
       <div className="text-center mb-8">

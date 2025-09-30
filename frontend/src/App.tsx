@@ -8,6 +8,7 @@ import { GameListPage } from './features/game-list/pages/GameListPage';
 import { MyListsPage } from './features/game-list/pages/MyListsPage';
 
 function App() {
+  // ===== RENDER =====
   return (
     <ErrorBoundary>
       <LanguageProvider>
