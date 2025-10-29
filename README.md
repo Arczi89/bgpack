@@ -338,6 +338,74 @@ curl "http://localhost:8080/api/games?minPlayers=3&maxPlayers=5&minPlayingTime=4
 - Jackson for XML parsing
 - Google Java Format + Checkstyle for code quality
 
+### Spring Framework Usage
+
+The backend leverages multiple Spring Boot modules and core Spring concepts:
+
+#### Spring Boot Modules
+
+| Module                             | Purpose                                              |
+| ---------------------------------- | ---------------------------------------------------- |
+| `spring-boot-starter-web`          | REST API controllers and Jackson JSON serialization  |
+| `spring-boot-starter-data-mongodb` | MongoDB integration with auto-generated repositories |
+| `spring-boot-starter-security`     | CORS configuration and security policies             |
+| `spring-boot-starter-cache`        | Declarative caching with Caffeine                    |
+| `spring-boot-starter-webflux`      | Reactive WebClient for async BGG API calls           |
+| `spring-boot-starter-validation`   | Bean validation with `@Valid`                        |
+
+#### Core Spring Concepts
+
+**1. Dependency Injection & IoC Container**
+
+- Constructor-based injection for all components
+- `@Service`, `@Repository`, `@Component`, `@RestController` stereotypes
+- Automatic bean creation and lifecycle management
+
+**2. Layered Architecture**
+
+```
+Controllers (@RestController) → Services (@Service) → Repositories (@Repository) → MongoDB
+```
+
+**3. Spring Data MongoDB**
+
+- Query methods auto-generated from method names
+- Example: `findByUsername(String username)` → `db.my_games.find({ username: "..." })`
+- Zero repository implementation required
+
+**4. Declarative Caching**
+
+- `@Cacheable` on expensive BGG API calls
+- Caffeine cache with 1-hour TTL and 1000 max entries
+- Cache keys based on method parameters
+
+**5. Reactive HTTP Client**
+
+- `WebClient` for non-blocking BGG API calls
+- `Mono<T>` reactive types with retry and timeout support
+- Exponential backoff for failed requests
+
+**6. Global Exception Handling**
+
+- `@ControllerAdvice` for centralized error handling
+- Validation errors mapped to user-friendly JSON responses
+
+**7. Externalized Configuration**
+
+- `application.yml` for all configuration
+- `@Value` injection for properties
+- Environment variable support with defaults
+
+#### Lombok Integration
+
+Lombok reduces boilerplate code through compile-time code generation:
+
+- `@Data` - generates getters, setters, `toString()`, `equals()`, `hashCode()`
+- `@Builder` - implements Builder pattern for object creation
+- `@RequiredArgsConstructor` - generates constructor for dependency injection
+- `@Slf4j` - creates logger instance automatically
+- `@NoArgsConstructor` / `@AllArgsConstructor` - generates constructors
+
 **Infrastructure:**
 
 - MongoDB for data persistence
