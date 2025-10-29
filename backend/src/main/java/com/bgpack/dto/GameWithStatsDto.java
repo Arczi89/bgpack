@@ -1,33 +1,25 @@
 package com.bgpack.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class GameWithStatsDto {
-    private String id;
-    private String name;
-    private Integer yearPublished;
-    private Integer minPlayers;
-    private Integer maxPlayers;
-    private Integer playingTime;
-    private Integer minAge;
-    private String description;
-    private String imageUrl;
-    private String thumbnailUrl;
-    private Double bggRating;
-    private Double averageRating;
-    private Double complexity;
-    private List<String> ownedBy;
-
-    // Extended stats
-    private Double averageWeight;
-    private String suggestedNumPlayers;
-}
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record GameWithStatsDto(
+    String id,
+    String name,
+    Integer yearPublished,
+    Integer minPlayers,
+    Integer maxPlayers,
+    Integer playingTime,
+    Integer minAge,
+    String description,
+    String imageUrl,
+    String thumbnailUrl,
+    Double bggRating,
+    Double averageRating,
+    Double complexity,
+    List<String> ownedBy,
+    Double averageWeight,
+    String suggestedNumPlayers
+) {}

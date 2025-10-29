@@ -26,11 +26,6 @@ public class GameStatsService {
     private final BggApiClient bggApiClient;
     private final BggXmlParserService bggXmlParserService;
 
-    /**
-     * Get game statistics for a single game.
-     * @param gameId BGG game ID
-     * @return game statistics
-     */
     public GameStatsDto getGameStats(String gameId) {
         log.info("Getting stats for game ID: {}", gameId);
 
@@ -64,11 +59,6 @@ public class GameStatsService {
         throw new IllegalArgumentException("Game stats not found for ID: " + gameId);
     }
 
-    /**
-     * Get game statistics for multiple games.
-     * @param gameIds list of BGG game IDs
-     * @return list of game statistics
-     */
     public List<GameStatsDto> getMultipleGameStats(List<String> gameIds) {
         log.info("Getting stats for {} games", gameIds.size());
 
@@ -124,11 +114,6 @@ public class GameStatsService {
         return result;
     }
 
-    /**
-     * Get games with extended statistics for a user.
-     * @param games list of basic games
-     * @return list of games with extended statistics
-     */
     public List<GameWithStatsDto> getGamesWithStats(List<Game> games) {
         log.info("Getting games with stats for {} games", games.size());
 
@@ -141,59 +126,59 @@ public class GameStatsService {
         return games.stream()
                 .map(game -> {
                     GameStatsDto stats = statsList.stream()
-                            .filter(s -> s.getGameId().equals(game.getId()))
+                            .filter(s -> s.gameId().equals(game.getId()))
                             .findFirst()
                             .orElse(null);
 
-                    return GameWithStatsDto.builder()
-                            .id(game.getId())
-                            .name(game.getName())
-                            .yearPublished(game.getYearPublished())
-                            .minPlayers(game.getMinPlayers())
-                            .maxPlayers(game.getMaxPlayers())
-                            .playingTime(game.getPlayingTime())
-                            .minAge(game.getMinAge())
-                            .description(game.getDescription())
-                            .imageUrl(game.getImageUrl())
-                            .thumbnailUrl(game.getThumbnailUrl())
-                            .bggRating(game.getBggRating())
-                            .averageRating(game.getAverageRating())
-                            .complexity(game.getComplexity())
-                            .ownedBy(game.getOwnedBy())
-                            .averageWeight(stats != null ? stats.getAverageWeight() : null)
-                            .suggestedNumPlayers(stats != null ? stats.getSuggestedNumPlayers() : null)
-                            .build();
+                    return new GameWithStatsDto(
+                            game.getId(),
+                            game.getName(),
+                            game.getYearPublished(),
+                            game.getMinPlayers(),
+                            game.getMaxPlayers(),
+                            game.getPlayingTime(),
+                            game.getMinAge(),
+                            game.getDescription(),
+                            game.getImageUrl(),
+                            game.getThumbnailUrl(),
+                            game.getBggRating(),
+                            game.getAverageRating(),
+                            game.getComplexity(),
+                            game.getOwnedBy(),
+                            stats != null ? stats.averageWeight() : null,
+                            stats != null ? stats.suggestedNumPlayers() : null
+                    );
                 })
                 .collect(Collectors.toList());
     }
 
-    private GameStatsDto mapToDto(GameStats entity) {
+    private GameStatsDto mapToDto(final GameStats entity) {
         if (entity == null) {
             return null;
         }
 
-        return GameStatsDto.builder()
-                .gameId(entity.getGameId())
-                .name(entity.getName())
-                .bggRating(entity.getBggRating())
-                .averageRating(entity.getAverageRating())
-                .averageWeight(entity.getAverageWeight())
-                .suggestedNumPlayers(entity.getSuggestedNumPlayers())
-                .build();
+        return new GameStatsDto(
+                entity.getGameId(),
+                entity.getName(),
+                entity.getBggRating(),
+                entity.getAverageRating(),
+                entity.getAverageWeight(),
+                entity.getSuggestedNumPlayers()
+        );
     }
 
-    private GameStats mapToEntity(GameStatsDto dto) {
+    private GameStats mapToEntity(final GameStatsDto dto) {
         if (dto == null) {
             return null;
         }
 
         return GameStats.builder()
-                .gameId(dto.getGameId())
-                .name(dto.getName())
-                .bggRating(dto.getBggRating())
-                .averageRating(dto.getAverageRating())
-                .averageWeight(dto.getAverageWeight())
-                .suggestedNumPlayers(dto.getSuggestedNumPlayers())
+                .gameId(dto.gameId())
+                .name(dto.name())
+                .bggRating(dto.bggRating())
+                .averageRating(dto.averageRating())
+                .averageWeight(dto.averageWeight())
+                .suggestedNumPlayers(dto.suggestedNumPlayers())
                 .build();
     }
 

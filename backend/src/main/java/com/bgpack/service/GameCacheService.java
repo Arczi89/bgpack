@@ -17,9 +17,6 @@ public class GameCacheService {
 
     private final GameCacheRepository gameCacheRepository;
 
-    /**
-     * Get game from cache if available
-     */
     public Optional<Game> getCachedGame(String gameId) {
         log.info("Looking for cached game: {}", gameId);
 
@@ -38,9 +35,6 @@ public class GameCacheService {
         return Optional.empty();
     }
 
-    /**
-     * Save game to cache
-     */
     public void saveGameToCache(Game gameDto) {
         log.info("Saving game to cache: {}", gameDto.getId());
 
@@ -69,9 +63,6 @@ public class GameCacheService {
         log.info("Game saved to cache: {}", gameDto.getId());
     }
 
-    /**
-     * Update existing cache entry
-     */
     public void updateGameCache(Game gameDto) {
         log.info("Updating cached game: {}", gameDto.getId());
 
@@ -98,29 +89,19 @@ public class GameCacheService {
             gameCacheRepository.save(cache);
             log.info("Game cache updated: {}", gameDto.getId());
         } else {
-            // If not in cache, save as new
             saveGameToCache(gameDto);
         }
     }
 
-    /**
-     * Remove game from cache
-     */
     public void removeGameFromCache(String gameId) {
         log.info("Removing game from cache: {}", gameId);
         gameCacheRepository.deleteByGameId(gameId);
     }
 
-    /**
-     * Check if game is in cache
-     */
     public boolean isGameCached(String gameId) {
         return gameCacheRepository.findByGameId(gameId).isPresent();
     }
 
-    /**
-     * Get cache statistics
-     */
     public long getCacheSize() {
         return gameCacheRepository.count();
     }

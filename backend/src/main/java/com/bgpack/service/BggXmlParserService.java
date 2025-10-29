@@ -334,14 +334,8 @@ public class BggXmlParserService {
                 }
             }
 
-            return GameStatsDto.builder()
-                    .gameId(id)
-                    .name(name)
-                    .bggRating(bggRating)
-                    .averageRating(averageRating)
-                    .averageWeight(averageWeight)
-                    .suggestedNumPlayers(suggestedNumPlayers)
-                    .build();
+            return new GameStatsDto(id, name, bggRating, averageRating,
+                                    averageWeight, suggestedNumPlayers);
         } catch (Exception e) {
             log.warn("Error parsing game stats from element: {}", e.getMessage());
             return null;

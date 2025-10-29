@@ -6,10 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Game filtering criteria.
- * Used both for API requests and MongoDB storage.
- */
 @Data
 @Builder
 @NoArgsConstructor

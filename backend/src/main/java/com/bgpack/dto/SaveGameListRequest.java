@@ -11,13 +11,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
-/**
- * Request DTO for saving a game list.
- * Kept separate from GameList entity because it has validation annotations
- * and different business rules (no ID, timestamps generated on server).
- * This follows Spring Boot best practice: separate DTOs when validation or
- * transformation logic differs from the domain model.
- */
 @Data
 @Builder
 @NoArgsConstructor

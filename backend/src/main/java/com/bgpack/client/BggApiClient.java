@@ -53,11 +53,6 @@ public class BggApiClient {
                 .build();
     }
 
-    /**
-     * Search for games on BGG.
-     * @param query search term
-     * @return XML response with search results
-     */
     public Mono<String> searchGames(final String query) {
         return webClient.get()
                 .uri("/search?search={query}&type=boardgame", query)
@@ -76,11 +71,6 @@ public class BggApiClient {
                 .doOnError(error -> log.error("Error getting game details: {}", error.getMessage()));
     }
 
-    /**
-     * Get user's game collection from BGG.
-     * @param username BGG username
-     * @return XML response with collection data
-     */
     public Mono<String> getCollection(final String username) {
         log.info("Getting collection for username: {}", username);
         String uri = "/collection?username=" + username + "&own=1&stats=1";
@@ -120,12 +110,6 @@ public class BggApiClient {
                 .doOnError(error -> log.error("Error getting multiple games: {}", error.getMessage()));
     }
 
-    /**
-     * Get user's game collection from BGG with subtype filter.
-     * @param username BGG username
-     * @param subtype game subtype (e.g., "boardgame", "boardgameexpansion")
-     * @return XML response with collection data
-     */
     public Mono<String> getCollection(final String username, final String subtype) {
         log.info("Getting collection for username: {} with subtype: {}", username, subtype);
         return webClient.get()

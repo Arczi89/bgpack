@@ -85,13 +85,6 @@ public class BggService {
         return getCollection(username, false);
     }
 
-    /**
-     * Get collection with retry mechanism for better reliability.
-     * @param username BGG username
-     * @param excludeExpansions whether to exclude expansions
-     * @param maxRetries maximum number of retry attempts
-     * @return list of owned games
-     */
     private List<Game> getCollectionWithRetry(final String username, final boolean excludeExpansions, final int maxRetries) {
         int attempts = 0;
         long delayMs = 2000;

@@ -1,19 +1,13 @@
 package com.bgpack.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class GameStatsDto {
-    private String gameId;
-    private String name;
-    private Double bggRating;
-    private Double averageRating;
-    private Double averageWeight;
-    private String suggestedNumPlayers;
-}
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record GameStatsDto(
+    String gameId,
+    String name,
+    Double bggRating,
+    Double averageRating,
+    Double averageWeight,
+    String suggestedNumPlayers
+) {}

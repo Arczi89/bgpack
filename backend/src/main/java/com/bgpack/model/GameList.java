@@ -11,11 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * User's saved game list.
- * Serves both as MongoDB document and API response/request.
- * Following Spring Data MongoDB best practices for simple CRUD operations.
- */
 @Data
 @Builder
 @NoArgsConstructor

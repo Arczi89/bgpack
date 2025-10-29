@@ -9,16 +9,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-/**
- * Game entity representing a board game.
- * Used both as MongoDB document (embedded in GameList) and API response.
- * This unified approach follows YAGNI principle - no need for separate DTO/Entity for MongoDB.
- */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)  // Don't serialize null values in JSON
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Game {
 
     @Field("id")
