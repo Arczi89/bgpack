@@ -1,6 +1,6 @@
 package com.bgpack.controller;
 
-import com.bgpack.dto.GameDto;
+import com.bgpack.model.Game;
 import com.bgpack.dto.GameSearchRequest;
 import com.bgpack.service.BggService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,8 +45,8 @@ class BggControllerTest {
     @Test
     void getGames_WithValidRequest_ShouldReturnGames() throws Exception {
         // Given
-        List<GameDto> mockGames = Arrays.asList(
-                GameDto.builder()
+        List<Game> mockGames = Arrays.asList(
+                Game.builder()
                         .id("1")
                         .name("Catan")
                         .yearPublished(1995)
@@ -78,9 +78,9 @@ class BggControllerTest {
     @Test
     void getGames_WithEmptyRequest_ShouldReturnAllGames() throws Exception {
         // Given
-        List<GameDto> mockGames = Arrays.asList(
-                GameDto.builder().id("1").name("Catan").build(),
-                GameDto.builder().id("2").name("Ticket to Ride").build()
+        List<Game> mockGames = Arrays.asList(
+                Game.builder().id("1").name("Catan").build(),
+                Game.builder().id("2").name("Ticket to Ride").build()
         );
         when(bggService.getGames(any(GameSearchRequest.class))).thenReturn(mockGames);
 
@@ -96,8 +96,8 @@ class BggControllerTest {
     @Test
     void getGames_WithMultipleFilters_ShouldReturnFilteredGames() throws Exception {
         // Given
-        List<GameDto> mockGames = Arrays.asList(
-                GameDto.builder().id("1").name("Catan").build()
+        List<Game> mockGames = Arrays.asList(
+                Game.builder().id("1").name("Catan").build()
         );
         when(bggService.getGames(any(GameSearchRequest.class))).thenReturn(mockGames);
 
@@ -121,7 +121,7 @@ class BggControllerTest {
     @Test
     void getGameById_WithValidId_ShouldReturnGame() throws Exception {
         // Given
-        GameDto mockGame = GameDto.builder()
+        Game mockGame = Game.builder()
                 .id("1")
                 .name("Catan")
                 .yearPublished(1995)
@@ -167,14 +167,14 @@ class BggControllerTest {
     @Test
     void getCollection_WithValidUsername_ShouldReturnCollection() throws Exception {
         // Given
-        List<GameDto> mockCollection = Arrays.asList(
-                GameDto.builder().id("1").name("Catan").build(),
-                GameDto.builder().id("2").name("Ticket to Ride").build()
+        List<Game> mockCollection = Arrays.asList(
+                Game.builder().id("1").name("Catan").build(),
+                Game.builder().id("2").name("Ticket to Ride").build()
         );
         when(bggService.getCollection("testuser")).thenReturn(mockCollection);
 
         // When & Then
-        mockMvc.perform(get("/api/collections/testuser"))
+        mockMvc.perform(get("/api/own/testuser"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -188,7 +188,7 @@ class BggControllerTest {
         when(bggService.getCollection("emptyuser")).thenReturn(Arrays.asList());
 
         // When & Then
-        mockMvc.perform(get("/api/collections/emptyuser"))
+        mockMvc.perform(get("/api/own/emptyuser"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(0)));

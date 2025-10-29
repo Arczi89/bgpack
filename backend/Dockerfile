@@ -1,13 +1,22 @@
-# Use existing bgpack-backend image as base to avoid Docker Hub issues
-FROM bgpack-backend:latest
+# Development/Production Dockerfile for Spring Boot application
+FROM maven:3.9-eclipse-temurin-21
 
 WORKDIR /app
 
-# Copy the new JAR file over the old one
-COPY target/bgpack-backend-0.0.1-SNAPSHOT.jar target/bgpack-backend-0.0.1-SNAPSHOT.jar
+# Copy pom.xml and checkstyle.xml first for dependency caching
+COPY pom.xml checkstyle.xml ./
 
-# Expose port
-EXPOSE 8080
+# Download dependencies (cache layer)
+RUN mvn dependency:go-offline -B || true
 
-# Run the application
+# Copy source code
+COPY src ./src
+
+# Build the application (for production)
+RUN mvn clean package -DskipTests
+
+# Expose ports
+EXPOSE 8080 5005
+
+# Default command (can be overridden in docker-compose)
 CMD ["java", "-jar", "target/bgpack-backend-0.0.1-SNAPSHOT.jar"]

@@ -58,7 +58,7 @@ else
     # Start backend in Docker
     print_status "Building backend with latest changes..."
     cd backend
-    export JAVA_HOME=../tools/jdk-17.0.2
+    export JAVA_HOME=../tools/jdk-21
     ./mvnw clean package -DskipTests
     if [ $? -ne 0 ]; then
         print_error "Failed to build backend"
@@ -66,8 +66,8 @@ else
     fi
     cd ..
     
-    print_status "Starting backend in Docker..."
-    docker-compose up backend -d
+    print_status "Starting backend in Docker with debugging enabled..."
+    docker-compose -f docker-compose.dev.yml up backend -d
     
     # Wait for backend to be ready
     print_status "Waiting for backend to start..."
@@ -108,9 +108,9 @@ echo ""
 echo "To stop: ./stop-dev.sh"
 if [ "$BACKEND_TYPE" = "Docker" ]; then
     if [ ! -z "$FRONTEND_PID" ]; then
-        echo "Or manually: docker-compose down && kill $FRONTEND_PID"
+        echo "Or manually: docker-compose -f docker-compose.dev.yml down && kill $FRONTEND_PID"
     else
-        echo "Or manually: docker-compose down"
+        echo "Or manually: docker-compose -f docker-compose.dev.yml down"
         echo "Note: Frontend was already running, stop it manually if needed"
     fi
 else

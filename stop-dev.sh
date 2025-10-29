@@ -27,7 +27,7 @@ if [ -f .backend.pid ]; then
     ./stop-backend-local.sh
 else
     print_status "Stopping Docker backend..."
-    docker-compose down
+    docker-compose -f docker-compose.dev.yml down
 fi
 
 # Stop frontend if PID file exists

@@ -1,15 +1,15 @@
 package com.bgpack.testdata;
 
-import com.bgpack.dto.GameDto;
+import com.bgpack.model.Game;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MockGameData {
 
-    public static List<GameDto> getMockGames() {
+    public static List<Game> getMockGames() {
         return Arrays.asList(
-            GameDto.builder()
+            Game.builder()
                 .id("1")
                 .name("Catan")
                 .yearPublished(1995)
@@ -24,7 +24,7 @@ public class MockGameData {
                 .complexity(2.3)
                 .build(),
 
-            GameDto.builder()
+            Game.builder()
                 .id("2")
                 .name("Ticket to Ride")
                 .yearPublished(2004)
@@ -38,7 +38,7 @@ public class MockGameData {
                 .complexity(1.9)
                 .build(),
 
-            GameDto.builder()
+            Game.builder()
                 .id("3")
                 .name("Wingspan")
                 .yearPublished(2019)
@@ -52,7 +52,7 @@ public class MockGameData {
                 .complexity(2.4)
                 .build(),
 
-            GameDto.builder()
+            Game.builder()
                 .id("4")
                 .name("Azul")
                 .yearPublished(2017)
@@ -66,7 +66,7 @@ public class MockGameData {
                 .complexity(1.8)
                 .build(),
 
-            GameDto.builder()
+            Game.builder()
                 .id("5")
                 .name("Gloomhaven")
                 .yearPublished(2017)
@@ -82,9 +82,9 @@ public class MockGameData {
         );
     }
 
-    public static List<GameDto> getMockCollection(String username) {
+    public static List<Game> getMockCollection(String username) {
         return List.of(
-            GameDto.builder()
+            Game.builder()
                 .id("7")
                 .name("7 Wonders")
                 .yearPublished(2016)
@@ -98,7 +98,7 @@ public class MockGameData {
                 .complexity(2.3)
                 .ownedBy(List.of(username))
                 .build(),
-            GameDto.builder()
+            Game.builder()
                 .id("31260")
                 .name("Agricola")
                 .yearPublished(2007)
@@ -112,7 +112,7 @@ public class MockGameData {
                 .complexity(3.6)
                 .ownedBy(List.of(username))
                 .build(),
-            GameDto.builder()
+            Game.builder()
                 .id("230802")
                 .name("Azul")
                 .yearPublished(2017)
@@ -126,7 +126,7 @@ public class MockGameData {
                 .complexity(1.8)
                 .ownedBy(List.of(username))
                 .build(),
-            GameDto.builder()
+            Game.builder()
                 .id("2651")
                 .name("Power Grid")
                 .yearPublished(2004)
@@ -140,7 +140,7 @@ public class MockGameData {
                 .complexity(3.3)
                 .ownedBy(List.of(username))
                 .build(),
-            GameDto.builder()
+            Game.builder()
                 .id("266192")
                 .name("Wingspan")
                 .yearPublished(2019)

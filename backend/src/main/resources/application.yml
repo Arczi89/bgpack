@@ -21,6 +21,14 @@ spring:
     caffeine:
       spec: maximumSize=1000,expireAfterWrite=1h
 
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java,src/main/resources
+      exclude: static/**,public/**,templates/**
+    livereload:
+      enabled: true
+
 logging:
   level:
     com.bgpack: DEBUG
@@ -32,7 +40,7 @@ logging:
 
 bgg:
   api:
-    base-url: "https://www.boardgamegeek.com/xmlapi2"
+    base-url: "https://boardgamegeek.com/xmlapi2"
     timeout: 60000
     rate-limit: 1.0  # requests per second (1 request per second)
     max-requests-per-hour: 3600  # 1 request per second * 60 minutes * 60 seconds

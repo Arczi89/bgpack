@@ -1,7 +1,7 @@
 package com.bgpack.service;
 
 import com.bgpack.client.BggApiClient;
-import com.bgpack.dto.GameDto;
+import com.bgpack.model.Game;
 import com.bgpack.dto.GameSearchRequest;
 import com.bgpack.testdata.MockGameData;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +55,7 @@ class BggServiceTest {
         GameSearchRequest searchRequest = GameSearchRequest.builder().build();
 
         // When
-        List<GameDto> result = bggService.getGames(searchRequest);
+        List<Game> result = bggService.getGames(searchRequest);
 
         // Then
         assertThat(result).isEmpty();
@@ -69,7 +69,7 @@ class BggServiceTest {
                 .build();
 
         // When
-        List<GameDto> result = bggService.getGames(searchRequest);
+        List<Game> result = bggService.getGames(searchRequest);
 
         // Then
         assertThat(result).isEmpty();
@@ -84,7 +84,7 @@ class BggServiceTest {
                 .build();
 
         // When
-        List<GameDto> result = bggService.getGames(searchRequest);
+        List<Game> result = bggService.getGames(searchRequest);
 
         // Then
         assertThat(result).isEmpty();
@@ -97,15 +97,15 @@ class BggServiceTest {
                 .search("Catan")
                 .build();
 
-        List<GameDto> bggGames = Arrays.asList(
-                GameDto.builder().id("13").name("Catan").yearPublished(1995).build()
+        List<Game> bggGames = Arrays.asList(
+                Game.builder().id("13").name("Catan").yearPublished(1995).build()
         );
 
         when(bggApiClient.searchGames("Catan")).thenReturn(Mono.just("<xml>mock response</xml>"));
         when(xmlParserService.parseSearchResults(anyString())).thenReturn(bggGames);
 
         // When
-        List<GameDto> result = bggService.getGames(searchRequest);
+        List<Game> result = bggService.getGames(searchRequest);
 
         // Then
         assertThat(result).hasSize(1);
@@ -123,7 +123,7 @@ class BggServiceTest {
         when(bggApiClient.searchGames("Catan")).thenReturn(Mono.error(new RuntimeException("API Error")));
 
         // When
-        List<GameDto> result = bggService.getGames(searchRequest);
+        List<Game> result = bggService.getGames(searchRequest);
 
         // Then
         assertThat(result).isEmpty();
@@ -140,7 +140,7 @@ class BggServiceTest {
     @Test
     void getGameById_WithBggApiSuccess_ShouldReturnBggGame() {
         // Given
-        GameDto bggGame = GameDto.builder()
+        Game bggGame = Game.builder()
                 .id("13")
                 .name("Catan")
                 .yearPublished(1995)
@@ -152,7 +152,7 @@ class BggServiceTest {
         when(xmlParserService.parseGameDetails(anyString())).thenReturn(bggGame);
 
         // When
-        GameDto result = bggService.getGameById("13");
+        Game result = bggService.getGameById("13");
 
         // Then
         assertThat(result).isNotNull();
@@ -182,20 +182,20 @@ class BggServiceTest {
     @Test
     void getCollection_WithValidUsername_ShouldReturnCollection() {
         // Given
-        List<GameDto> collection = Arrays.asList(
-                GameDto.builder().id("13").name("Catan").build(),
-                GameDto.builder().id("42").name("Ticket to Ride").build()
+        List<Game> collection = Arrays.asList(
+                Game.builder().id("13").name("Catan").build(),
+                Game.builder().id("42").name("Ticket to Ride").build()
         );
 
         when(bggApiClient.getCollection("testuser")).thenReturn(Mono.just("<xml>mock response</xml>"));
         when(xmlParserService.parseCollection(anyString())).thenReturn(collection);
 
         // When
-        List<GameDto> result = bggService.getCollection("testuser");
+        List<Game> result = bggService.getCollection("testuser");
 
         // Then
         assertThat(result).hasSize(2);
-        assertThat(result).extracting(GameDto::getName)
+        assertThat(result).extracting(Game::getName)
                 .containsExactlyInAnyOrder("Catan", "Ticket to Ride");
     }
 
@@ -205,7 +205,7 @@ class BggServiceTest {
         when(bggApiClient.getCollection("testuser")).thenReturn(Mono.error(new RuntimeException("API Error")));
 
         // When
-        List<GameDto> result = bggService.getCollection("testuser");
+        List<Game> result = bggService.getCollection("testuser");
 
         // Then
         assertThat(result).isEmpty();
@@ -226,7 +226,7 @@ class BggServiceTest {
                 .build();
 
         // When
-        List<GameDto> result = bggService.getGames(searchRequest);
+        List<Game> result = bggService.getGames(searchRequest);
 
         // Then
         assertThat(result).isEmpty();

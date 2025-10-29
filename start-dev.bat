@@ -2,8 +2,8 @@
 echo BGPack - Development Setup
 echo =============================
 
-echo [INFO] Starting backend in Docker...
-docker-compose up backend -d
+echo [INFO] Starting backend in Docker with debugging enabled...
+docker-compose -f docker-compose.dev.yml up backend -d
 
 echo [INFO] Waiting for backend to start...
 timeout /t 10 /nobreak > nul

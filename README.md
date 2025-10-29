@@ -42,13 +42,13 @@ BGPack (Board Games Pack) is a full-stack application for discovering and managi
 # Linux/Mac - Backend in Docker (default)
 ./start-dev.sh
 
-# Linux/Mac - Backend locally (requires Java 17)
+# Linux/Mac - Backend locally (requires Java 21)
 ./start-dev.sh --local
 
 # Windows - Backend in Docker (default)
 start-dev.bat
 
-# Windows - Backend locally (requires Java 17)
+# Windows - Backend locally (requires Java 21)
 start-dev.bat --local
 ```
 
@@ -77,7 +77,7 @@ stop-dev.bat
 
 **Local Backend:**
 
-- Requires Java 17 (included in `tools/jdk-17.0.2/`)
+- Requires Java 21 (included in `tools/jdk-21/`)
 - Faster startup and debugging
 - Direct access to logs
 
@@ -329,7 +329,7 @@ curl "http://localhost:8080/api/games?minPlayers=3&maxPlayers=5&minPlayingTime=4
 
 **Backend:**
 
-- Spring Boot 3.2 with Java 17
+- Spring Boot 3.3 with Java 21
 - Spring Security for authentication and CORS
 - Spring Web for REST API
 - Spring Data MongoDB for persistence

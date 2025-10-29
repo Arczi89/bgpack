@@ -1,7 +1,7 @@
 package com.bgpack;
 
 import com.bgpack.service.BggXmlParserService;
-import com.bgpack.dto.GameDto;
+import com.bgpack.model.Game;
 
 public class SimpleXmlTest {
     public static void main(String[] args) {
@@ -59,7 +59,7 @@ public class SimpleXmlTest {
 
         try {
             System.out.println("Parsing XML...");
-            GameDto game = parser.parseGameDetails(xmlResponse);
+            Game game = parser.parseGameDetails(xmlResponse);
 
             if (game != null) {
                 System.out.println("Game parsed successfully:");

@@ -23,17 +23,16 @@ services:
       - "5005:5005"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATA_MONGODB_HOST=mongodb
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATA_MONGODB_DATABASE=bgpack
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/bgpack
     volumes:
       - ./backend/src:/app/src
+      - ./backend/target:/app/target
       - maven-cache:/root/.m2
     networks:
       - bgpack-network
     depends_on:
       - mongodb
-    command: ["./mvnw", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005'"]
+    command: ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
 
   frontend:
     build:

@@ -83,7 +83,25 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 flex-grow">
+        {children}
+      </main>
+
+      <footer className="bg-white border-t mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-center items-center">
+            <a
+              href="https://boardgamegeek.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <span className="text-sm">Powered by</span>
+              <span className="font-bold text-lg">BGG</span>
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
