@@ -1,7 +1,7 @@
 package com.bgpack.service;
 
-import com.bgpack.dto.GameDto;
 import com.bgpack.dto.GameStatsDto;
+import com.bgpack.model.Game;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class BggXmlParserService {
 
-    public List<GameDto> parseSearchResults(final String xmlResponse) {
+    public List<Game> parseSearchResults(final String xmlResponse) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -28,13 +28,13 @@ public class BggXmlParserService {
                 new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
 
             NodeList items = doc.getElementsByTagName("item");
-            List<GameDto> games = new ArrayList<>();
+            List<Game> games = new ArrayList<>();
 
             for (int i = 0; i < items.getLength(); i++) {
                 Node item = items.item(i);
                 if (item.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) item;
-                    GameDto game = parseGameFromSearchElement(element);
+                    Game game = parseGameFromSearchElement(element);
                     if (game != null) {
                         games.add(game);
                     }
@@ -53,7 +53,7 @@ public class BggXmlParserService {
         }
     }
 
-    public GameDto parseGameDetails(final String xmlResponse) {
+    public Game parseGameDetails(final String xmlResponse) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -77,7 +77,7 @@ public class BggXmlParserService {
         }
     }
 
-    public List<GameDto> parseCollection(final String xmlResponse) {
+    public List<Game> parseCollection(final String xmlResponse) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -85,13 +85,13 @@ public class BggXmlParserService {
                 new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
 
             NodeList items = doc.getElementsByTagName("item");
-            List<GameDto> games = new ArrayList<>();
+            List<Game> games = new ArrayList<>();
 
             for (int i = 0; i < items.getLength(); i++) {
                 Node item = items.item(i);
                 if (item.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) item;
-                    GameDto game = parseGameFromCollectionElement(element);
+                    Game game = parseGameFromCollectionElement(element);
                     if (game != null) {
                         games.add(game);
                     }
@@ -110,7 +110,7 @@ public class BggXmlParserService {
         }
     }
 
-    private GameDto parseGameFromSearchElement(final Element element) {
+    private Game parseGameFromSearchElement(final Element element) {
         try {
             String id = getAttributeValue(element, "id");
             String name = getElementValue(element, "name");
@@ -120,7 +120,7 @@ public class BggXmlParserService {
                 return null;
             }
 
-            return GameDto.builder()
+            return Game.builder()
                     .id(id)
                     .name(name)
                     .yearPublished(parseInteger(yearPublished))
@@ -131,7 +131,7 @@ public class BggXmlParserService {
         }
     }
 
-    private GameDto parseGameFromDetailElement(Element element) {
+    private Game parseGameFromDetailElement(Element element) {
         try {
             String id = getAttributeValue(element, "id");
             String name = getElementValue(element, "name");
@@ -159,7 +159,7 @@ public class BggXmlParserService {
                 }
             }
 
-            return GameDto.builder()
+            return Game.builder()
                     .id(id)
                     .name(name)
                     .yearPublished(parseInteger(yearPublished))
@@ -180,7 +180,7 @@ public class BggXmlParserService {
         }
     }
 
-    private GameDto parseGameFromCollectionElement(final Element element) {
+    private Game parseGameFromCollectionElement(final Element element) {
         try {
             String id = getAttributeValue(element, "objectid");
             String name = getElementValue(element, "name");
@@ -216,7 +216,7 @@ public class BggXmlParserService {
                 log.debug("No stats element found for game: {} (ID: {})", name, id);
             }
 
-            return GameDto.builder()
+            return Game.builder()
                     .id(id)
                     .name(name)
                     .yearPublished(parseInteger(yearPublished))

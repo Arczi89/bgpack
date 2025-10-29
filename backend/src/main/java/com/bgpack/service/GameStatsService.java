@@ -2,8 +2,8 @@ package com.bgpack.service;
 
 import com.bgpack.dto.GameStatsDto;
 import com.bgpack.dto.GameWithStatsDto;
-import com.bgpack.entity.Game;
 import com.bgpack.entity.GameStats;
+import com.bgpack.model.Game;
 import com.bgpack.repository.GameStatsRepository;
 import com.bgpack.client.BggApiClient;
 import com.bgpack.service.BggXmlParserService;

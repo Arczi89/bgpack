@@ -1,15 +1,21 @@
-package com.bgpack.entity;
+package com.bgpack.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Game filtering criteria.
+ * Used both for API requests and MongoDB storage.
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameFiltersEntity {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class GameFilters {
     private Integer minPlayers;
     private Integer maxPlayers;
     private Integer minPlayingTime;
@@ -18,3 +24,4 @@ public class GameFiltersEntity {
     private Double minRating;
     private Boolean exactPlayerFilter;
 }
+

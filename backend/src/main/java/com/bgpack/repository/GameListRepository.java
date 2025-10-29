@@ -1,6 +1,6 @@
 package com.bgpack.repository;
 
-import com.bgpack.entity.GameList;
+import com.bgpack.model.GameList;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,9 @@
 package com.bgpack.controller;
 
-import com.bgpack.dto.GameDto;
 import com.bgpack.dto.GameSearchRequest;
 import com.bgpack.dto.GameStatsDto;
 import com.bgpack.dto.GameWithStatsDto;
+import com.bgpack.model.Game;
 import com.bgpack.service.BggService;
 import com.bgpack.service.GameStatsService;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +47,8 @@ public class BggController {
      * @return list of matching games
      */
     @GetMapping("/games")
-    public ResponseEntity<List<GameDto>> getGames(@Valid final GameSearchRequest searchRequest) {
-        List<GameDto> games = bggService.getGames(searchRequest);
+    public ResponseEntity<List<Game>> getGames(@Valid final GameSearchRequest searchRequest) {
+        List<Game> games = bggService.getGames(searchRequest);
         return ResponseEntity.ok(games);
     }
 
@@ -60,10 +60,10 @@ public class BggController {
      * @return list of owned games
      */
     @GetMapping("/own/{username}")
-    public ResponseEntity<List<GameDto>> getOwnedGames(
+    public ResponseEntity<List<Game>> getOwnedGames(
             @PathVariable @NotBlank final String username,
             @RequestParam(defaultValue = "false") final boolean excludeExpansions) {
-        List<GameDto> games = bggService.getCollection(username, excludeExpansions);
+        List<Game> games = bggService.getCollection(username, excludeExpansions);
         return ResponseEntity.ok(games);
     }
 
@@ -81,6 +81,8 @@ public class BggController {
 
     /**
      * Get owned games with extended statistics for a specific user.
+     * No mapping needed - Game is used directly!
+     *
      * @param username BGG username
      * @param excludeExpansions whether to exclude expansions
      * @return list of owned games with extended statistics
@@ -89,9 +91,8 @@ public class BggController {
     public ResponseEntity<List<GameWithStatsDto>> getOwnedGamesWithStats(
             @PathVariable @NotBlank final String username,
             @RequestParam(defaultValue = "false") final boolean excludeExpansions) {
-        List<GameDto> games = bggService.getCollection(username, excludeExpansions);
-        List<GameWithStatsDto> gamesWithStats = gameStatsService.getGamesWithStats(
-            games.stream().map(this::mapToEntity).collect(java.util.stream.Collectors.toList()));
+        List<Game> games = bggService.getCollection(username, excludeExpansions);
+        List<GameWithStatsDto> gamesWithStats = gameStatsService.getGamesWithStats(games);
         return ResponseEntity.ok(gamesWithStats);
     }
 
@@ -105,26 +106,5 @@ public class BggController {
             @RequestBody @Valid final List<String> gameIds) {
         List<GameStatsDto> stats = gameStatsService.getMultipleGameStats(gameIds);
         return ResponseEntity.ok(stats);
-    }
-
-    private com.bgpack.entity.Game mapToEntity(GameDto dto) {
-        return com.bgpack.entity.Game.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .yearPublished(dto.getYearPublished())
-                .minPlayers(dto.getMinPlayers())
-                .maxPlayers(dto.getMaxPlayers())
-                .playingTime(dto.getPlayingTime())
-                .minAge(dto.getMinAge())
-                .description(dto.getDescription())
-                .imageUrl(dto.getImageUrl())
-                .thumbnailUrl(dto.getThumbnailUrl())
-                .bggRating(dto.getBggRating())
-                .averageRating(dto.getAverageRating())
-                .complexity(dto.getComplexity())
-                .averageWeight(dto.getAverageWeight())
-                .suggestedNumPlayers(dto.getSuggestedNumPlayers())
-                .ownedBy(dto.getOwnedBy())
-                .build();
     }
 }

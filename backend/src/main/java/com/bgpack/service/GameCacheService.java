@@ -1,7 +1,7 @@
 package com.bgpack.service;
 
-import com.bgpack.dto.GameDto;
 import com.bgpack.entity.GameCache;
+import com.bgpack.model.Game;
 import com.bgpack.repository.GameCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class GameCacheService {
     /**
      * Get game from cache if available
      */
-    public Optional<GameDto> getCachedGame(String gameId) {
+    public Optional<Game> getCachedGame(String gameId) {
         log.info("Looking for cached game: {}", gameId);
 
         Optional<GameCache> cachedGame = gameCacheRepository.findByGameId(gameId);
@@ -41,7 +41,7 @@ public class GameCacheService {
     /**
      * Save game to cache
      */
-    public void saveGameToCache(GameDto gameDto) {
+    public void saveGameToCache(Game gameDto) {
         log.info("Saving game to cache: {}", gameDto.getId());
 
         GameCache gameCache = GameCache.builder()
@@ -72,7 +72,7 @@ public class GameCacheService {
     /**
      * Update existing cache entry
      */
-    public void updateGameCache(GameDto gameDto) {
+    public void updateGameCache(Game gameDto) {
         log.info("Updating cached game: {}", gameDto.getId());
 
         Optional<GameCache> existingCache = gameCacheRepository.findByGameId(gameDto.getId());
@@ -125,8 +125,8 @@ public class GameCacheService {
         return gameCacheRepository.count();
     }
 
-    private GameDto convertToDto(GameCache cache) {
-        return GameDto.builder()
+    private Game convertToDto(GameCache cache) {
+        return Game.builder()
                 .id(cache.getGameId())
                 .name(cache.getName())
                 .yearPublished(cache.getYearPublished())

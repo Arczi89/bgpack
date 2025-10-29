@@ -1,8 +1,8 @@
 package com.bgpack.service;
 
 import com.bgpack.client.BggApiClient;
-import com.bgpack.dto.GameDto;
 import com.bgpack.dto.GameSearchRequest;
+import com.bgpack.model.Game;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,14 +31,14 @@ public class BggService {
     }
 
     @Cacheable(value = "games", key = "#searchRequest.toString()")
-    public List<GameDto> getGames(final GameSearchRequest searchRequest) {
+    public List<Game> getGames(final GameSearchRequest searchRequest) {
         log.info("Searching games with criteria: {}", searchRequest);
 
         if (searchRequest.getSearch() != null && !searchRequest.getSearch().trim().isEmpty()) {
             if (optimizationService.shouldMakeRequest("search")) {
                 try {
                     rateLimiter.acquire();
-                    List<GameDto> bggGames = searchGamesFromBgg(searchRequest.getSearch());
+                    List<Game> bggGames = searchGamesFromBgg(searchRequest.getSearch());
                     optimizationService.recordRequest("search", true);
                     if (!bggGames.isEmpty()) {
                         return bggGames.stream()
@@ -59,7 +59,7 @@ public class BggService {
     }
 
     @Cacheable(value = "game", key = "#id")
-    public GameDto getGameById(final String id) {
+    public Game getGameById(final String id) {
         log.info("Getting game by id: {}", id);
 
         if (optimizationService.shouldMakeRequest("gameDetails")) {
@@ -81,7 +81,7 @@ public class BggService {
         throw new IllegalArgumentException("Game not found with id: " + id);
     }
 
-    public List<GameDto> getCollection(final String username) {
+    public List<Game> getCollection(final String username) {
         return getCollection(username, false);
     }
 
@@ -92,7 +92,7 @@ public class BggService {
      * @param maxRetries maximum number of retry attempts
      * @return list of owned games
      */
-    private List<GameDto> getCollectionWithRetry(final String username, final boolean excludeExpansions, final int maxRetries) {
+    private List<Game> getCollectionWithRetry(final String username, final boolean excludeExpansions, final int maxRetries) {
         int attempts = 0;
         long delayMs = 2000;
 
@@ -113,7 +113,7 @@ public class BggService {
                 log.info("Raw XML response length for user '{}': {}", username, xmlResponse != null ? xmlResponse.length() : 0);
 
                 if (xmlResponse != null && !xmlResponse.trim().isEmpty()) {
-                    List<GameDto> games = xmlParserService.parseCollection(xmlResponse);
+                    List<Game> games = xmlParserService.parseCollection(xmlResponse);
 
                     if (games != null && !games.isEmpty()) {
                         games.forEach(game -> game.setOwnedBy(List.of(username)));
@@ -159,7 +159,7 @@ public class BggService {
         return new ArrayList<>();
     }
 
-    public List<GameDto> getCollection(final String username, final boolean excludeExpansions) {
+    public List<Game> getCollection(final String username, final boolean excludeExpansions) {
         if (optimizationService.shouldMakeRequest("collection")) {
             return getCollectionWithRetry(username, excludeExpansions, 3);
         }
@@ -168,7 +168,7 @@ public class BggService {
         return new ArrayList<>();
     }
 
-    private List<GameDto> searchGamesFromBgg(final String query) {
+    private List<Game> searchGamesFromBgg(final String query) {
         try {
             String xmlResponse = bggApiClient.searchGames(query).block();
             if (xmlResponse != null && !xmlResponse.trim().isEmpty()) {
@@ -181,7 +181,7 @@ public class BggService {
     }
 
 
-    private boolean matchesSearch(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesSearch(final Game game, final GameSearchRequest searchRequest) {
         return matchesSearchText(game, searchRequest) &&
                matchesPlayerCount(game, searchRequest) &&
                matchesPlayingTime(game, searchRequest) &&
@@ -190,7 +190,7 @@ public class BggService {
                matchesYear(game, searchRequest);
     }
 
-    private boolean matchesSearchText(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesSearchText(final Game game, final GameSearchRequest searchRequest) {
         if (searchRequest.getSearch() == null || searchRequest.getSearch().trim().isEmpty()) {
             return true;
         }
@@ -199,7 +199,7 @@ public class BggService {
                game.getDescription().toLowerCase().contains(search);
     }
 
-    private boolean matchesPlayerCount(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesPlayerCount(final Game game, final GameSearchRequest searchRequest) {
         if (searchRequest.getMinPlayers() != null && searchRequest.getMaxPlayers() != null) {
             return matchesPlayerRange(game, searchRequest);
         } else if (searchRequest.getMinPlayers() != null) {
@@ -210,7 +210,7 @@ public class BggService {
         return true;
     }
 
-    private boolean matchesPlayerRange(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesPlayerRange(final Game game, final GameSearchRequest searchRequest) {
         if (Boolean.TRUE.equals(searchRequest.getExactPlayerFilter())) {
             return game.getMinPlayers().equals(searchRequest.getMinPlayers()) &&
                    game.getMaxPlayers().equals(searchRequest.getMaxPlayers());
@@ -220,7 +220,7 @@ public class BggService {
         }
     }
 
-    private boolean matchesMinPlayers(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesMinPlayers(final Game game, final GameSearchRequest searchRequest) {
         if (Boolean.TRUE.equals(searchRequest.getExactPlayerFilter())) {
             return game.getMinPlayers().equals(searchRequest.getMinPlayers());
         } else {
@@ -228,7 +228,7 @@ public class BggService {
         }
     }
 
-    private boolean matchesMaxPlayers(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesMaxPlayers(final Game game, final GameSearchRequest searchRequest) {
         if (Boolean.TRUE.equals(searchRequest.getExactPlayerFilter())) {
             return game.getMaxPlayers().equals(searchRequest.getMaxPlayers());
         } else {
@@ -236,7 +236,7 @@ public class BggService {
         }
     }
 
-    private boolean matchesPlayingTime(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesPlayingTime(final Game game, final GameSearchRequest searchRequest) {
         boolean matchesMinTime = searchRequest.getMinPlayingTime() == null ||
                                  game.getPlayingTime() >= searchRequest.getMinPlayingTime();
         boolean matchesMaxTime = searchRequest.getMaxPlayingTime() == null ||
@@ -244,15 +244,15 @@ public class BggService {
         return matchesMinTime && matchesMaxTime;
     }
 
-    private boolean matchesAge(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesAge(final Game game, final GameSearchRequest searchRequest) {
         return searchRequest.getMinAge() == null || game.getMinAge() >= searchRequest.getMinAge();
     }
 
-    private boolean matchesRating(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesRating(final Game game, final GameSearchRequest searchRequest) {
         return searchRequest.getMinRating() == null || game.getBggRating() >= searchRequest.getMinRating();
     }
 
-    private boolean matchesYear(final GameDto game, final GameSearchRequest searchRequest) {
+    private boolean matchesYear(final Game game, final GameSearchRequest searchRequest) {
         boolean matchesYearFrom = searchRequest.getYearFrom() == null ||
                                   game.getYearPublished() >= searchRequest.getYearFrom();
         boolean matchesYearTo = searchRequest.getYearTo() == null ||

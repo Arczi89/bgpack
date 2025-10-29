@@ -1,5 +1,6 @@
-package com.bgpack.entity;
+package com.bgpack.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,11 +9,18 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
+/**
+ * Game entity representing a board game.
+ * Used both as MongoDB document (embedded in GameList) and API response.
+ * This unified approach follows YAGNI principle - no need for separate DTO/Entity for MongoDB.
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)  // Don't serialize null values in JSON
 public class Game {
+
     @Field("id")
     private String id;
 
@@ -61,3 +69,4 @@ public class Game {
     @Field("ownedBy")
     private List<String> ownedBy;
 }
+
