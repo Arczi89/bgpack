@@ -22,6 +22,7 @@ backend/target/
 .env.test.local
 .env.production.local
 .env.*.local
+.env.secrets
 
 # IDE and Editor files
 .vscode/
@@ -121,3 +122,6 @@ playwright/.cache/
 *.webm
 *.png
 *.zip
+
+token
+backend/src/main/resources/application-local.yml

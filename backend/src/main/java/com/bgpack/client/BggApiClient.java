@@ -21,10 +21,14 @@ public class BggApiClient {
 
     private final WebClient webClient;
     private final String baseUrl;
+    private final String authToken;
 
     public BggApiClient(@Value("${bgg.api.base-url}") final String baseUrl,
-                       @Value("${bgg.api.timeout:30000}") final int timeout) {
+                       @Value("${bgg.api.timeout:30000}") final int timeout,
+                       @Value("${bgg.api.token:}") final String authToken) {
         this.baseUrl = baseUrl;
+        this.authToken = authToken;
+        log.info("BGG API Token (początek): {}", authToken != null && !authToken.isEmpty() ? authToken.substring(0, Math.min(8, authToken.length())) + "..." : "(brak)");
 
         HttpClient httpClient = HttpClient.create()
                 .secure(sslSpec -> {
@@ -49,6 +53,7 @@ public class BggApiClient {
                 .defaultHeader("User-Agent",
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                 .defaultHeader("Accept", "application/xml, text/xml, */*")
+                .defaultHeader("Authorization", authToken != null && !authToken.isEmpty() ? "Bearer " + authToken : "")
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(MAX_MEMORY_SIZE))
                 .build();
     }

@@ -24,6 +24,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/bgpack
+      - BGG_API_TOKEN=${BGG_API_TOKEN}
     volumes:
       - ./backend/src:/app/src
       - ./backend/target:/app/target

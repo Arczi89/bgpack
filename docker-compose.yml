@@ -9,6 +9,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/bgpack
+      - BGG_API_TOKEN=${BGG_API_TOKEN}
     networks:
       - bgpack-network
     depends_on:

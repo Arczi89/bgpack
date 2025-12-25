@@ -347,15 +347,13 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Search Button */}
         <div className="mt-6">
           <button
             data-testid="search-button"
             onClick={handleSearch}
-            disabled={!bggNicks.trim() || isLoading}
+            disabled={!bggNicks.trim() || (isLoading && !error)}
             className="w-full bg-primary-600 text-white py-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-medium transition-all duration-200 flex items-center justify-center gap-3 relative overflow-hidden"
           >
-            {/* Content */}
             <div className="relative z-10 flex items-center gap-3">
               {isLoading && (
                 <div

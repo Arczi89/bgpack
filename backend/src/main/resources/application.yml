@@ -46,3 +46,4 @@ bgg:
     max-requests-per-hour: 3600  # 1 request per second * 60 minutes * 60 seconds
     circuit-breaker-threshold: 5  # consecutive failures before opening circuit
     circuit-breaker-timeout: 300  # seconds before trying again
+    token: ${BGG_API_TOKEN:}
