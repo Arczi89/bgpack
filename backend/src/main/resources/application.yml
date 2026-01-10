@@ -1,9 +1,35 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
+
 
 spring:
   application:
     name: bgpack-backend
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bgpack}
+    username: ${SPRING_DB_USERNAME:bgpack_user}
+    password: ${SPRING_DB_PASSWORD:bgpack_pass}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:create-drop}
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
   
   web:
     cors:
@@ -11,11 +37,7 @@ spring:
       allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
       allowed-headers: "*"
       allow-credentials: true
-  
-  data:
-    mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/bgpack}
-  
+
   cache:
     type: caffeine
     caffeine:
@@ -33,8 +55,10 @@ logging:
   level:
     com.bgpack: DEBUG
     org.springframework.security: DEBUG
-    org.springframework.data.mongodb: DEBUG
-    org.mongodb.driver: DEBUG
+    org.springframework.data.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
@@ -47,3 +71,7 @@ bgg:
     circuit-breaker-threshold: 5  # consecutive failures before opening circuit
     circuit-breaker-timeout: 300  # seconds before trying again
     token: ${BGG_API_TOKEN:}
+
+jwt:
+  secret: ${JWT_SECRET:}
+  expiration: ${JWT_EXPIRATION:86400000}

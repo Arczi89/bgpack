@@ -1,7 +1,7 @@
 package com.bgpack.service;
 
 import com.bgpack.dto.GameStatsDto;
-import com.bgpack.model.Game;
+import com.bgpack.entity.Game;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -13,8 +13,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -112,16 +115,16 @@ public class BggXmlParserService {
 
     private Game parseGameFromSearchElement(final Element element) {
         try {
-            String id = getAttributeValue(element, "id");
+            String bggId = getAttributeValue(element, "id");
             String name = getElementValue(element, "name");
             String yearPublished = getElementValue(element, "yearpublished");
 
-            if (id == null || name == null) {
+            if (bggId == null || name == null) {
                 return null;
             }
 
             return Game.builder()
-                    .id(id)
+                    .bggId(bggId)
                     .name(name)
                     .yearPublished(parseInteger(yearPublished))
                     .build();
@@ -133,7 +136,7 @@ public class BggXmlParserService {
 
     private Game parseGameFromDetailElement(Element element) {
         try {
-            String id = getAttributeValue(element, "id");
+            String bggId = element.getAttribute("id");
             String name = getElementValue(element, "name");
             String yearPublished = getElementValue(element, "yearpublished");
             String minPlayers = getElementValue(element, "minplayers");
@@ -146,9 +149,9 @@ public class BggXmlParserService {
 
             // Parse statistics
             Element statsElement = getChildElement(element, "statistics");
-            Double bggRating = null;
-            Double averageRating = null;
-            Double complexity = null;
+            BigDecimal bggRating = null;
+            BigDecimal averageRating = null;
+            BigDecimal complexity = null;
 
             if (statsElement != null) {
                 Element ratingsElement = getChildElement(statsElement, "ratings");
@@ -160,7 +163,7 @@ public class BggXmlParserService {
             }
 
             return Game.builder()
-                    .id(id)
+                    .bggId(bggId)
                     .name(name)
                     .yearPublished(parseInteger(yearPublished))
                     .minPlayers(parseInteger(minPlayers))
@@ -180,44 +183,36 @@ public class BggXmlParserService {
         }
     }
 
-    private Game parseGameFromCollectionElement(final Element element) {
-        try {
-            String id = getAttributeValue(element, "objectid");
-            String name = getElementValue(element, "name");
-            String yearPublished = getElementValue(element, "yearpublished");
-            String imageUrl = getElementValue(element, "image");
-            String thumbnailUrl = getElementValue(element, "thumbnail");
+    private Game parseGameFromCollectionElement(Element element) {
+        String bggId = element.getAttribute("objectid");
+        String name = getElementValue(element, "name");
+        String yearPublished = getElementValue(element, "yearpublished");
+        String imageUrl = getElementValue(element, "image");
+        String thumbnailUrl = getElementValue(element, "thumbnail");
 
-            // Parse statistics from stats element
-            Element statsElement = getChildElement(element, "stats");
-            Integer minPlayers = null;
-            Integer maxPlayers = null;
-            Integer playingTime = null;
-            Integer minAge = null;
-            Double bggRating = null;
-            Double averageRating = null;
-            Double complexity = null;
+        BigDecimal bggRating = null;
+        BigDecimal averageRating = null;
+        BigDecimal complexity = null;
+        Integer rank = null;
 
-            if (statsElement != null) {
-                minPlayers = parseInteger(getAttributeValue(statsElement, "minplayers"));
-                maxPlayers = parseInteger(getAttributeValue(statsElement, "maxplayers"));
-                playingTime = parseInteger(getAttributeValue(statsElement, "playingtime"));
-                minAge = parseInteger(getAttributeValue(statsElement, "minage"));
-                bggRating = parseDouble(getAttributeValue(statsElement, "bayesaverage"));
-                averageRating = parseDouble(getAttributeValue(statsElement, "average"));
-                complexity = parseDouble(getAttributeValue(statsElement, "avgweight"));
+        Element statsElement = getChildElement(element, "stats");
+        if (statsElement != null) {
+            Integer minPlayers = parseInteger(statsElement.getAttribute("minplayers"));
+            Integer maxPlayers = parseInteger(statsElement.getAttribute("maxplayers"));
+            Integer playingTime = parseInteger(statsElement.getAttribute("playingtime"));
+            Integer minAge = parseInteger(statsElement.getAttribute("minage"));
 
-                if (bggRating == null) {
-                    log.debug("No BGG rating found for game: {} (ID: {})", name, id);
-                } else {
-                    log.debug("Parsed BGG rating {} for game: {} (ID: {})", bggRating, name, id);
-                }
-            } else {
-                log.debug("No stats element found for game: {} (ID: {})", name, id);
+            Element ratingElement = getChildElement(statsElement, "rating");
+            if (ratingElement != null) {
+                bggRating = getAttributeBigDecimalValue(ratingElement, "bayesaverage");
+                averageRating = getAttributeBigDecimalValue(ratingElement, "average");
+                complexity = getAttributeBigDecimalValue(ratingElement, "averageweight");
+
+                rank = parseRankFromRanks(ratingElement);
             }
 
             return Game.builder()
-                    .id(id)
+                    .bggId(bggId)
                     .name(name)
                     .yearPublished(parseInteger(yearPublished))
                     .minPlayers(minPlayers)
@@ -229,11 +224,41 @@ public class BggXmlParserService {
                     .bggRating(bggRating)
                     .averageRating(averageRating)
                     .complexity(complexity)
+                    .rank(rank)
                     .build();
-        } catch (Exception e) {
-            log.warn("Error parsing game from collection element: {}", e.getMessage());
-            return null;
         }
+
+        return Game.builder()
+                .bggId(bggId)
+                .name(name)
+                .yearPublished(parseInteger(yearPublished))
+                .imageUrl(imageUrl)
+                .thumbnailUrl(thumbnailUrl)
+                .build();
+    }
+
+    private BigDecimal getAttributeBigDecimalValue(Element parent, String tagName) {
+        Element el = getChildElement(parent, tagName);
+        if (el != null) {
+            return parseDouble(el.getAttribute("value"));
+        }
+        return null;
+    }
+
+    private Integer parseRankFromRanks(Element ratingElement) {
+        Element ranksElement = getChildElement(ratingElement, "ranks");
+        if (ranksElement != null) {
+            NodeList ranks = ranksElement.getElementsByTagName("rank");
+            for (int i = 0; i < ranks.getLength(); i++) {
+                Element rankEl = (Element) ranks.item(i);
+                if ("boardgame".equals(rankEl.getAttribute("name"))) {
+                    String value = rankEl.getAttribute("value");
+                    if ("Not Ranked".equalsIgnoreCase(value)) return null;
+                    return parseInteger(value);
+                }
+            }
+        }
+        return null;
     }
 
     public GameStatsDto parseGameStats(final String xmlResponse) {
@@ -293,6 +318,250 @@ public class BggXmlParserService {
         }
     }
 
+    public List<Game> parseSearchResultsToEntities(final String xmlResponse) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(
+                    new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
+
+            NodeList items = doc.getElementsByTagName("item");
+            List<Game> games = new ArrayList<>();
+
+            for (int i = 0; i < items.getLength(); i++) {
+                Node item = items.item(i);
+                if (item.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) item;
+                    com.bgpack.entity.Game game = parseGameFromSearchElementToEntity(element);
+                    if (game != null) {
+                        games.add(game);
+                    }
+                }
+            }
+
+            log.info("Parsed {} games from search results to entities", games.size());
+            return games;
+        } catch (Exception e) {
+            log.error("Error parsing XML search response to entities: {}", e.getMessage());
+            throw new RuntimeException("Failed to parse BGG API search response", e);
+        }
+    }
+
+    public Game parseGameDetailsToEntity(final String xmlResponse) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(
+                    new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
+
+            NodeList items = doc.getElementsByTagName("item");
+            if (items.getLength() > 0) {
+                Element element = (Element) items.item(0);
+                return parseGameFromDetailElementToEntity(element);
+            }
+
+            throw new RuntimeException("No game found in XML response");
+        } catch (Exception e) {
+            log.error("Error parsing XML game details response to entity: {}", e.getMessage());
+            throw new RuntimeException("Failed to parse BGG API game details response", e);
+        }
+    }
+
+    public List<Game> parseCollectionToEntities(final String xmlResponse) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(
+                    new ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
+
+            NodeList items = doc.getElementsByTagName("item");
+            List<Game> games = new ArrayList<>();
+
+            for (int i = 0; i < items.getLength(); i++) {
+                Node item = items.item(i);
+                if (item.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) item;
+                    Game game = parseGameFromCollectionElementToEntity(element);
+                    if (game != null) {
+                        games.add(game);
+                    }
+                }
+            }
+
+            log.info("Parsed {} games from collection to entities", games.size());
+            return games;
+        } catch (Exception e) {
+            log.error("Error parsing XML collection response to entities: {}", e.getMessage());
+            throw new RuntimeException("Failed to parse BGG API collection response", e);
+        }
+    }
+
+    private Game parseGameFromSearchElementToEntity(final Element element) {
+        try {
+            String bggId = getAttributeValue(element, "id");
+            String name = getElementValue(element, "name");
+            String yearPublished = getElementValue(element, "yearpublished");
+
+            if (bggId == null || name == null) {
+                return null;
+            }
+
+            return Game.builder()
+                    .bggId(bggId)
+                    .name(name)
+                    .yearPublished(parseInteger(yearPublished))
+                    .build();
+        } catch (Exception e) {
+            log.warn("Error parsing game from search element to entity: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private Game parseGameFromDetailElementToEntity(Element element) {
+        try {
+            String bggId = getAttributeValue(element, "id");
+            String name = getElementValue(element, "name");
+            String yearPublished = getElementValue(element, "yearpublished");
+            String minPlayers = getElementValue(element, "minplayers");
+            String maxPlayers = getElementValue(element, "maxplayers");
+            String playingTime = getElementValue(element, "playingtime");
+            String minAge = getElementValue(element, "minage");
+            String description = getElementValue(element, "description");
+            String imageUrl = getElementValue(element, "image");
+            String thumbnailUrl = getElementValue(element, "thumbnail");
+
+            // Parse statistics
+            Element statsElement = getChildElement(element, "statistics");
+            BigDecimal bggRating = null;
+            BigDecimal averageRating = null;
+            BigDecimal complexity = null;
+            BigDecimal averageWeight = null;
+
+            if (statsElement != null) {
+                Element ratingsElement = getChildElement(statsElement, "ratings");
+                if (ratingsElement != null) {
+                    bggRating = parseDouble(getElementValue(ratingsElement, "bayesaverage"));
+                    averageRating = parseDouble(getElementValue(ratingsElement, "average"));
+                    complexity = parseDouble(getElementValue(ratingsElement, "averageweight"));
+                    averageWeight = complexity; // Same value
+                }
+            }
+
+            // Parse suggested players as JSON-compatible Map
+            Map<String, Object> suggestedPlayers = parseSuggestedPlayersToMap(element);
+
+            return Game.builder()
+                    .bggId(bggId)
+                    .name(name)
+                    .yearPublished(parseInteger(yearPublished))
+                    .minPlayers(parseInteger(minPlayers))
+                    .maxPlayers(parseInteger(maxPlayers))
+                    .playingTime(parseInteger(playingTime))
+                    .minAge(parseInteger(minAge))
+                    .description(description)
+                    .imageUrl(imageUrl)
+                    .thumbnailUrl(thumbnailUrl)
+                    .bggRating(bggRating)
+                    .averageRating(averageRating)
+                    .complexity(complexity)
+                    .averageWeight(averageWeight)
+                    .suggestedNumPlayers(suggestedPlayers)
+                    .build();
+        } catch (Exception e) {
+            log.warn("Error parsing game from detail element to entity: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private com.bgpack.entity.Game parseGameFromCollectionElementToEntity(Element element) {
+        String id = element.getAttribute("objectid");
+        String name = getElementValue(element, "name");
+        String yearPublished = getElementValue(element, "yearpublished");
+        String imageUrl = getElementValue(element, "image");
+        String thumbnailUrl = getElementValue(element, "thumbnail");
+
+        BigDecimal bggRating = null;
+        BigDecimal averageRating = null;
+        BigDecimal complexity = null;
+        BigDecimal averageWeight = null;
+        Integer rank = null;
+
+        Element statsElement = getChildElement(element, "stats");
+        Integer minPlayers = null;
+        Integer maxPlayers = null;
+        Integer playingTime = null;
+        Integer minAge = null;
+
+        if (statsElement != null) {
+            minPlayers = parseInteger(statsElement.getAttribute("minplayers"));
+            maxPlayers = parseInteger(statsElement.getAttribute("maxplayers"));
+            playingTime = parseInteger(statsElement.getAttribute("playingtime"));
+            minAge = parseInteger(statsElement.getAttribute("minage"));
+
+            Element ratingElement = getChildElement(statsElement, "rating");
+            if (ratingElement != null) {
+                bggRating = getAttributeBigDecimalValue(ratingElement, "bayesaverage");
+                averageRating = getAttributeBigDecimalValue(ratingElement, "average");
+                complexity = getAttributeBigDecimalValue(ratingElement, "averageweight");
+                averageWeight = complexity;
+
+                rank = parseRankFromRanks(ratingElement);
+            }
+        }
+
+        return Game.builder()
+                .bggId(id)
+                .name(name)
+                .yearPublished(parseInteger(yearPublished))
+                .minPlayers(minPlayers)
+                .maxPlayers(maxPlayers)
+                .playingTime(playingTime)
+                .minAge(minAge)
+                .imageUrl(imageUrl)
+                .thumbnailUrl(thumbnailUrl)
+                .bggRating(bggRating)
+                .averageRating(averageRating)
+                .complexity(complexity)
+                .averageWeight(averageWeight)
+                .rank(rank)
+                .build();
+    }
+
+    private Map<String, Object> parseSuggestedPlayersToMap(Element element) {
+        Map<String, Object> result = new HashMap<>();
+
+        NodeList polls = element.getElementsByTagName("poll");
+        for (int i = 0; i < polls.getLength(); i++) {
+            Element poll = (Element) polls.item(i);
+            if ("suggested_numplayers".equals(poll.getAttribute("name"))) {
+                List<String> suggestedCounts = new ArrayList<>();
+
+                NodeList results = poll.getElementsByTagName("result");
+                for (int j = 0; j < results.getLength(); j++) {
+                    Element pollResult = (Element) results.item(j);
+                    String numPlayers = pollResult.getAttribute("numplayers");
+
+                    int best = parseInteger(pollResult.getAttribute("best")) != null ?
+                            parseInteger(pollResult.getAttribute("best")) : 0;
+                    int recommended = parseInteger(pollResult.getAttribute("recommended")) != null ?
+                            parseInteger(pollResult.getAttribute("recommended")) : 0;
+
+                    if (best > recommended) {
+                        suggestedCounts.add(numPlayers + " (best)");
+                    } else if (recommended > 0) {
+                        suggestedCounts.add(numPlayers + " (recommended)");
+                    }
+                }
+
+                result.put("suggested", suggestedCounts);
+                break;
+            }
+        }
+
+        return result.isEmpty() ? null : result;
+    }
+
+
     private GameStatsDto parseGameStatsFromElement(final Element element) {
         try {
             String id = getAttributeValue(element, "id");
@@ -300,9 +569,9 @@ public class BggXmlParserService {
 
             // Parse statistics
             Element statsElement = getChildElement(element, "statistics");
-            Double bggRating = null;
-            Double averageRating = null;
-            Double averageWeight = null;
+            BigDecimal bggRating = null;
+            BigDecimal averageRating = null;
+            BigDecimal averageWeight = null;
             String suggestedNumPlayers = null;
 
             if (statsElement != null) {
@@ -410,14 +679,14 @@ public class BggXmlParserService {
         }
     }
 
-    private Double parseDouble(final String value) {
+    private BigDecimal parseDouble(final String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
         }
         try {
-            return Double.parseDouble(value.trim());
+            return new BigDecimal(value.trim());
         } catch (NumberFormatException e) {
-            log.warn("Failed to parse double: {}", value);
+            log.warn("Failed to parse BigDecimal: {}", value);
             return null;
         }
     }

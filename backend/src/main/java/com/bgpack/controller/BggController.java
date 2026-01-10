@@ -1,9 +1,10 @@
+
 package com.bgpack.controller;
 
 import com.bgpack.dto.GameSearchRequest;
 import com.bgpack.dto.GameStatsDto;
 import com.bgpack.dto.GameWithStatsDto;
-import com.bgpack.model.Game;
+import com.bgpack.entity.Game;
 import com.bgpack.service.BggService;
 import com.bgpack.service.GameStatsService;
 import lombok.RequiredArgsConstructor;

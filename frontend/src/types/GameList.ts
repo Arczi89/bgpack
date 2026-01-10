@@ -1,7 +1,7 @@
 import { Game, GameFilters } from './Game';
 
 export interface GameList {
-  id: string;
+  id: number;
   username: string;
   listName: string;
   usernames: string[];

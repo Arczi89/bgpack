@@ -1,6 +1,6 @@
 package com.bgpack.dto;
 
-import com.bgpack.model.Game;
+import com.bgpack.entity.Game;
 import com.bgpack.model.GameFilters;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

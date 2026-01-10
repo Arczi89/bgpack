@@ -1,18 +1,17 @@
-import {
-  Game,
-  GameSearchParams,
-  GameStats,
-  GameWithStats,
-} from '../types/Game';
-import { GameList, SaveGameListRequest } from '../types/GameList';
+import { Game, GameSearchParams, GameStats } from '@/types/Game';
+import { GameList, SaveGameListRequest } from '@/types/GameList';
 
 const API_BASE_URL =
   process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1000;
+
 class ApiService {
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    retryCount: number = 0
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
 
@@ -31,46 +30,52 @@ class ApiService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      if (response.status === 204) {
+        return {} as T;
+      }
+
       return await response.json();
     } catch (error) {
-      console.error(`API request failed for ${endpoint}:`, error);
+      if (retryCount < MAX_RETRIES) {
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+        return this.request<T>(endpoint, options, retryCount + 1);
+      }
       throw error;
     }
   }
 
-  async getGames(searchParams: GameSearchParams = {}): Promise<Game[]> {
-    const params = new URLSearchParams();
+  async getGames(params: GameSearchParams): Promise<Game[]> {
+    const searchParams = new URLSearchParams();
 
-    Object.entries(searchParams).forEach(([key, value]) => {
+    Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
-        params.append(key, value.toString());
+        searchParams.append(key, value.toString());
       }
     });
 
-    const queryString = params.toString();
+    const queryString = searchParams.toString();
     const endpoint = queryString ? `/games?${queryString}` : '/games';
 
     return this.request<Game[]>(endpoint);
   }
+
   async getOwnedGamesWithStats(
     username: string,
     excludeExpansions: boolean = false
-  ): Promise<GameWithStats[]> {
-    const url = excludeExpansions
-      ? `/own/${username}/with-stats?excludeExpansions=true`
-      : `/own/${username}/with-stats`;
-    return this.request<GameWithStats[]>(url);
+  ): Promise<Game[]> {
+    const url = `/own/${username}/with-stats?excludeExpansions=${excludeExpansions}`;
+    return this.request<Game[]>(url);
   }
 
-  async getGameStats(gameIds: string[]): Promise<GameStats[]> {
+  async getGameDetails(bggId: string): Promise<Game> {
+    return this.request<Game>(`/games/${bggId}`);
+  }
+
+  async getGameStats(bggIds: string[]): Promise<GameStats[]> {
     return this.request<GameStats[]>('/games/stats/batch', {
       method: 'POST',
-      body: JSON.stringify(gameIds),
+      body: JSON.stringify(bggIds),
     });
-  }
-
-  async testConnection(): Promise<string> {
-    return this.request<string>('/test');
   }
 
   async saveGameList(
@@ -87,12 +92,16 @@ class ApiService {
     return this.request<GameList[]>(`/game-lists/${username}`);
   }
 
-  async deleteGameList(username: string, gameListId: string): Promise<void> {
-    return this.request<void>(`/game-lists/${username}/${gameListId}`, {
+  async deleteGameList(username: string, listId: number): Promise<void> {
+    return this.request<void>(`/game-lists/${username}/${listId}`, {
       method: 'DELETE',
     });
   }
+
+  async testConnection(): Promise<string> {
+    return this.request<string>('/test');
+  }
 }
 
-export const apiService = new ApiService();
+const apiService = new ApiService();
 export default apiService;

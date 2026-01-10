@@ -36,6 +36,35 @@ check_port() {
     fi
 }
 
+# Check if Docker PostgreSQL is running
+print_status "Checking PostgreSQL status..."
+if docker ps | grep -q bgpack-postgres; then
+    print_success "PostgreSQL is already running"
+else
+    print_status "Starting PostgreSQL in Docker..."
+    docker-compose -f docker-compose.yml up postgres -d
+    if [ $? -ne 0 ]; then
+        print_error "Failed to start PostgreSQL"
+        exit 1
+    fi
+
+    # Wait for PostgreSQL to be ready
+    print_status "Waiting for PostgreSQL to be ready..."
+    sleep 5
+
+    # Check if PostgreSQL is ready
+    for i in {1..30}; do
+        if docker exec bgpack-postgres pg_isready -U bgpack_user > /dev/null 2>&1; then
+            print_success "PostgreSQL is ready"
+            break
+        fi
+        if [ $i -eq 30 ]; then
+            print_warning "PostgreSQL might still be initializing..."
+        fi
+        sleep 1
+    done
+fi
+
 # Check if ports are already in use
 if check_port 8080; then
     print_warning "Port 8080 is already in use - backend might already be running"
@@ -104,6 +133,7 @@ print_success "BGPack is running!"
 echo ""
 echo "Backend ($BACKEND_TYPE):  http://localhost:8080"
 echo "Frontend (Local):         http://localhost:3000"
+echo "PostgreSQL (Docker):      localhost:5432"
 echo ""
 echo "To stop: ./stop-dev.sh"
 if [ "$BACKEND_TYPE" = "Docker" ]; then

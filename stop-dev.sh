@@ -30,6 +30,10 @@ else
     docker-compose -f docker-compose.dev.yml down
 fi
 
+# Stop PostgreSQL if running in Docker
+print_status "Stopping PostgreSQL..."
+docker-compose -f docker-compose.yml down
+
 # Stop frontend if PID file exists
 if [ -f .frontend.pid ]; then
     FRONTEND_PID=$(cat .frontend.pid)

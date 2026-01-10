@@ -1,34 +1,35 @@
 export interface Game {
-  id: string;
+  id: number;
+  bggId: string;
   name: string;
+  description: string;
   yearPublished: number;
   minPlayers: number;
   maxPlayers: number;
   playingTime: number;
   minAge: number;
-  description: string;
   imageUrl?: string;
   thumbnailUrl?: string;
+  rank?: number | null;
   bggRating: number | null;
   averageRating: number | null;
   complexity: number | null;
   averageWeight?: number | null;
   suggestedNumPlayers?: string | null;
+  recommendedPlayers?: Record<string, any> | null;
+  cachedAt?: string;
+  cacheHits?: number;
+  lastUpdated?: string;
   ownedBy?: string[];
 }
 
 export interface GameStats {
+  id?: number;
   gameId: string;
-  name: string;
-  bggRating: number | null;
+  totalPlays?: number;
   averageRating: number | null;
-  averageWeight: number | null;
-  suggestedNumPlayers: string | null;
-}
-
-export interface GameWithStats extends Game {
-  averageWeight?: number | null;
-  suggestedNumPlayers?: string | null;
+  totalRatings?: number;
+  complexityRating: number | null;
 }
 
 export interface GameFilters {
@@ -56,17 +57,6 @@ export interface GameSearchParams {
     | 'playingTime'
     | 'complexity';
   sortOrder?: 'asc' | 'desc';
-}
-
-export interface BggUser {
-  username: string;
-  displayName?: string;
-}
-
-export interface GameCollection {
-  id: string;
-  name: string;
-  games: Game[];
-  createdAt: Date;
-  updatedAt: Date;
+  page?: number;
+  size?: number;
 }
