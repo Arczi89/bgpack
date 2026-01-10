@@ -53,12 +53,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      mockGames[1], // Azul
-      mockGames[2], // Catan
-      mockGames[5], // Gloomhaven
-      mockGames[3], // Ticket to Ride
-      mockGames[4], // Wingspan
-      mockGames[0], // Zombicide
+      mockGames[1],
+      mockGames[2],
+      mockGames[5],
+      mockGames[3],
+      mockGames[4],
+      mockGames[0],
     ]);
   });
 
@@ -72,12 +72,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      mockGames[0], // Zombicide
-      mockGames[4], // Wingspan
-      mockGames[3], // Ticket to Ride
-      mockGames[5], // Gloomhaven
-      mockGames[2], // Catan
-      mockGames[1], // Azul
+      mockGames[0],
+      mockGames[4],
+      mockGames[3],
+      mockGames[5],
+      mockGames[2],
+      mockGames[1],
     ]);
   });
 
@@ -91,12 +91,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      mockGames[2], // Catan (1995)
-      mockGames[3], // Ticket to Ride (2004)
-      mockGames[0], // Zombicide (2012)
-      mockGames[1], // Azul (2017)
-      mockGames[5], // Gloomhaven (2017)
-      mockGames[4], // Wingspan (2019)
+      mockGames[2],
+      mockGames[3],
+      mockGames[0],
+      mockGames[1],
+      mockGames[5],
+      mockGames[4],
     ]);
   });
 
@@ -110,12 +110,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      mockGames[4], // Wingspan (2019)
-      mockGames[1], // Azul (2017)
-      mockGames[5], // Gloomhaven (2017)
-      mockGames[0], // Zombicide (2012)
-      mockGames[3], // Ticket to Ride (2004)
-      mockGames[2], // Catan (1995)
+      mockGames[4],
+      mockGames[1],
+      mockGames[5],
+      mockGames[0],
+      mockGames[3],
+      mockGames[2],
     ]);
   });
 
@@ -134,12 +134,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      gamesWithRatings[2], // Catan (7.1)
-      gamesWithRatings[3], // Ticket to Ride (7.4)
-      gamesWithRatings[0], // Zombicide (7.5)
-      gamesWithRatings[4], // Wingspan (8.1)
-      gamesWithRatings[1], // Azul (8.2)
-      gamesWithRatings[5], // Gloomhaven (8.8)
+      gamesWithRatings[2],
+      gamesWithRatings[3],
+      gamesWithRatings[0],
+      gamesWithRatings[4],
+      gamesWithRatings[1],
+      gamesWithRatings[5],
     ]);
   });
 
@@ -158,12 +158,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      gamesWithRatings[5], // Gloomhaven (8.8)
-      gamesWithRatings[1], // Azul (8.2)
-      gamesWithRatings[4], // Wingspan (8.1)
-      gamesWithRatings[0], // Zombicide (7.5)
-      gamesWithRatings[3], // Ticket to Ride (7.4)
-      gamesWithRatings[2], // Catan (7.1)
+      gamesWithRatings[5],
+      gamesWithRatings[1],
+      gamesWithRatings[4],
+      gamesWithRatings[0],
+      gamesWithRatings[3],
+      gamesWithRatings[2],
     ]);
   });
 
@@ -177,12 +177,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      mockGames[1], // Azul (45 min)
-      mockGames[3], // Ticket to Ride (45 min)
-      mockGames[0], // Zombicide (60 min)
-      mockGames[4], // Wingspan (70 min)
-      mockGames[2], // Catan (90 min)
-      mockGames[5], // Gloomhaven (120 min)
+      mockGames[1],
+      mockGames[3],
+      mockGames[0],
+      mockGames[4],
+      mockGames[2],
+      mockGames[5],
     ]);
   });
 
@@ -196,12 +196,12 @@ describe('useGameSorting', () => {
     );
 
     expect(result.current).toEqual([
-      mockGames[5], // Gloomhaven (120 min)
-      mockGames[2], // Catan (90 min)
-      mockGames[4], // Wingspan (70 min)
-      mockGames[0], // Zombicide (60 min)
-      mockGames[1], // Azul (45 min)
-      mockGames[3], // Ticket to Ride (45 min)
+      mockGames[5],
+      mockGames[2],
+      mockGames[4],
+      mockGames[0],
+      mockGames[1],
+      mockGames[3],
     ]);
   });
 
@@ -310,12 +310,12 @@ describe('useGameFiltering', () => {
 
     expect(result.current).toHaveLength(6);
     expect(result.current.map(g => g.name)).toEqual([
-      'Zombicide', // 1-6 supports 3-4
-      'Azul', // 2-4 supports 3-4
-      'Catan', // 3-4 exact match
-      'Ticket to Ride', // 2-5 supports 3-4
-      'Wingspan', // 1-5 supports 3-4
-      'Gloomhaven', // 1-4 supports 3-4
+      'Zombicide',
+      'Azul',
+      'Catan',
+      'Ticket to Ride',
+      'Wingspan',
+      'Gloomhaven',
     ]);
   });
 

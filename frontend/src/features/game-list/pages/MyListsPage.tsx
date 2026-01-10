@@ -8,7 +8,7 @@ export const MyListsPage: React.FC = () => {
   const [gameLists, setGameLists] = useState<GameList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   // ===== HOOKS =====
   const { t } = useLanguage();
@@ -33,7 +33,7 @@ export const MyListsPage: React.FC = () => {
     }
   };
 
-  const handleDeleteList = async (listId: string) => {
+  const handleDeleteList = async (listId: number) => {
     if (!window.confirm('Are you sure you want to delete this list?')) {
       return;
     }

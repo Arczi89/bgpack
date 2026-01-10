@@ -1,59 +1,38 @@
 package com.bgpack.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.math.BigDecimal;
 
+@Entity
+@Table(name = "game_stats")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "game_stats")
 public class GameStats {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Field("gameId")
-    private String gameId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
 
-    @Field("name")
-    private String name;
+    @Column(name = "total_plays")
+    private Long totalPlays;
 
-    @Field("bggRating")
-    private Double bggRating;
+    @Column(name = "average_rating")
+    private BigDecimal averageRating;
 
-    @Field("averageRating")
-    private Double averageRating;
+    @Column(name = "total_ratings")
+    private Long totalRatings;
 
-    @Field("averageWeight")
-    private Double averageWeight;
-
-    @Field("suggestedNumPlayers")
-    private String suggestedNumPlayers;
-
-    // Cache metadata
-    @Field("cachedAt")
-    private LocalDateTime cachedAt;
-
-    @Field("lastUpdated")
-    private LocalDateTime lastUpdated;
-
-    @Field("cacheHits")
-    private Integer cacheHits;
-
-    public void incrementCacheHits() {
-        this.cacheHits = (this.cacheHits == null ? 0 : this.cacheHits) + 1;
-    }
-
-    public void updateCacheTimestamp() {
-        this.lastUpdated = LocalDateTime.now();
-    }
+    @Column(name = "complexity_rating")
+    private BigDecimal complexityRating;
 }

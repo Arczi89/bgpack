@@ -31,12 +31,13 @@ BGPack (Board Games Pack) is a full-stack application for discovering and managi
 
 ### Requirements
 
-- **Docker** and **Docker Compose** (for backend)
+- **Docker** and **Docker Compose** (for PostgreSQL and optional backend)
 - **Node.js 18+** (for frontend development)
+- **Java 21** (optional - only if running backend locally, included in `tools/jdk-21/`)
 
 ### Development Setup (Recommended)
 
-**One command to run the entire project:**
+**One command to run the entire project (includes PostgreSQL):**
 
 ```bash
 # Linux/Mac - Backend in Docker (default)
@@ -52,6 +53,18 @@ start-dev.bat
 start-dev.bat --local
 ```
 
+**This automatically starts:**
+
+- ✅ PostgreSQL database (Docker container)
+- ✅ Backend API (Docker container or local Java process)
+- ✅ Frontend dev server (local npm)
+
+**Services will be available at:**
+
+- Frontend: http://localhost:3000 (local development)
+- Backend: http://localhost:8080
+- Database: localhost:5432 (PostgreSQL)
+
 **Stop the application:**
 
 ```bash
@@ -62,10 +75,7 @@ start-dev.bat --local
 stop-dev.bat
 ```
 
-**Application will be available at:**
-
-- Frontend: http://localhost:3000 (local development)
-- Backend: http://localhost:8080 (Docker container or local)
+**For more details about startup scripts, see:** [STARTUP_SCRIPTS_README.md](documentation/STARTUP_SCRIPTS_README.md)
 
 ### Backend Options
 

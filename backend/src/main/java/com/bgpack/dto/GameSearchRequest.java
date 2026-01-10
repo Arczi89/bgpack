@@ -63,12 +63,15 @@ public class GameSearchRequest {
     @Max(value = MAX_YEAR, message = "Year cannot exceed 2030")
     private Integer yearTo;
 
+    @Builder.Default
     @Pattern(regexp = "^(name|yearPublished|bggRating|playingTime|complexity)$",
-             message = "Sort field must be one of: name, yearPublished, bggRating, playingTime, complexity")
+            message = "Sort field must be one of: name, yearPublished, bggRating, playingTime, complexity")
     private String sortBy = "bggRating";
 
+    @Builder.Default
     @Pattern(regexp = "^(asc|desc)$", message = "Sort order must be 'asc' or 'desc'")
     private String sortOrder = "desc";
 
+    @Builder.Default
     private Boolean exactPlayerFilter = false;
 }

@@ -1,17 +1,24 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:7.0
-    container_name: bgpack-mongodb-dev
-    ports:
-      - "27017:27017"
+  postgres:
+    image: postgres:15-alpine
+    container_name: bgpack-postgres-dev
     environment:
-      - MONGO_INITDB_DATABASE=bgpack
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
     volumes:
-      - mongodb-data:/data/db
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - bgpack-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -22,8 +29,11 @@ services:
       - "8080:8080"
       - "5005:5005"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/bgpack
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DB_USERNAME=${POSTGRES_USER}
+      - SPRING_DB_PASSWORD=${POSTGRES_PASSWORD}
+      - SERVER_PORT=8080
       - BGG_API_TOKEN=${BGG_API_TOKEN}
     volumes:
       - ./backend/src:/app/src
@@ -32,7 +42,8 @@ services:
     networks:
       - bgpack-network
     depends_on:
-      - mongodb
+      postgres:
+        condition: service_healthy
     command: ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
 
   frontend:
@@ -48,7 +59,7 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_API_URL=http://backend:8080
     networks:
       - bgpack-network
     depends_on:
@@ -59,7 +70,6 @@ networks:
     driver: bridge
 
 volumes:
+  postgres_data:
   maven-cache:
-    driver: local
-  mongodb-data:
     driver: local

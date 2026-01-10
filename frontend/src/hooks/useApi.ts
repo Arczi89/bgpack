@@ -70,9 +70,46 @@ export function useOwnedGames(username: string) {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
+      const cacheKey = `owned_games_${username}`;
+      const cachedData = localStorage.getItem(cacheKey);
+
+      if (cachedData) {
+        const parsed = JSON.parse(cachedData);
+        const cacheTime = parsed.timestamp || 0;
+        const now = Date.now();
+        if (now - cacheTime < 300000) {
+          console.log(`Using cached data for ${username}`);
+          setState({ data: parsed.data, loading: false, error: null });
+          return;
+        }
+      }
+
       const data = await apiService.getOwnedGamesWithStats(username);
+
+      localStorage.setItem(
+        cacheKey,
+        JSON.stringify({
+          data,
+          timestamp: Date.now(),
+        })
+      );
+
       setState({ data, loading: false, error: null });
     } catch (error) {
+      const cacheKey = `owned_games_${username}`;
+      const cachedData = localStorage.getItem(cacheKey);
+
+      if (cachedData) {
+        const parsed = JSON.parse(cachedData);
+        console.warn(`API failed, using stale cache for ${username}`);
+        setState({
+          data: parsed.data,
+          loading: false,
+          error: `Using cached data (API error: ${error instanceof Error ? error.message : 'Unknown error'})`,
+        });
+        return;
+      }
+
       setState({
         data: null,
         loading: false,
@@ -176,7 +213,7 @@ export function useMultipleOwnedGames(
         }
 
         games.forEach(game => {
-          const gameId = game.id;
+          const gameId = game.bggId;
           if (gameMap.has(gameId)) {
             const existingGame = gameMap.get(gameId);
             if (!existingGame.ownedBy.includes(username)) {
@@ -192,7 +229,9 @@ export function useMultipleOwnedGames(
         });
       });
 
+      console.log('gameMap:', gameMap);
       const uniqueGames = Array.from(gameMap.values());
+      console.log('uniqueGames:', uniqueGames);
 
       setState({
         data: uniqueGames,

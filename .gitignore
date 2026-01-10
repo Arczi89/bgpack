@@ -125,3 +125,5 @@ playwright/.cache/
 
 token
 backend/src/main/resources/application-local.yml
+
+documentation/
