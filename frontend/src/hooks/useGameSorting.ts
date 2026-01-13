@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { Game } from '../types/Game';
+import { Game } from '@/types/Game';
 
 type SortField =
   | 'name'
   | 'yearPublished'
+  | 'rank'
   | 'bggRating'
   | 'playingTime'
   | 'complexity';
@@ -24,6 +25,13 @@ export const useGameSorting = ({
     return [...games].sort((a, b) => {
       let aValue: any = a[sortBy];
       let bValue: any = b[sortBy];
+
+      if (aValue === null) {
+        return 1;
+      }
+      if (bValue === null) {
+        return -1;
+      }
 
       if (sortBy === 'name') {
         aValue = aValue.toLowerCase();

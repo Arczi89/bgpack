@@ -21,7 +21,12 @@ export const HomePage: React.FC = () => {
   const [localExcludeExpansions, setLocalExcludeExpansions] =
     useState<boolean>(false);
   const [sortBy, setSortBy] = useState<
-    'name' | 'yearPublished' | 'bggRating' | 'playingTime' | 'complexity'
+    | 'name'
+    | 'yearPublished'
+    | 'rank'
+    | 'bggRating'
+    | 'playingTime'
+    | 'complexity'
   >('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [games, setGames] = useState<Game[]>([]);
@@ -106,7 +111,7 @@ export const HomePage: React.FC = () => {
         exactPlayerFilter: filters.exactPlayerFilter || false,
       };
 
-      await apiService.saveGameList('arczi89', saveRequest);
+      await apiService.saveGameList(currentUsernames.join(','), saveRequest);
       setSaveSuccess(`List "${listName}" saved successfully!`);
 
       setTimeout(() => setSaveSuccess(null), 3000);
@@ -331,11 +336,12 @@ export const HomePage: React.FC = () => {
               disabled={isLoading}
               className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <option value="bggRating">{t.rating}</option>
               <option value="name">{t.name}</option>
               <option value="yearPublished">{t.year}</option>
+              <option value="rank">{t.rank}</option>
+              <option value="bggRating">{t.rating}</option>
               <option value="playingTime">{t.playTime}</option>
-              <option value="complexity">Complexity</option>
+              <option value="complexity">{t.complexity}</option>
             </select>
           </div>
           <div className="flex items-center gap-2">
@@ -494,6 +500,9 @@ export const HomePage: React.FC = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.rank}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.game}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -504,9 +513,6 @@ export const HomePage: React.FC = () => {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.time}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t.rank}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.rating}
@@ -522,6 +528,9 @@ export const HomePage: React.FC = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {paginatedGames.map((game, index) => (
                     <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {game.rank ? `#${game.rank}` : 'N/A'}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
                           {game.name}
@@ -546,9 +555,6 @@ export const HomePage: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {game.playingTime} min
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.rank ? `#${game.rank}` : 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold text-primary-700">
                         {game.bggRating ? game.bggRating.toFixed(2) : '-'}
@@ -587,6 +593,8 @@ export const HomePage: React.FC = () => {
                   <option value={10}>10</option>
                   <option value={20}>20</option>
                   <option value={50}>50</option>
+                  <option value={100}>100</option>
+                  <option value={200}>200</option>
                   <option value={-1}>{t.all}</option>
                 </select>
                 <span className="text-sm text-gray-700">{t.perPage}</span>
