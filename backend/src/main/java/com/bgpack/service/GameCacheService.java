@@ -52,7 +52,6 @@ public class GameCacheService {
         existing.setBggRating(newData.getBggRating());
         existing.setAverageRating(newData.getAverageRating());
         existing.setComplexity(newData.getComplexity());
-        existing.setAverageWeight(newData.getAverageWeight());
         existing.setSuggestedNumPlayers(newData.getSuggestedNumPlayers());
         existing.setRecommendedPlayers(newData.getRecommendedPlayers());
     }

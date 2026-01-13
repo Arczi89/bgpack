@@ -135,6 +135,13 @@ export const HomePage: React.FC = () => {
     itemsPerPage
   );
 
+  const getComplexityColor = (complexity: number | null | undefined) => {
+    if (!complexity) return 'text-gray-400';
+    if (complexity < 2) return 'bg-green-100 text-green-800';
+    if (complexity < 3.5) return 'bg-yellow-100 text-yellow-800';
+    return 'bg-red-100 text-red-800';
+  };
+
   // ===== RENDER =====
   return (
     <div className="px-4 py-6 sm:px-0">
@@ -499,7 +506,13 @@ export const HomePage: React.FC = () => {
                       {t.time}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.rank}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.rating}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {t.complexity}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.year}
@@ -535,7 +548,18 @@ export const HomePage: React.FC = () => {
                         {game.playingTime} min
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {game.bggRating ? game.bggRating.toFixed(1) : '-'}
+                        {game.rank ? `#${game.rank}` : 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold text-primary-700">
+                        {game.bggRating ? game.bggRating.toFixed(2) : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <span
+                          className={`px-2 py-1 rounded ${getComplexityColor(game.complexity)}`}
+                        >
+                          {game.complexity ? game.complexity.toFixed(2) : '-'} /
+                          5
+                        </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {game.yearPublished}

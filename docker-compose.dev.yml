@@ -39,12 +39,16 @@ services:
       - ./backend/src:/app/src
       - ./backend/target:/app/target
       - maven-cache:/root/.m2
+      - ./backend/src/main/resources/db/migration:/app/resources/db/migration
     networks:
       - bgpack-network
     depends_on:
       postgres:
         condition: service_healthy
-    command: ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
+    command: >
+      java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      -Dspring.profiles.active=dev
+      -jar application.jar
 
   frontend:
     build:

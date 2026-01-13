@@ -71,6 +71,14 @@ public class BggApiOptimizationService {
         return ((double) (total - failedRequests.get()) / total) * 100.0;
     }
 
+    public void resetCircuitBreaker(String endpoint) {
+        RequestStats stats = requestStats.get(endpoint);
+        if (stats != null) {
+            stats.reset();
+            log.info("Circuit breaker manually reset for endpoint: {}", endpoint);
+        }
+    }
+
     private static class RequestStats {
         private final AtomicInteger consecutiveFailures = new AtomicInteger(0);
         private final AtomicInteger totalRequests = new AtomicInteger(0);
@@ -86,6 +94,12 @@ public class BggApiOptimizationService {
             } else {
                 consecutiveFailures.incrementAndGet();
             }
+        }
+
+        public void reset() {
+            consecutiveFailures.set(0);
+            circuitOpen = false;
+            circuitOpenTime = null;
         }
 
         public boolean isCircuitOpen() {

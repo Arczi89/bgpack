@@ -1,5 +1,6 @@
 package com.bgpack.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "collections"})
 public class Game {
 
     @Id
@@ -66,9 +68,6 @@ public class Game {
 
     @Column(name = "complexity", precision = 3)
     private BigDecimal complexity;
-
-    @Column(name = "average_weight", precision = 3)
-    private BigDecimal averageWeight;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "suggested_num_players", columnDefinition = "jsonb")

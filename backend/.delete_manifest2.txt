@@ -1,7 +1,0 @@
-Dodatkowe pliki do usunięcia:
-- C:/git/bgpack/backend/src/test/java/com/bgpack/TestXmlParser.java
-- C:/git/bgpack/backend/src/test/java/com/bgpack/SimpleXmlTest.java
-- C:/git/bgpack/backend/src/test/java/com/bgpack/testdata/MockGameData.java
-- C:/git/bgpack/backend/src/test/java/com/bgpack/service/BggServiceTest.java
-- C:/git/bgpack/backend/src/test/java/com/bgpack/controller/BggControllerTest.java
-

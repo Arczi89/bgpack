@@ -45,7 +45,7 @@ if %errorlevel% equ 0 (
 :postgres_ready
 echo.
 echo [INFO] Starting backend in Docker with debugging enabled...
-docker-compose -f docker-compose.dev.yml up backend -d
+docker-compose -f docker-compose.dev.yml up --build backend -d
 
 echo [INFO] Waiting for backend to start...
 timeout /t 10 /nobreak > nul

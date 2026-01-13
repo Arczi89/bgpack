@@ -127,3 +127,6 @@ token
 backend/src/main/resources/application-local.yml
 
 documentation/
+.run/DEBUG.run.xm
+backend/bgpack-backend.iml
+*.iml

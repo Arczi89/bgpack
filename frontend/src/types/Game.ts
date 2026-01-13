@@ -12,24 +12,13 @@ export interface Game {
   thumbnailUrl?: string;
   rank?: number | null;
   bggRating: number | null;
-  averageRating: number | null;
   complexity: number | null;
-  averageWeight?: number | null;
   suggestedNumPlayers?: string | null;
   recommendedPlayers?: Record<string, any> | null;
   cachedAt?: string;
   cacheHits?: number;
   lastUpdated?: string;
   ownedBy?: string[];
-}
-
-export interface GameStats {
-  id?: number;
-  gameId: string;
-  totalPlays?: number;
-  averageRating: number | null;
-  totalRatings?: number;
-  complexityRating: number | null;
 }
 
 export interface GameFilters {

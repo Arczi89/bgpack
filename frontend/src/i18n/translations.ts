@@ -40,6 +40,8 @@ export interface Translations {
   emptyCollectionsInfo: string;
   userErrors: string;
   exactPlayerFilter: string;
+  rank: string;
+  complexity: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -88,6 +90,8 @@ export const translations: Record<string, Translations> = {
     emptyCollectionsInfo: 'Users with empty collections:',
     userErrors: 'Errors while fetching collections:',
     exactPlayerFilter: 'Exact player count match',
+    rank: 'Rank',
+    complexity: 'Complexity',
   },
   pl: {
     home: 'Home',
@@ -134,5 +138,7 @@ export const translations: Record<string, Translations> = {
     emptyCollectionsInfo: 'Users with empty collections:',
     userErrors: 'Errors while fetching collections:',
     exactPlayerFilter: 'Exact player count match',
+    rank: 'Ranking',
+    complexity: 'Złożoność',
   },
 };

@@ -1,4 +1,4 @@
-import { Game, GameSearchParams, GameStats } from '@/types/Game';
+import { Game, GameSearchParams } from '@/types/Game';
 import { GameList, SaveGameListRequest } from '@/types/GameList';
 
 const API_BASE_URL =
@@ -69,13 +69,6 @@ class ApiService {
 
   async getGameDetails(bggId: string): Promise<Game> {
     return this.request<Game>(`/games/${bggId}`);
-  }
-
-  async getGameStats(bggIds: string[]): Promise<GameStats[]> {
-    return this.request<GameStats[]>('/games/stats/batch', {
-      method: 'POST',
-      body: JSON.stringify(bggIds),
-    });
   }
 
   async saveGameList(

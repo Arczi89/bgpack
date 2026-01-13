@@ -1,5 +1,0 @@
-Pliki i katalogi do usunięcia:
-- C:/git/bgpack/backend/src/test/java (cały katalog)
-- C:/git/bgpack/backend/test_parser.py
-- C:/git/bgpack/backend/src/main/resources/application-test.yml
-

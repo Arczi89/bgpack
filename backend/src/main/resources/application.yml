@@ -18,12 +18,18 @@ spring:
   jpa:
     database: POSTGRESQL
     hibernate:
-      ddl-auto: ${JPA_DDL_AUTO:create-drop}
+      ddl-auto: ${JPA_DDL_AUTO:update}
     show-sql: ${JPA_SHOW_SQL:true}
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        jdbc:
+          batch_size: 50
+          order_inserts: true
+          order_updates: true
+          batch_versioned_data: true
+          generate_statistics: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:

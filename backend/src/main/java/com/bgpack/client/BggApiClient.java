@@ -21,14 +21,11 @@ public class BggApiClient {
 
     private final WebClient webClient;
     private final String baseUrl;
-    private final String authToken;
 
     public BggApiClient(@Value("${bgg.api.base-url}") final String baseUrl,
                        @Value("${bgg.api.timeout:30000}") final int timeout,
                        @Value("${bgg.api.token:}") final String authToken) {
         this.baseUrl = baseUrl;
-        this.authToken = authToken;
-        log.info("BGG API Token (początek): {}", authToken != null && !authToken.isEmpty() ? authToken.substring(0, Math.min(8, authToken.length())) + "..." : "(brak)");
 
         HttpClient httpClient = HttpClient.create()
                 .secure(sslSpec -> {
@@ -67,54 +64,6 @@ public class BggApiClient {
                 .doOnError(error -> log.error("Error searching games: {}", error.getMessage()));
     }
 
-    public Mono<String> getGameDetails(final String gameId) {
-        return webClient.get()
-                .uri("/thing?id={id}&stats=1", gameId)
-                .retrieve()
-                .bodyToMono(String.class)
-                .timeout(Duration.ofMillis(TIMEOUT_MS))
-                .doOnError(error -> log.error("Error getting game details: {}", error.getMessage()));
-    }
-
-    public Mono<String> getCollection(final String username) {
-        log.info("Getting collection for username: {}", username);
-        String uri = "/collection?username=" + username + "&own=1&stats=1";
-        log.info("BGG API Request: {}{}", baseUrl, uri);
-        return webClient.get()
-                .uri("/collection?username={username}&own=1&stats=1", username)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().value() == 202) {
-                        log.info("BGG API returned 202 - request queued for user '{}', retrying in 5 seconds", username);
-                        return Mono.delay(Duration.ofSeconds(5))
-                                .then(getCollection(username));
-                    } else if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(String.class);
-                    } else {
-                        return Mono.error(new RuntimeException("HTTP " + response.statusCode().value()));
-                    }
-                })
-                .timeout(Duration.ofMillis(TIMEOUT_MS))
-                .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(2))
-                        .filter(throwable -> {
-                            if (throwable.getMessage() != null
-                                && (throwable.getMessage().contains("timeout")
-                                 || throwable.getMessage().contains("connection"))) {
-                                return true;
-                            }
-                            return false;
-                        }))
-                .doOnError(error -> log.error("Error getting collection: {}", error.getMessage(), error));
-    }
-
-    public Mono<String> getMultipleGames(final String gameIds) {
-        return webClient.get()
-                .uri("/thing?id={ids}&stats=1", gameIds)
-                .retrieve()
-                .bodyToMono(String.class)
-                .timeout(Duration.ofMillis(TIMEOUT_MS))
-                .doOnError(error -> log.error("Error getting multiple games: {}", error.getMessage()));
-    }
-
     public Mono<String> getCollection(final String username, final String subtype) {
         log.info("Getting collection for username: {} with subtype: {}", username, subtype);
         return webClient.get()
@@ -131,15 +80,30 @@ public class BggApiClient {
                     }
                 })
                 .timeout(Duration.ofMillis(TIMEOUT_MS))
-                .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(2))
+                .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(5))
                         .filter(throwable -> {
-                            if (throwable.getMessage() != null
-                                && (throwable.getMessage().contains("timeout")
-                                 || throwable.getMessage().contains("connection"))) {
+                            if (throwable instanceof RuntimeException && throwable.getMessage().contains("429")) {
+                                log.warn("BGG API returned 429 (Rate Limit). Retrying with backoff...");
                                 return true;
                             }
-                            return false;
-                        }))
-                .doOnError(error -> log.error("Error getting collection: {}", error.getMessage(), error));
+                            return throwable.getMessage() != null &&
+                                    (throwable.getMessage().contains("timeout") ||
+                                            throwable.getMessage().contains("connection"));
+                        })
+                        .doBeforeRetry(retrySignal -> log.info("Retry attempt #{}", retrySignal.totalRetries() + 1)));
+    }
+
+    public Mono<String> getThings(String ids) {
+        log.info("Fetching detailed data from BGG for IDs: {}", ids);
+        return this.webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/xmlapi2/thing")
+                        .queryParam("id", ids)
+                        .queryParam("stats", 1)
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .timeout(Duration.ofMillis(TIMEOUT_MS))
+                .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(2)));
     }
 }

@@ -128,13 +128,6 @@ export function useOwnedGames(username: string) {
   };
 }
 
-export function useGameStats(gameIds: string[]) {
-  return useApi(
-    () => apiService.getGameStats(gameIds),
-    [JSON.stringify(gameIds)]
-  );
-}
-
 export function useMultipleOwnedGames(
   usernames: string[],
   excludeExpansions: boolean = false
@@ -229,9 +222,7 @@ export function useMultipleOwnedGames(
         });
       });
 
-      console.log('gameMap:', gameMap);
       const uniqueGames = Array.from(gameMap.values());
-      console.log('uniqueGames:', uniqueGames);
 
       setState({
         data: uniqueGames,

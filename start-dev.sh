@@ -96,7 +96,7 @@ else
     cd ..
     
     print_status "Starting backend in Docker with debugging enabled..."
-    docker-compose -f docker-compose.dev.yml up backend -d
+    docker-compose -f docker-compose.dev.yml up --build backend -d
     
     # Wait for backend to be ready
     print_status "Waiting for backend to start..."
