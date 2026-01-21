@@ -130,3 +130,4 @@ documentation/
 .run/DEBUG.run.xm
 backend/bgpack-backend.iml
 *.iml
+/.run/
