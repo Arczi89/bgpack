@@ -54,80 +54,6 @@ export function useGames(searchParams: any = {}) {
   );
 }
 
-export function useOwnedGames(username: string) {
-  const [state, setState] = useState<ApiState<any[]>>({
-    data: null,
-    loading: false,
-    error: null,
-  });
-
-  const fetchData = useCallback(async () => {
-    if (!username || username.trim() === '') {
-      setState({ data: [], loading: false, error: null });
-      return;
-    }
-
-    setState(prev => ({ ...prev, loading: true, error: null }));
-
-    try {
-      const cacheKey = `owned_games_${username}`;
-      const cachedData = localStorage.getItem(cacheKey);
-
-      if (cachedData) {
-        const parsed = JSON.parse(cachedData);
-        const cacheTime = parsed.timestamp || 0;
-        const now = Date.now();
-        if (now - cacheTime < 300000) {
-          console.log(`Using cached data for ${username}`);
-          setState({ data: parsed.data, loading: false, error: null });
-          return;
-        }
-      }
-
-      const data = await apiService.getOwnedGamesWithStats(username);
-
-      localStorage.setItem(
-        cacheKey,
-        JSON.stringify({
-          data,
-          timestamp: Date.now(),
-        })
-      );
-
-      setState({ data, loading: false, error: null });
-    } catch (error) {
-      const cacheKey = `owned_games_${username}`;
-      const cachedData = localStorage.getItem(cacheKey);
-
-      if (cachedData) {
-        const parsed = JSON.parse(cachedData);
-        console.warn(`API failed, using stale cache for ${username}`);
-        setState({
-          data: parsed.data,
-          loading: false,
-          error: `Using cached data (API error: ${error instanceof Error ? error.message : 'Unknown error'})`,
-        });
-        return;
-      }
-
-      setState({
-        data: null,
-        loading: false,
-        error: error instanceof Error ? error.message : 'An error occurred',
-      });
-    }
-  }, [username]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  return {
-    ...state,
-    refetch: fetchData,
-  };
-}
-
 export function useMultipleOwnedGames(
   usernames: string[],
   excludeExpansions: boolean = false
@@ -175,7 +101,7 @@ export function useMultipleOwnedGames(
 
       const promises = validUsernames.map(async username => {
         try {
-          const games = await apiService.getOwnedGamesWithStats(
+          const games = await apiService.getUserGamesWithStats(
             username,
             excludeExpansions
           );

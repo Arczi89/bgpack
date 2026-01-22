@@ -23,10 +23,6 @@ public class SearchPreset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @Column(name = "preset_name", length = 100, nullable = false)
     private String presetName;
 

@@ -4,11 +4,14 @@ import {
   useGameSorting,
   useGamePagination,
 } from '../../../hooks/useGameSorting';
-import { Game, GameFilters } from '../../../types/Game';
+import { Game, GameFilters, Preset } from '../../../types/Game';
 import { useMultipleOwnedGames } from '../../../hooks/useApi';
 import { SaveGameListRequest } from '../../../types/GameList';
 import apiService from '../../../services/apiService';
 import { matchesAllFilters } from '../../../utils/gameFilters';
+import { SavePresetModal } from '../../../components/SavePresetModal';
+import { Toast } from '../../../components/Toast';
+import { PresetList } from '../../../components/PresetList';
 
 export const HomePage: React.FC = () => {
   // ===== STATE MANAGEMENT =====
@@ -34,6 +37,15 @@ export const HomePage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
+  const [presets, setPresets] = useState<Preset[]>([]);
+  const [isPresetModalOpen, setIsPresetModalOpen] = useState<boolean>(false);
+  const [isSavingPreset, setIsSavingPreset] = useState<boolean>(false);
+  const [isLoadingPresets, setIsLoadingPresets] = useState<boolean>(false);
+  const [presetError, setPresetError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'success' | 'error' | 'info';
+  } | null>(null);
 
   // ===== HOOKS =====
   const { t } = useLanguage();
@@ -71,6 +83,11 @@ export const HomePage: React.FC = () => {
     setCurrentPage(1);
   }, [filters, hasSearched, apiGames]);
 
+  // Load global presets on page load
+  useEffect(() => {
+    loadPresets();
+  }, []);
+
   // ===== EVENT HANDLERS =====
   const handleSearch = async () => {
     if (!bggNicks.trim()) return;
@@ -88,41 +105,6 @@ export const HomePage: React.FC = () => {
     setHasSearched(true);
   };
 
-  const handleSaveResults = async () => {
-    if (games.length === 0) {
-      alert('No games to save!');
-      return;
-    }
-
-    const listName = prompt('Enter a name for this list:');
-    if (!listName || listName.trim() === '') {
-      return;
-    }
-
-    setIsSaving(true);
-    setSaveSuccess(null);
-
-    try {
-      const saveRequest: SaveGameListRequest = {
-        listName: listName.trim(),
-        usernames: currentUsernames,
-        games: games,
-        filters: filters,
-        exactPlayerFilter: filters.exactPlayerFilter || false,
-      };
-
-      await apiService.saveGameList(currentUsernames.join(','), saveRequest);
-      setSaveSuccess(`List "${listName}" saved successfully!`);
-
-      setTimeout(() => setSaveSuccess(null), 3000);
-    } catch (error) {
-      console.error('Error saving game list:', error);
-      alert('Failed to save the list. Please try again.');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   const handleItemsPerPageChange = (value: number) => {
     setItemsPerPage(value);
     setCurrentPage(1);
@@ -130,6 +112,92 @@ export const HomePage: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const loadPresets = async () => {
+    setIsLoadingPresets(true);
+    setPresetError(null);
+    try {
+      const loadedPresets = await apiService.getPresets();
+      setPresets(loadedPresets);
+    } catch (error) {
+      console.error('Error loading presets:', error);
+      setPresetError(
+        error instanceof Error ? error.message : 'Error loading presets'
+      );
+    } finally {
+      setIsLoadingPresets(false);
+    }
+  };
+
+  const handleSavePreset = async (presetName: string) => {
+    const usernames = bggNicks
+      .split(',')
+      .map(u => u.trim())
+      .filter(Boolean);
+
+    if (usernames.length === 0) {
+      setToast({
+        message: 'Input at least one BGG username to save a preset.',
+        type: 'error',
+      });
+      return;
+    }
+
+    setIsSavingPreset(true);
+    setPresetError(null);
+
+    try {
+      await apiService.savePreset({
+        presetName,
+        criteria: {
+          usernames,
+          filters: localFilters,
+          excludeExpansions: localExcludeExpansions,
+        },
+      });
+
+      setToast({
+        message: `Preset "${presetName}" is saved properly!`,
+        type: 'success',
+      });
+      setIsPresetModalOpen(false);
+      await loadPresets();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error saving preset';
+      setPresetError(errorMessage);
+      setToast({
+        message: errorMessage,
+        type: 'error',
+      });
+    } finally {
+      setIsSavingPreset(false);
+    }
+  };
+
+  const handleSelectPreset = (preset: Preset) => {
+    const {
+      usernames,
+      filters: presetFilters,
+      excludeExpansions: presetExclude,
+    } = preset.filterCriteria;
+
+    // 1-click: fill nicks, set filters, trigger search/sync
+    const joined = (usernames || []).join(', ');
+    setBggNicks(joined);
+    setLocalFilters(presetFilters || {});
+    setLocalExcludeExpansions(!!presetExclude);
+
+    setCurrentUsernames(usernames || []);
+    setFilters(presetFilters || {});
+    setExcludeExpansions(!!presetExclude);
+    setHasSearched(true);
+
+    setToast({
+      message: `Preset applied - "${preset.presetName}"`,
+      type: 'success',
+    });
   };
 
   // ===== COMPUTED VALUES =====
@@ -324,6 +392,20 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
 
+        <div className="mt-6 flex items-center justify-between">
+          <label className="block text-sm font-medium text-gray-700">
+            Presets:
+          </label>
+          <button
+            onClick={() => setIsPresetModalOpen(true)}
+            disabled={isLoading || !bggNicks.trim()}
+            className="text-sm text-primary-600 hover:text-primary-700 font-medium focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            title={!bggNicks.trim() ? 'Input bgg usernames' : ''}
+          >
+            Save Preset
+          </button>
+        </div>
+
         {/* Sorting */}
         <div className="mt-4 flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
@@ -382,6 +464,19 @@ export const HomePage: React.FC = () => {
               {isLoading ? t.searching : t.searchGames}
             </div>
           </button>
+          <div className="px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-gray-700">Quick Load</h3>
+              <span className="text-xs text-gray-500">
+                Choose a preset to quickly load saved filters and usernames.
+              </span>
+            </div>
+            <PresetList
+              presets={presets}
+              onSelectPreset={handleSelectPreset}
+              isLoading={isLoadingPresets}
+            />
+          </div>
         </div>
       </div>
 
@@ -399,26 +494,6 @@ export const HomePage: React.FC = () => {
                 </span>
               )}
             </h2>
-            {games.length > 0 && (
-              <div className="flex flex-col items-end space-y-2">
-                <button
-                  onClick={handleSaveResults}
-                  disabled={isSaving}
-                  className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
-                    isSaving
-                      ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                      : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
-                  }`}
-                >
-                  {isSaving ? 'Saving...' : t.saveResults}
-                </button>
-                {saveSuccess && (
-                  <div className="text-sm text-green-600 font-medium">
-                    {saveSuccess}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Information about empty collections and errors */}
@@ -652,6 +727,32 @@ export const HomePage: React.FC = () => {
           </h3>
           <p className="mt-1 text-sm text-gray-500">{t.readyToDiscoverDesc}</p>
         </div>
+      )}
+
+      {/* Save Preset Modal */}
+      <SavePresetModal
+        isOpen={isPresetModalOpen}
+        onClose={() => {
+          setIsPresetModalOpen(false);
+          setPresetError(null);
+        }}
+        onSave={handleSavePreset}
+        isLoading={isSavingPreset}
+        error={presetError}
+        isSaveDisabledReason={
+          !bggNicks.trim()
+            ? 'Wpisz przynajmniej jeden nick BGG, aby móc zapisać preset.'
+            : null
+        }
+      />
+
+      {/* Toast Notifications */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
     </div>
   );

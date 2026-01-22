@@ -49,7 +49,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      const result = await apiService.getOwnedGamesWithStats('user1');
+      const result = await apiService.getUserGamesWithStats('user1');
 
       expect(mockFetch).toHaveBeenCalledWith(
         'http://localhost:8080/api/own/user1/with-stats',
@@ -67,7 +67,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      const result = await apiService.getOwnedGamesWithStats('user1', true);
+      const result = await apiService.getUserGamesWithStats('user1', true);
 
       expect(mockFetch).toHaveBeenCalledWith(
         'http://localhost:8080/api/own/user1/with-stats?excludeExpansions=true',
@@ -87,14 +87,14 @@ describe('apiService', () => {
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
       await expect(
-        apiService.getOwnedGamesWithStats('nonExistingUser1')
+        apiService.getUserGamesWithStats('nonExistingUser1')
       ).rejects.toThrow('HTTP error! status: 404');
     });
 
     it('should handle network errors', async () => {
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
-      await expect(apiService.getOwnedGamesWithStats('user1')).rejects.toThrow(
+      await expect(apiService.getUserGamesWithStats('user1')).rejects.toThrow(
         'Network error'
       );
     });
@@ -106,7 +106,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      const result = await apiService.getOwnedGamesWithStats('user1');
+      const result = await apiService.getUserGamesWithStats('user1');
 
       expect(result).toEqual([]);
     });
@@ -118,7 +118,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      await expect(apiService.getOwnedGamesWithStats('user1')).rejects.toThrow(
+      await expect(apiService.getUserGamesWithStats('user1')).rejects.toThrow(
         'Invalid JSON'
       );
     });
@@ -194,7 +194,7 @@ describe('apiService', () => {
           )
       );
 
-      const result = await apiService.getOwnedGamesWithStats('user1');
+      const result = await apiService.getUserGamesWithStats('user1');
 
       expect(result).toEqual(mockGames);
     });
@@ -224,7 +224,7 @@ describe('apiService', () => {
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
       await expect(
-        apiService.getOwnedGamesWithStats('invalidUser')
+        apiService.getUserGamesWithStats('invalidUser')
       ).rejects.toThrow('HTTP error! status: 400');
     });
 
@@ -236,7 +236,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      await expect(apiService.getOwnedGamesWithStats('user1')).rejects.toThrow(
+      await expect(apiService.getUserGamesWithStats('user1')).rejects.toThrow(
         'HTTP error! status: 401'
       );
     });
@@ -249,7 +249,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      await expect(apiService.getOwnedGamesWithStats('user1')).rejects.toThrow(
+      await expect(apiService.getUserGamesWithStats('user1')).rejects.toThrow(
         'HTTP error! status: 403'
       );
     });
@@ -262,7 +262,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      await expect(apiService.getOwnedGamesWithStats('user1')).rejects.toThrow(
+      await expect(apiService.getUserGamesWithStats('user1')).rejects.toThrow(
         'HTTP error! status: 500'
       );
     });
@@ -275,7 +275,7 @@ describe('apiService', () => {
       };
       mockFetch.mockResolvedValueOnce(mockResponse as any);
 
-      await expect(apiService.getOwnedGamesWithStats('user1')).rejects.toThrow(
+      await expect(apiService.getUserGamesWithStats('user1')).rejects.toThrow(
         'HTTP error! status: 503'
       );
     });
@@ -290,9 +290,9 @@ describe('apiService', () => {
       mockFetch.mockResolvedValue(mockResponse as any);
 
       const promises = [
-        apiService.getOwnedGamesWithStats('user1'),
-        apiService.getOwnedGamesWithStats('user2'),
-        apiService.getOwnedGamesWithStats('user3'),
+        apiService.getUserGamesWithStats('user1'),
+        apiService.getUserGamesWithStats('user2'),
+        apiService.getUserGamesWithStats('user3'),
       ];
 
       const results = await Promise.all(promises);
@@ -321,9 +321,9 @@ describe('apiService', () => {
         .mockResolvedValueOnce(mockSuccessResponse as any);
 
       const promises = [
-        apiService.getOwnedGamesWithStats('user1'),
-        apiService.getOwnedGamesWithStats('nonExistingUser1'),
-        apiService.getOwnedGamesWithStats('user2'),
+        apiService.getUserGamesWithStats('user1'),
+        apiService.getUserGamesWithStats('nonExistingUser1'),
+        apiService.getUserGamesWithStats('user2'),
       ];
 
       const results = await Promise.allSettled(promises);

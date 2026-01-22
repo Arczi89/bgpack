@@ -38,7 +38,7 @@ describe('useMultipleOwnedGames', () => {
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(null);
 
-    expect(mockedApiService.getOwnedGamesWithStats).not.toHaveBeenCalled();
+    expect(mockedApiService.getUserGamesWithStats).not.toHaveBeenCalled();
   });
 
   it('should return empty array when usernames are empty strings', async () => {
@@ -50,7 +50,7 @@ describe('useMultipleOwnedGames', () => {
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(null);
 
-    expect(mockedApiService.getOwnedGamesWithStats).not.toHaveBeenCalled();
+    expect(mockedApiService.getUserGamesWithStats).not.toHaveBeenCalled();
   });
 
   it('should fetch games for multiple users and deduplicate results', async () => {
@@ -64,7 +64,7 @@ describe('useMultipleOwnedGames', () => {
     ];
     const mockGames3 = [createMockGame('4', 'Pandemic', ['user3'])];
 
-    mockedApiService.getOwnedGamesWithStats
+    mockedApiService.getUserGamesWithStats
       .mockResolvedValueOnce(mockGames1)
       .mockResolvedValueOnce(mockGames2)
       .mockResolvedValueOnce(mockGames3);
@@ -86,16 +86,16 @@ describe('useMultipleOwnedGames', () => {
     ]);
     expect(result.current.error).toBe(null);
 
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledTimes(3);
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledTimes(3);
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user1',
       false
     );
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user2',
       false
     );
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user3',
       false
     );
@@ -103,7 +103,7 @@ describe('useMultipleOwnedGames', () => {
 
   it('should return error when API call fails', async () => {
     const errorMessage = 'User not found';
-    mockedApiService.getOwnedGamesWithStats.mockRejectedValueOnce(
+    mockedApiService.getUserGamesWithStats.mockRejectedValueOnce(
       new Error(errorMessage)
     );
 
@@ -123,7 +123,7 @@ describe('useMultipleOwnedGames', () => {
     const mockGames1 = [createMockGame('1', 'Catan', ['user1'])];
     const errorMessage = 'User not found';
 
-    mockedApiService.getOwnedGamesWithStats
+    mockedApiService.getUserGamesWithStats
       .mockResolvedValueOnce(mockGames1)
       .mockRejectedValueOnce(new Error(errorMessage))
       .mockResolvedValueOnce([]);
@@ -144,7 +144,7 @@ describe('useMultipleOwnedGames', () => {
 
   it('should pass excludeExpansions parameter to API calls', async () => {
     const mockGames = [createMockGame('1', 'Catan', ['user1'])];
-    mockedApiService.getOwnedGamesWithStats.mockResolvedValue(mockGames);
+    mockedApiService.getUserGamesWithStats.mockResolvedValue(mockGames);
 
     const { result } = renderHook(() =>
       useMultipleOwnedGames(['user1', 'user2'], true)
@@ -154,11 +154,11 @@ describe('useMultipleOwnedGames', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user1',
       true
     );
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user2',
       true
     );
@@ -166,7 +166,7 @@ describe('useMultipleOwnedGames', () => {
 
   it('should trim whitespace from usernames before API calls', async () => {
     const mockGames = [createMockGame('1', 'Catan', ['user1'])];
-    mockedApiService.getOwnedGamesWithStats.mockResolvedValue(mockGames);
+    mockedApiService.getUserGamesWithStats.mockResolvedValue(mockGames);
 
     const { result } = renderHook(() =>
       useMultipleOwnedGames(['  user1  ', ' user2 ', 'user3'])
@@ -176,15 +176,15 @@ describe('useMultipleOwnedGames', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user1',
       false
     );
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user2',
       false
     );
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledWith(
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledWith(
       'user3',
       false
     );
@@ -192,7 +192,7 @@ describe('useMultipleOwnedGames', () => {
 
   it('should refetch data when refetch function is called', async () => {
     const mockGames = [createMockGame('1', 'Catan', ['user1'])];
-    mockedApiService.getOwnedGamesWithStats.mockResolvedValue(mockGames);
+    mockedApiService.getUserGamesWithStats.mockResolvedValue(mockGames);
 
     const { result } = renderHook(() => useMultipleOwnedGames(['user1']));
 
@@ -200,7 +200,7 @@ describe('useMultipleOwnedGames', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledTimes(1);
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledTimes(1);
 
     result.current.refetch();
 
@@ -208,12 +208,12 @@ describe('useMultipleOwnedGames', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(mockedApiService.getOwnedGamesWithStats).toHaveBeenCalledTimes(2);
+    expect(mockedApiService.getUserGamesWithStats).toHaveBeenCalledTimes(2);
   });
 
   it('should handle network timeout errors', async () => {
     const timeoutError = new Error('Request timeout');
-    mockedApiService.getOwnedGamesWithStats.mockRejectedValueOnce(timeoutError);
+    mockedApiService.getUserGamesWithStats.mockRejectedValueOnce(timeoutError);
 
     const { result } = renderHook(() => useMultipleOwnedGames(['user1']));
 
@@ -226,7 +226,7 @@ describe('useMultipleOwnedGames', () => {
   });
 
   it('should return empty array when API returns empty response', async () => {
-    mockedApiService.getOwnedGamesWithStats.mockResolvedValueOnce([]);
+    mockedApiService.getUserGamesWithStats.mockResolvedValueOnce([]);
 
     const { result } = renderHook(() => useMultipleOwnedGames(['user1']));
 
@@ -240,7 +240,7 @@ describe('useMultipleOwnedGames', () => {
 
   it('should handle malformed API responses', async () => {
     const malformedError = new Error('Invalid JSON response');
-    mockedApiService.getOwnedGamesWithStats.mockRejectedValueOnce(
+    mockedApiService.getUserGamesWithStats.mockRejectedValueOnce(
       malformedError
     );
 
@@ -259,7 +259,7 @@ describe('useMultipleOwnedGames', () => {
     const mockGames2 = [createMockGame('2', 'Azul', ['user2'])];
     const errorMessage = 'User not found';
 
-    mockedApiService.getOwnedGamesWithStats
+    mockedApiService.getUserGamesWithStats
       .mockResolvedValueOnce(mockGames1)
       .mockResolvedValueOnce(mockGames2)
       .mockRejectedValueOnce(new Error(errorMessage))

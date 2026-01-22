@@ -10,11 +10,9 @@ import java.util.List;
 
 @Repository
 public interface SearchPresetRepository extends JpaRepository<SearchPreset, Long> {
+    @Query("SELECT sp FROM SearchPreset sp ORDER BY sp.createdAt DESC")
+    List<SearchPreset> findAllOrderByCreatedAtDesc();
 
-    @Query("SELECT sp FROM SearchPreset sp WHERE sp.user.id = :userId ORDER BY sp.createdAt DESC")
-    List<SearchPreset> findByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId);
-
-    @Query("SELECT sp FROM SearchPreset sp WHERE sp.user.id = :userId AND sp.presetName = :presetName")
-    List<SearchPreset> findByUserIdAndPresetName(@Param("userId") Long userId,
-                                                 @Param("presetName") String presetName);
+    @Query("SELECT sp FROM SearchPreset sp WHERE sp.presetName = :presetName")
+    List<SearchPreset> findByPresetName(@Param("presetName") String presetName);
 }

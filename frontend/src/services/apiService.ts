@@ -1,4 +1,9 @@
-import { Game, GameSearchParams } from '@/types/Game';
+import {
+  Game,
+  GameSearchParams,
+  Preset,
+  SavePresetRequest,
+} from '@/types/Game';
 import { GameList, SaveGameListRequest } from '@/types/GameList';
 
 const API_BASE_URL =
@@ -59,40 +64,27 @@ class ApiService {
     return this.request<Game[]>(endpoint);
   }
 
-  async getOwnedGamesWithStats(
+  async getUserGamesWithStats(
     username: string,
     excludeExpansions: boolean = false
   ): Promise<Game[]> {
-    const url = `/own/${username}/with-stats?excludeExpansions=${excludeExpansions}`;
+    const url = `/games/user/${username}?excludeExpansions=${excludeExpansions}`;
     return this.request<Game[]>(url);
   }
 
-  async getGameDetails(bggId: string): Promise<Game> {
-    return this.request<Game>(`/games/${bggId}`);
+  async testConnection(): Promise<string> {
+    return this.request<string>('/test');
   }
 
-  async saveGameList(
-    username: string,
-    request: SaveGameListRequest
-  ): Promise<GameList> {
-    return this.request<GameList>(`/game-lists/${username}`, {
+  async savePreset(request: SavePresetRequest): Promise<Preset> {
+    return this.request<Preset>(`/presets`, {
       method: 'POST',
       body: JSON.stringify(request),
     });
   }
 
-  async getUserGameLists(username: string): Promise<GameList[]> {
-    return this.request<GameList[]>(`/game-lists/${username}`);
-  }
-
-  async deleteGameList(username: string, listId: number): Promise<void> {
-    return this.request<void>(`/game-lists/${username}/${listId}`, {
-      method: 'DELETE',
-    });
-  }
-
-  async testConnection(): Promise<string> {
-    return this.request<string>('/test');
+  async getPresets(): Promise<Preset[]> {
+    return this.request<Preset[]>(`/presets`);
   }
 }
 

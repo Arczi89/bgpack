@@ -12,10 +12,18 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchPresetDto {
+public class PresetDto {
     private Long id;
     private String presetName;
-    private String username;
+    /**
+     * Stored in JSONB column `filter_criteria`:
+     * {
+     *   "usernames": [...],
+     *   "filters": { ... },
+     *   "excludeExpansions": true
+     * }
+     */
     private Map<String, Object> filterCriteria;
     private ZonedDateTime createdAt;
 }
+

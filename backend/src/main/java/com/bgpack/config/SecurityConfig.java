@@ -3,10 +3,8 @@ package com.bgpack.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,12 +36,9 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/test").permitAll()
                 .requestMatchers("/api/games/**").permitAll()
-                .requestMatchers("/api/own/**").permitAll()
-                .requestMatchers("/api/stats/**").permitAll()
-                .requestMatchers("/api/game-lists/**").permitAll()
-                .requestMatchers("/api/games/stats/batch").permitAll()
+                .requestMatchers("/api/presets/**").permitAll()
+                .requestMatchers("/api/teams/**").permitAll()
                 .anyRequest().authenticated()
             );
 

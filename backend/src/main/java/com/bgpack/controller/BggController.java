@@ -41,7 +41,7 @@ public class BggController {
         return ResponseEntity.ok(games);
     }
 
-    @GetMapping("/own/{username}/with-stats")
+    @GetMapping("/games/user/{username}")
     public ResponseEntity<List<Game>> getOwnedGamesWithStats(
             @PathVariable @NotBlank final String username,
             @RequestParam(defaultValue = "false") final boolean excludeExpansions) {

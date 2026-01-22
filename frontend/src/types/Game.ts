@@ -49,3 +49,21 @@ export interface GameSearchParams {
   page?: number;
   size?: number;
 }
+
+export interface PresetCriteria {
+  usernames: string[];
+  filters: Partial<GameFilters>;
+  excludeExpansions: boolean;
+}
+
+export interface Preset {
+  id: number;
+  presetName: string;
+  filterCriteria: PresetCriteria;
+  createdAt: string;
+}
+
+export interface SavePresetRequest {
+  presetName: string;
+  criteria: PresetCriteria;
+}

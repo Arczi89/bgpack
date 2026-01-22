@@ -32,9 +32,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserCollection> collections;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<SearchPreset> searchPresets;
-
     @Column(name = "last_sync")
     private ZonedDateTime lastSync;
 

@@ -1,5 +1,6 @@
 package com.bgpack.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,19 +9,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Map;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaveSearchPresetRequest {
+public class SavePresetRequest {
 
     @NotBlank(message = "Preset name is required")
-    @Size(max = 100, message = "Preset name cannot exceed 100 characters")
+    @Size(min = 1, max = 50, message = "Preset name must be between 1 and 50 characters")
     private String presetName;
 
-    @NotNull(message = "Filter criteria are required")
-    private Map<String, Object> filterCriteria;
+    @NotNull(message = "Criteria is required")
+    @Valid
+    private PresetCriteriaDto criteria;
 }
+
