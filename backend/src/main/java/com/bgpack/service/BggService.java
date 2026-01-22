@@ -160,7 +160,7 @@ public class BggService {
                 .map(Game::getBggId)
                 .toList();
 
-        String idsParam = String.join(",", bggIds); //TODO: test how much ids can be fetch at once
+        String idsParam = String.join(",", bggIds);
 
         String thingsXml = bggApiClient.getThings(idsParam).block();
 

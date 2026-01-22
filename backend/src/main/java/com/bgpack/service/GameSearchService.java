@@ -1,12 +1,14 @@
 package com.bgpack.service;
 
 import com.bgpack.entity.Game;
+import com.bgpack.entity.UserCollection;
 import com.bgpack.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.criteria.Subquery;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ public class GameSearchService {
     private final GameRepository gameRepository;
 
     /**
-     * Wyszukuje gry na podstawie kryteriów zapisanych w JSONB
+     * Searches games based on criteria stored in JSONB
      */
     public List<Game> searchWithCriteria(Map<String, Object> criteria) {
         log.info("Searching games with criteria: {}", criteria);
@@ -47,14 +49,15 @@ public class GameSearchService {
         return games;
     }
 
-    // JPA Specifications
     private Specification<Game> hasUsersInCollection(List<Integer> userIds) {
         return (root, query, cb) -> {
-            // Checks if the game is in the collection of ALL specified users
-            // SQL: WHERE game_id IN (SELECT game_id FROM user_collections WHERE user_id IN (1,5,10) GROUP BY game_id HAVING COUNT(DISTINCT user_id) = 3)
-            return root.get("id").in(
-                    // TODO: implementacja podzapytania - do uzupełnienia przez developera
-            );
+            Subquery<Long> subquery = query.subquery(Long.class);
+            var collectionRoot = subquery.from(UserCollection.class);
+            subquery.select(collectionRoot.get("game").get("id"))
+                    .where(cb.in(collectionRoot.get("user").get("id")).value(userIds))
+                    .groupBy(collectionRoot.get("game").get("id"))
+                    .having(cb.equal(cb.countDistinct(collectionRoot.get("user").get("id")), userIds.size()));
+            return root.get("id").in(subquery);
         };
     }
 
