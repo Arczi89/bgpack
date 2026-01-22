@@ -9,16 +9,19 @@ BGPack (Board Games Pack) is a full-stack application for discovering and managi
 - **Board Game Search** - search for games from BoardGameGeek API with advanced filtering
 - **Friends' Collections** - browse and discover games owned by your friends on BGG
 - **Smart Filtering** - comprehensive filtering by players, time, rating, age, and year
-- **Game List Management** - save, organize, and manage custom game lists
+- **Search Presets** - save and reuse search filter configurations
 - **Real-time Data** - live integration with BoardGameGeek API (no mock data)
+- **Intelligent Caching** - PostgreSQL-based cache with `last_sync` and `cache_hits` tracking
 
 ### Advanced Features
 
 - **Exact vs Overlap Matching** - flexible player count filtering (exact match or overlap support)
-- **Collection Persistence** - MongoDB storage for saved game lists
+- **Collection Persistence** - PostgreSQL storage for games, users, and collections
 - **Rate Limiting** - intelligent API usage optimization and circuit breaker
 - **Error Handling** - graceful fallbacks when API is unavailable
-- **Caching** - Spring Cache integration for improved performance
+- **Caching System** - multi-level caching with Spring Cache (Caffeine) and database cache
+- **Database Migrations** - Flyway for schema versioning and management
+- **Health Checks** - custom health check endpoint for monitoring
 
 ### User Experience
 
@@ -91,38 +94,54 @@ stop-dev.bat
 - Faster startup and debugging
 - Direct access to logs
 
-### Local Development (without Docker)
+## Environment Variables
 
-**One command (recommended):**
+The application uses the following environment variables:
 
-```bash
-# Linux/Mac
-./start-app.sh
+### Database Configuration
 
-# Windows
-start-app.bat
-```
+- `POSTGRES_DB` - PostgreSQL database name (default: `bgpack`)
+- `POSTGRES_USER` - PostgreSQL username (default: `bgpack_user`)
+- `POSTGRES_PASSWORD` - PostgreSQL password (default: `bgpack_pass`)
+- `POSTGRES_PORT` - PostgreSQL port (default: `5432`)
 
-**Or manually:**
+### Backend Configuration
 
-```bash
-# Backend
-cd backend
-./mvnw spring-boot:run
+- `SPRING_PROFILES_ACTIVE` - Spring profile (default: `dev`)
+- `SPRING_DATASOURCE_URL` - Database connection URL (default: `jdbc:postgresql://localhost:5432/bgpack`)
+- `SPRING_DB_USERNAME` - Database username (default: `bgpack_user`)
+- `SPRING_DB_PASSWORD` - Database password (default: `bgpack_pass`)
+- `SERVER_PORT` - Backend server port (default: `8080`)
+- `JPA_DDL_AUTO` - Hibernate DDL mode (default: `update`)
+- `JPA_SHOW_SQL` - Show SQL queries in logs (default: `true`)
 
-# Frontend (in new terminal)
-cd frontend
-npm install
-npm start
-```
+### BGG API Configuration
 
-**Stop:**
+- `BGG_API_TOKEN` - BoardGameGeek API token (optional)
 
-```bash
-# Linux/Mac
-./stop-app.sh
+### JWT Configuration (for future authentication)
 
-# Windows - press Ctrl+C in start-app.bat window
+- `JWT_SECRET` - JWT secret key
+- `JWT_EXPIRATION` - JWT expiration time in milliseconds (default: `86400000`)
+
+### PgAdmin Configuration (optional)
+
+- `PGADMIN_EMAIL` - PgAdmin login email
+- `PGADMIN_PASSWORD` - PgAdmin login password
+- `PGADMIN_PORT` - PgAdmin port (default: `5050`)
+
+### Example `.env` file:
+
+```env
+POSTGRES_DB=bgpack
+POSTGRES_USER=bgpack_user
+POSTGRES_PASSWORD=bgpack_pass
+POSTGRES_PORT=5432
+SPRING_PROFILES_ACTIVE=dev
+BGG_API_TOKEN=your_token_here
+PGADMIN_EMAIL=admin@example.com
+PGADMIN_PASSWORD=admin123
+PGADMIN_PORT=5050
 ```
 
 ## Project Structure
@@ -133,9 +152,10 @@ bgpack/
 │   ├── src/
 │   │   ├── components/       # Reusable components
 │   │   ├── features/         # Application features
-│   │   │   ├── auth/         # Authentication
-│   │   │   ├── game-list/    # Game listing
-│   │   │   └── user-collection/ # User collection
+│   │   │   └── game-list/     # Game listing and search
+│   │   ├── contexts/         # React contexts
+│   │   ├── hooks/            # Custom React hooks
+│   │   ├── services/         # API services
 │   │   ├── store/            # Redux store
 │   │   └── types/            # TypeScript definitions
 │   ├── Dockerfile            # Production Docker
@@ -147,38 +167,66 @@ bgpack/
 │   ├── src/main/java/com/bgpack/
 │   │   ├── controller/       # REST controllers
 │   │   ├── service/          # Business logic
+│   │   ├── entity/           # JPA entities
+│   │   ├── repository/       # JPA repositories
 │   │   ├── dto/              # Data Transfer Objects
-│   │   └── config/           # Configuration
+│   │   ├── config/           # Configuration classes
+│   │   ├── client/           # External API clients
+│   │   ├── exception/        # Exception handlers
+│   │   └── health/           # Health check classes
+│   ├── src/main/resources/
+│   │   ├── db/migration/     # Flyway migrations
+│   │   └── application.yml   # Application configuration
 │   ├── Dockerfile            # Backend Docker
 │   └── pom.xml
 ├── docker-compose.yml        # Production Docker Compose
 ├── docker-compose.dev.yml    # Development Docker Compose
-├── docker-run.sh            # Docker startup script (Linux/Mac)
-├── docker-run.bat           # Docker startup script (Windows)
-├── start-app.sh             # Local startup script (Linux/Mac)
-├── start-app.bat            # Local startup script (Windows)
-├── stop-app.sh              # Stop script (Linux/Mac)
+├── start-dev.sh             # Development startup script (Linux/Mac)
+├── start-dev.bat            # Development startup script (Windows)
+├── stop-dev.sh              # Stop script (Linux/Mac)
+├── stop-dev.bat             # Stop script (Windows)
 └── README.md
 ```
 
 ## API Endpoints
 
-### Game Search & Details
+### Health Check
 
 - `GET /api/test` - Health check endpoint
+
+### Game Search
+
 - `GET /api/games` - Search games with comprehensive filtering
-- `GET /api/games/{id}` - Get detailed game information by ID
+  - Query parameters:
+    - `search` - Search term (required)
+    - `minPlayers` - Minimum number of players
+    - `maxPlayers` - Maximum number of players
+    - `minPlayingTime` - Minimum playing time in minutes
+    - `maxPlayingTime` - Maximum playing time in minutes
+    - `minAge` - Minimum age
+    - `minRating` - Minimum BGG rating
+    - `yearFrom` - Year from
+    - `yearTo` - Year to
+    - `exactPlayerFilter` - Boolean for exact player count matching
 
 ### User Collections
 
-- `GET /api/own/{username}` - Get user's board game collection from BGG
-- `GET /api/own/{username}?excludeExpansions=true` - Get collection excluding expansions
+- `GET /api/own/{username}/with-stats` - Get user's board game collection from BGG with statistics
+  - Path parameters:
+    - `username` - BGG username (required)
+  - Query parameters:
+    - `excludeExpansions` - Exclude expansions (default: `false`)
 
-### Game List Management
+### Search Presets
 
-- `POST /api/game-lists/{username}` - Save a new game list
-- `GET /api/game-lists/{username}` - Get all saved game lists for user
-- `DELETE /api/game-lists/{username}/{listId}` - Delete a specific game list
+- `POST /api/search-presets/{username}` - Save a new search preset
+- `GET /api/search-presets/{username}` - Get all saved search presets for user
+- `GET /api/search-presets/{username}/{presetId}/execute` - Execute a saved search preset
+- `DELETE /api/search-presets/{username}/{presetId}` - Delete a specific search preset
+
+### Circuit Breaker Management
+
+- `POST /api/bgg/reset-cache/{endpoint}` - Reset circuit breaker for a specific endpoint
 
 ### Usage Examples
 
@@ -190,23 +238,32 @@ curl http://localhost:8080/api/test
 curl "http://localhost:8080/api/games?search=catan&minPlayers=3&maxPlayers=4"
 
 # Get user's BGG collection
-curl http://localhost:8080/api/own/username
+curl "http://localhost:8080/api/own/username/with-stats?excludeExpansions=true"
 
-# Save a game list
-curl -X POST http://localhost:8080/api/game-lists/admin \
+# Save a search preset
+curl -X POST http://localhost:8080/api/search-presets/admin \
   -H "Content-Type: application/json" \
   -d '{
-    "listName": "Family Games",
-    "usernames": ["user1", "user2"],
-    "games": [{"id": "1", "name": "Catan"}],
-    "exactPlayerFilter": false
+    "presetName": "Family Games",
+    "filterCriteria": {
+      "minPlayers": 2,
+      "maxPlayers": 4,
+      "minAge": 8,
+      "maxPlayingTime": 60
+    }
   }'
 
-# Get saved game lists
-curl http://localhost:8080/api/game-lists/admin
+# Get saved search presets
+curl http://localhost:8080/api/search-presets/admin
 
-# Delete a game list
-curl -X DELETE http://localhost:8080/api/game-lists/admin/list-id
+# Execute a search preset
+curl http://localhost:8080/api/search-presets/admin/1/execute
+
+# Delete a search preset
+curl -X DELETE http://localhost:8080/api/search-presets/admin/1
+
+# Reset circuit breaker
+curl -X POST http://localhost:8080/api/bgg/reset-cache/search
 ```
 
 ## Game Filtering System
@@ -262,38 +319,6 @@ BGPack provides comprehensive filtering capabilities to help you find the perfec
 
 - Example: `2010-2020` shows games published between 2010 and 2020
 
-### Filtering Examples
-
-**Example 1: Family Game Night**
-
-```
-Min Players: 4
-Max Players: 4
-Min Age: 8
-Max Playing Time: 60
-Min Rating: 7.0
-```
-
-Result: Games for exactly 4 players, suitable for ages 8+, under 60 minutes, with good ratings.
-
-**Example 2: Large Group Games**
-
-```
-Min Players: 6
-Exact Match: OFF (non-exact mode)
-```
-
-Result: All games that support 6+ players (6-8, 6-10, 1-10, etc.)
-
-**Example 3: Quick Games for Any Group Size**
-
-```
-Max Playing Time: 30
-Min Rating: 7.5
-```
-
-Result: Quick games (≤30 min) with excellent ratings, regardless of player count.
-
 ### Filter Behavior
 
 - **Multiple filters** work together with AND logic (all conditions must be met)
@@ -301,27 +326,6 @@ Result: Quick games (≤30 min) with excellent ratings, regardless of player cou
 - **Sorting** works on filtered results
 - **Pagination** applies to filtered results
 - **Real-time filtering** - results update as you change filter values
-
-### API Filter Parameters
-
-All filters are available via the REST API:
-
-```bash
-# Player count filters
-curl "http://localhost:8080/api/games?minPlayers=2&maxPlayers=4&exactPlayerFilter=true"
-
-# Playing time filters
-curl "http://localhost:8080/api/games?minPlayingTime=30&maxPlayingTime=90"
-
-# Rating and age filters
-curl "http://localhost:8080/api/games?minRating=7.0&minAge=12"
-
-# Year filters
-curl "http://localhost:8080/api/games?yearFrom=2020&yearTo=2023"
-
-# Combined filters
-curl "http://localhost:8080/api/games?minPlayers=3&maxPlayers=5&minPlayingTime=45&maxPlayingTime=90&minRating=7.5"
-```
 
 ## Architecture
 
@@ -342,11 +346,71 @@ curl "http://localhost:8080/api/games?minPlayers=3&maxPlayers=5&minPlayingTime=4
 - Spring Boot 3.3 with Java 21
 - Spring Security for authentication and CORS
 - Spring Web for REST API
-- Spring Data MongoDB for persistence
-- Spring Cache for performance optimization
+- Spring Data JPA for persistence (PostgreSQL)
+- Spring Cache for performance optimization (Caffeine)
+- Flyway for database migrations
+- Spring WebFlux for reactive HTTP client (WebClient)
 - Lombok for code simplification
 - Jackson for XML parsing
 - Google Java Format + Checkstyle for code quality
+
+**Database:**
+
+- PostgreSQL 15 for data persistence
+- Flyway for schema versioning
+
+**Infrastructure:**
+
+- Docker & Docker Compose for containerization
+- Nginx for frontend serving
+- Maven for build management
+
+### Database Schema
+
+The application uses PostgreSQL with the following main tables:
+
+- **users** - User information with `last_sync` timestamp for cache management
+- **games** - Game data with `cached_at`, `cache_hits`, and `last_updated` for cache tracking
+- **user_collections** - Many-to-many relationship between users and games
+- **search_presets** - Saved search filter configurations
+- **tags** - Game tags
+- **game_tags** - Many-to-many relationship between games and tags
+
+### Caching System
+
+The application implements a multi-level caching system:
+
+1. **Spring Cache (Caffeine)** - In-memory cache for frequently accessed data
+   - TTL: 1 hour
+   - Max size: 1000 entries
+   - Used for game search results
+
+2. **Database Cache** - PostgreSQL-based cache for games and collections
+   - Games are cached with `cached_at` and `cache_hits` tracking
+   - Users have `last_sync` timestamp to determine cache freshness
+   - Cache is considered stale after 7 days
+   - Cache hits are incremented on each access
+
+3. **Cache Strategy**:
+   - Check database cache first
+   - If stale or missing, fetch from BGG API
+   - Update cache with new data
+   - Increment cache hits on successful cache reads
+
+### Circuit Breaker
+
+The application includes a circuit breaker pattern to protect against BGG API failures:
+
+- **Threshold**: 5 consecutive failures (configurable)
+- **Timeout**: 300 seconds before retry (configurable)
+- **Automatic Recovery**: Circuit closes after timeout period
+- **Manual Reset**: Available via API endpoint
+
+### Rate Limiting
+
+- **Rate Limit**: 1 request per second (configurable)
+- **Hourly Limit**: 3600 requests per hour (configurable)
+- **Automatic Tracking**: Request counts and failures are tracked
 
 ### Spring Framework Usage
 
@@ -354,14 +418,15 @@ The backend leverages multiple Spring Boot modules and core Spring concepts:
 
 #### Spring Boot Modules
 
-| Module                             | Purpose                                              |
-| ---------------------------------- | ---------------------------------------------------- |
-| `spring-boot-starter-web`          | REST API controllers and Jackson JSON serialization  |
-| `spring-boot-starter-data-mongodb` | MongoDB integration with auto-generated repositories |
-| `spring-boot-starter-security`     | CORS configuration and security policies             |
-| `spring-boot-starter-cache`        | Declarative caching with Caffeine                    |
-| `spring-boot-starter-webflux`      | Reactive WebClient for async BGG API calls           |
-| `spring-boot-starter-validation`   | Bean validation with `@Valid`                        |
+| Module                           | Purpose                                                 |
+| -------------------------------- | ------------------------------------------------------- |
+| `spring-boot-starter-web`        | REST API controllers and Jackson JSON serialization     |
+| `spring-boot-starter-data-jpa`   | PostgreSQL integration with auto-generated repositories |
+| `spring-boot-starter-security`   | CORS configuration and security policies                |
+| `spring-boot-starter-cache`      | Declarative caching with Caffeine                       |
+| `spring-boot-starter-webflux`    | Reactive WebClient for async BGG API calls              |
+| `spring-boot-starter-validation` | Bean validation with `@Valid`                           |
+| `spring-boot-starter-actuator`   | Health checks and metrics                               |
 
 #### Core Spring Concepts
 
@@ -374,13 +439,13 @@ The backend leverages multiple Spring Boot modules and core Spring concepts:
 **2. Layered Architecture**
 
 ```
-Controllers (@RestController) → Services (@Service) → Repositories (@Repository) → MongoDB
+Controllers (@RestController) → Services (@Service) → Repositories (@Repository) → PostgreSQL
 ```
 
-**3. Spring Data MongoDB**
+**3. Spring Data JPA**
 
 - Query methods auto-generated from method names
-- Example: `findByUsername(String username)` → `db.my_games.find({ username: "..." })`
+- Example: `findByUsername(String username)` → `SELECT * FROM users WHERE username = ?`
 - Zero repository implementation required
 
 **4. Declarative Caching**
@@ -406,6 +471,12 @@ Controllers (@RestController) → Services (@Service) → Repositories (@Reposit
 - `@Value` injection for properties
 - Environment variable support with defaults
 
+**8. Database Migrations**
+
+- Flyway for schema versioning
+- Automatic migration on application startup
+- Baseline support for existing databases
+
 #### Lombok Integration
 
 Lombok reduces boilerplate code through compile-time code generation:
@@ -416,43 +487,38 @@ Lombok reduces boilerplate code through compile-time code generation:
 - `@Slf4j` - creates logger instance automatically
 - `@NoArgsConstructor` / `@AllArgsConstructor` - generates constructors
 
-**Infrastructure:**
-
-- MongoDB for data persistence
-- Docker & Docker Compose for containerization
-- Nginx for frontend serving
-- Maven for build management
-
 ### Docker Configuration
 
 The application is fully containerized:
 
 **Production (`docker-compose.yml`):**
 
-- Backend: OpenJDK 17, port 8080
-- Frontend: Multi-stage build with Nginx
+- PostgreSQL: PostgreSQL 15 Alpine
+- Backend: Java 21, port 8080
+- PgAdmin: Database administration tool (optional)
 - Health checks and dependencies
 
 **Development (`docker-compose.dev.yml`):**
 
 - Hot reload with volume mounts
-- Debug support
+- Debug support (port 5005)
 - Development servers
+- Frontend with hot module replacement
 
 ### Application Flow
 
 ```
-Frontend (port 3000) → Nginx → Backend (port 8080) → MongoDB
+Frontend (port 3000) → Backend (port 8080) → PostgreSQL (port 5432)
                                            ↓
                                       BGG API
 ```
 
 ### Data Flow
 
-1. **Game Search**: Frontend → Backend → BGG API → Filtered Results
-2. **Collection Fetch**: Frontend → Backend → BGG API → User's Games
-3. **List Management**: Frontend → Backend → MongoDB → Persistent Storage
-4. **Caching**: Spring Cache stores frequently accessed data for performance
+1. **Game Search**: Frontend → Backend → Check Cache → BGG API (if needed) → Filtered Results → Update Cache
+2. **Collection Fetch**: Frontend → Backend → Check User Cache (`last_sync`) → BGG API (if stale) → Update Cache → Return Results
+3. **Search Presets**: Frontend → Backend → PostgreSQL → Execute Search → Return Results
+4. **Caching**: Multi-level caching stores frequently accessed data for performance
 
 ### Code Quality
 
@@ -464,42 +530,38 @@ The project includes automated code formatting and quality checks:
 
 ## Troubleshooting
 
+### Database Connection Issues
+
+**Problem**: Backend cannot connect to PostgreSQL.
+
+**Solution**:
+
+- Check if PostgreSQL container is running: `docker ps | grep bgpack-postgres`
+- Verify environment variables are set correctly
+- Check database credentials in `application.yml` or environment variables
+- Ensure PostgreSQL port is not blocked by firewall
+
 ### BGG API Integration Issues
 
-If the application returns mock data instead of real BGG data, check these configurations:
+If the application returns empty results or errors, check these configurations:
 
 #### SSL/TLS Certificate Issues
 
 **Problem**: BGG API returns `null` responses due to SSL certificate validation failures.
 
-**Solution**: The backend is configured to ignore SSL certificate issues:
-
-```java
-// In BggApiClient.java
-.trustManager(io.netty.handler.ssl.util.InsecureTrustManagerFactory.INSTANCE)
-```
+**Solution**: The backend is configured to handle SSL certificates properly via WebClient configuration.
 
 #### Redirect Handling
 
 **Problem**: BGG API redirects from `www.boardgamegeek.com` to `boardgamegeek.com`.
 
-**Solution**: Enable automatic redirects:
-
-```java
-// In BggApiClient.java
-.followRedirect(true)
-```
+**Solution**: Enable automatic redirects in WebClient configuration.
 
 #### User-Agent Requirements
 
 **Problem**: BGG API blocks requests with custom User-Agent strings.
 
-**Solution**: Use standard browser User-Agent:
-
-```java
-// In BggApiClient.java
-.defaultHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...")
-```
+**Solution**: Use standard browser User-Agent in WebClient configuration.
 
 #### Rate Limiting
 
@@ -513,6 +575,16 @@ bgg:
     rate-limit: 1.0 # 1 request per second
     max-requests-per-hour: 3600 # 3600 requests per hour
 ```
+
+#### Circuit Breaker
+
+**Problem**: Circuit breaker is open and blocking requests.
+
+**Solution**:
+
+- Wait for automatic recovery (300 seconds default)
+- Manually reset via API: `POST /api/bgg/reset-cache/{endpoint}`
+- Check logs for consecutive failures
 
 #### CORS Configuration
 
@@ -532,251 +604,12 @@ spring:
 
 ### Common Issues
 
-1. **Backend returns mock data**: Check BGG API configuration and SSL settings
+1. **Backend returns empty results**: Check BGG API configuration, circuit breaker status, and rate limits
 2. **CORS errors**: Verify CORS configuration in `application.yml`
 3. **Rate limiting**: Ensure rate limits are not exceeded
-4. **SSL errors**: Backend is configured to ignore SSL certificate issues
-
-## Game Statistics Feature
-
-BGPack now includes advanced game statistics functionality that extends the basic BGG API with comprehensive game data caching and enhanced statistics retrieval.
-
-### Overview
-
-The new functionality extends the BGPack system with the ability to fetch and store extended game statistics from the BoardGameGeek API. The system automatically fetches and caches statistics to avoid slow BGG API queries.
-
-### New Backend Endpoints
-
-#### 1. `GET /api/games/{gameId}/stats`
-
-Retrieves statistics for a single game.
-
-**Parameters:**
-
-- `gameId` (path) - BGG game ID
-
-**Response:**
-
-```json
-{
-  "gameId": "2536",
-  "name": "Vabanque",
-  "bggRating": 6.46569,
-  "averageRating": 5.75008,
-  "averageWeight": 1.44593,
-  "suggestedNumPlayers": "3, 4, 5"
-}
-```
-
-#### 2. `GET /api/own/{username}/with-stats`
-
-Retrieves user's games with extended statistics.
-
-**Parameters:**
-
-- `username` (path) - BGG username
-- `excludeExpansions` (query, optional) - whether to exclude expansions (default: false)
-
-**Response:**
-
-```json
-[
-  {
-    "id": "2536",
-    "name": "Vabanque",
-    "yearPublished": 2001,
-    "minPlayers": 3,
-    "maxPlayers": 6,
-    "playingTime": 45,
-    "minAge": 12,
-    "description": "A party meets for a game...",
-    "imageUrl": "https://cf.geekdo-images.com/...",
-    "thumbnailUrl": "https://cf.geekdo-images.com/...",
-    "bggRating": 6.46569,
-    "averageRating": 5.75008,
-    "complexity": 1.44593,
-    "ownedBy": ["user1", "user2"],
-    "averageWeight": 1.44593,
-    "suggestedNumPlayers": "3, 4, 5"
-  }
-]
-```
-
-#### 3. `POST /api/games/stats/batch`
-
-Retrieves statistics for multiple games at once.
-
-**Body:**
-
-```json
-["2536", "1234", "5678"]
-```
-
-**Response:**
-
-```json
-[
-  {
-    "gameId": "2536",
-    "name": "Vabanque",
-    "bggRating": 6.46569,
-    "averageRating": 5.75008,
-    "averageWeight": 1.44593,
-    "suggestedNumPlayers": "3, 4, 5"
-  }
-]
-```
-
-### Data Sources from BGG API
-
-The system uses the following BGG API endpoints:
-
-#### Basic endpoints (existing):
-
-- `/thing?id={id}&stats=1` - single game details with statistics
-- `/collection/{username}?own=1&stats=1` - user collection with basic statistics
-- `/thing?id={ids}&stats=1` - multiple games with statistics
-
-#### New endpoints:
-
-- `/thing?id={id}&stats=1` - extended statistics for single game
-- `/thing?id={ids}&stats=1` - extended statistics for multiple games
-
-### Data Structure
-
-#### New fields in Game model:
-
-- `averageWeight` - average game weight (difficulty)
-- `suggestedNumPlayers` - suggested number of players
-
-#### New GameStats entity:
-
-```java
-@Document(collection = "game_stats")
-public class GameStats {
-    private String gameId;
-    private String name;
-    private Double bggRating;
-    private Double averageRating;
-    private Double averageWeight;
-    private String suggestedNumPlayers;
-    // Cache metadata
-    private LocalDateTime cachedAt;
-    private LocalDateTime lastUpdated;
-    private Integer cacheHits;
-}
-```
-
-### Caching Mechanism
-
-1. **Cache Check** - system first checks if statistics are already in the database
-2. **BGG Fetch** - if not in cache, fetches from BGG API
-3. **Cache Save** - saves fetched data to database with metadata
-4. **Usage Tracking** - counts how many times data was used
-
-### Frontend
-
-#### New TypeScript types:
-
-```typescript
-export interface GameStats {
-  gameId: string;
-  name: string;
-  bggRating: number | null;
-  averageRating: number | null;
-  averageWeight: number | null;
-  suggestedNumPlayers: string | null;
-}
-
-export interface GameWithStats extends Game {
-  averageWeight?: number | null;
-  suggestedNumPlayers?: string | null;
-}
-```
-
-#### New API Service methods:
-
-```typescript
-async getOwnedGamesWithStats(username: string, excludeExpansions?: boolean): Promise<GameWithStats[]>
-async getGameStats(gameId: string): Promise<GameStats>
-async getMultipleGameStats(gameIds: string[]): Promise<GameStats[]>
-```
-
-### Logging and Monitoring
-
-The system logs the following information:
-
-- Number of games fetched for a given user
-- Number of elements fetched for a given game
-- Errors during BGG API fetching
-- Cache hit/miss information
-
-Example logs:
-
-```
-INFO - Getting stats for 5 games
-INFO - Found cached stats for game ID: 2536
-INFO - Fetching 3 missing games from BGG API
-INFO - Successfully fetched and cached stats for 3 games
-```
-
-### Performance Optimization
-
-1. **Cache Priority** - always checks cache before BGG API
-2. **Batch Requests** - fetches multiple games simultaneously
-3. **Rate Limiting** - respects BGG API limits
-4. **Retry Mechanism** - automatic retries on errors
-5. **Circuit Breaker** - protection against API overload
-
-### Configuration
-
-All settings are in `application.yml`:
-
-```yaml
-bgg:
-  api:
-    base-url: "https://www.boardgamegeek.com/xmlapi2"
-    timeout: 60000
-    rate-limit: 1.0 # requests per second
-    max-requests-per-hour: 3600
-    circuit-breaker-threshold: 5
-    circuit-breaker-timeout: 300
-```
-
-### Statistics Completeness Criteria
-
-Statistics are considered complete when they contain all four key fields:
-
-- `bggRating` - BGG rating
-- `averageRating` - average rating
-- `averageWeight` - average difficulty
-- `suggestedNumPlayers` - suggested number of players
-
-Other fields are optional and do not affect completeness assessment.
-
-### Testing
-
-To test the new endpoints:
-
-1. **Single game:**
-
-```bash
-curl http://localhost:8080/api/games/2536/stats
-```
-
-2. **User games with statistics:**
-
-```bash
-curl http://localhost:8080/api/own/username/with-stats
-```
-
-3. **Multiple games:**
-
-```bash
-curl -X POST http://localhost:8080/api/games/stats/batch \
-  -H "Content-Type: application/json" \
-  -d '["2536", "1234", "5678"]'
-```
+4. **Database connection**: Verify PostgreSQL is running and credentials are correct
+5. **Cache issues**: Check `last_sync` timestamps and cache freshness logic
+6. **Flyway migration errors**: Check migration files in `backend/src/main/resources/db/migration/`
 
 ## License
 
